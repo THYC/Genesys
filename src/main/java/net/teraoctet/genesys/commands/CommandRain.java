@@ -1,5 +1,6 @@
 package net.teraoctet.genesys.commands;
 
+import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static net.teraoctet.genesys.utils.MessageManager.RAIN_MESSAGE;
 import static org.spongepowered.api.Sponge.getGame;
@@ -17,7 +18,13 @@ public class CommandRain implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource sender, CommandContext ctx) throws CommandException {
 
-        Player player = (Player) sender;    
+        if(sender instanceof Player == false) { 
+            sender.sendMessage(NO_CONSOLE()); 
+            return CommandResult.success(); 
+        }  
+        
+        Player player = (Player) sender;  
+        
         if(!player.hasPermission("genesys.weather.rain")) { 
             sender.sendMessage(NO_PERMISSIONS()); 
             return CommandResult.success(); 
@@ -26,6 +33,7 @@ public class CommandRain implements CommandExecutor {
         World world = player.getWorld();
         world.setWeather(Weathers.RAIN);
         getGame().getServer().getBroadcastChannel().send(RAIN_MESSAGE(player));
+        
         return CommandResult.success();	
     }
 }

@@ -17,21 +17,20 @@ public class CommandNight implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource sender, CommandContext ctx) throws CommandException {
 
-        Player player = (Player) sender;    
+        if(sender instanceof Player == false) { 
+            sender.sendMessage(NO_CONSOLE()); 
+            return CommandResult.success(); 
+        }  
+        
+        Player player = (Player) sender; 
+        
         if(!player.hasPermission("genesys.time.night")) { 
                 sender.sendMessage(NO_PERMISSIONS()); 
                 return CommandResult.success(); 
         }
         
         World world = player.getLocation().getExtent();
-            
-        if(sender instanceof Player == false) { 
-            sender.sendMessage(NO_CONSOLE()); 
-            return CommandResult.success(); 
-        }
-        
         world.getProperties().setWorldTime(12); 
-        //getGame().getServer().getBroadcastSink().sendMessage(NIGHT_MESSAGE(player));
         getGame().getServer().getBroadcastChannel().send(NIGHT_MESSAGE(player));
  
         return CommandResult.success();	

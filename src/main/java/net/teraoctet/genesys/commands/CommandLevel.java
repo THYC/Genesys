@@ -3,7 +3,6 @@ package net.teraoctet.genesys.commands;
 import java.util.Optional;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import net.teraoctet.genesys.player.GPlayer;
-import static net.teraoctet.genesys.utils.GServer.getPlayer;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static net.teraoctet.genesys.utils.MessageManager.USAGE;

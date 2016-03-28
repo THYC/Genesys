@@ -17,21 +17,20 @@ public class CommandDay implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource sender, CommandContext ctx) throws CommandException {
     
-        Player player = (Player) sender;    
+        if(sender instanceof Player == false) { 
+            sender.sendMessage(NO_CONSOLE()); 
+            return CommandResult.success(); 
+        }  
+        
+        Player player = (Player) sender;
+        
         if(!player.hasPermission("genesys.time.day")) { 
                 sender.sendMessage(NO_PERMISSIONS()); 
                 return CommandResult.success(); 
         }
         
-        World world = player.getLocation().getExtent();
-            
-        if(sender instanceof Player == false) { 
-            sender.sendMessage(NO_CONSOLE()); 
-            return CommandResult.success(); 
-        }
-        
+        World world = player.getLocation().getExtent();        
         world.getProperties().setWorldTime(0); 
-        //getGame().getServer().getBroadcastSink().sendMessage(DAY_MESSAGE(player));
         getGame().getServer().getBroadcastChannel().send(DAY_MESSAGE(player));
  
         return CommandResult.success();	

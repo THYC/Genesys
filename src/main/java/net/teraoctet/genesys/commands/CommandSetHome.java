@@ -6,10 +6,10 @@ import static net.teraoctet.genesys.utils.GData.commit;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import net.teraoctet.genesys.utils.GHome;
 import net.teraoctet.genesys.player.GPlayer;
-import static net.teraoctet.genesys.utils.MessageManager.ALLOW_HOME;
-import static net.teraoctet.genesys.utils.MessageManager.HOME_AS_BEEN_SET;
-import static net.teraoctet.genesys.utils.MessageManager.HOME_EXIST;
-import static net.teraoctet.genesys.utils.MessageManager.NB_HOME_ALLOWED;
+import static net.teraoctet.genesys.utils.MessageManager.NB_ALLOWED_HOME;
+import static net.teraoctet.genesys.utils.MessageManager.HOME_SET_SUCCESS;
+import static net.teraoctet.genesys.utils.MessageManager.HOME_ALREADY_EXIST;
+import static net.teraoctet.genesys.utils.MessageManager.NB_HOME;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import org.spongepowered.api.command.CommandException;
@@ -43,7 +43,7 @@ public class CommandSetHome implements CommandExecutor {
 
         HashMap<String, GHome> homes = gplayer.getHomes();
         if(homes.containsKey(name)) {
-            sender.sendMessage(HOME_EXIST());
+            sender.sendMessage(HOME_ALREADY_EXIST());
             return CommandResult.success(); 
         }
 
@@ -51,7 +51,7 @@ public class CommandSetHome implements CommandExecutor {
         for(int i = 1; i <= 100; i++) {if(player.hasPermission("genesys.sethome." + i)) nbHomes = i;}
 
         if(!player.hasPermission("genesys.home.unlimited") && nbHomes <= homes.size()) {
-            sender.sendMessage(ALLOW_HOME(player,String.valueOf(nbHomes)));
+            sender.sendMessage(NB_ALLOWED_HOME(player,String.valueOf(nbHomes)));
             return CommandResult.success(); 
         }
 
@@ -65,9 +65,9 @@ public class CommandSetHome implements CommandExecutor {
         commit();
         gplayer.setHome(name, ghome);
 
-        sender.sendMessage(HOME_AS_BEEN_SET(player,name));
-        if(!player.hasPermission("genesys.home.unlimited")) sender.sendMessage(NB_HOME_ALLOWED(player,String.valueOf(homes.size()),"illimité"));
-        else sender.sendMessage(NB_HOME_ALLOWED(player,String.valueOf(homes.size()),String.valueOf(nbHomes)));
+        sender.sendMessage(HOME_SET_SUCCESS(player,name));
+        if(!player.hasPermission("genesys.home.unlimited")) sender.sendMessage(NB_HOME(player,String.valueOf(homes.size()),"illimité"));
+        else sender.sendMessage(NB_HOME(player,String.valueOf(homes.size()),String.valueOf(nbHomes)));
 
 	return CommandResult.success();
     }

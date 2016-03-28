@@ -18,19 +18,19 @@ public class CommandStorm implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource sender, CommandContext ctx) throws CommandException {
 
-        Player player = (Player) sender;    
-        if(!player.hasPermission("genesys.weather.storm")) { 
-                sender.sendMessage(NO_PERMISSIONS()); 
-                return CommandResult.success(); 
-        }
-        
-        World world = player.getLocation().getExtent();
-            
         if(sender instanceof Player == false) { 
             sender.sendMessage(NO_CONSOLE()); 
             return CommandResult.success(); 
+        }              
+
+        Player player = (Player) sender;
+        
+        if(!player.hasPermission("genesys.weather.storm")) { 
+            sender.sendMessage(NO_PERMISSIONS()); 
+            return CommandResult.success(); 
         }
         
+        World world = player.getLocation().getExtent();
         world.setWeather(Weathers.THUNDER_STORM);
         getGame().getServer().getBroadcastChannel().send(STORM_MESSAGE(player));
  

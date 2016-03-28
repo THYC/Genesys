@@ -45,17 +45,19 @@ public class MessageManager {
     private static Text INFO_PARCEL;
     private static Text PARCEL_SECURE;
     private static Text MISSING_BALANCE;
-    private static Text HOME_EXIST;
-    private static Text ALLOW_HOME;
-    private static Text HOME_NOT_EXIST;
-    private static Text TARGET_HOME_NOT_EXIST;
-    private static Text TP_TO_HOME;
-    private static Text WORLD_EXIST;
-    private static Text WORLD_CREATED;
-    private static Text HOME_AS_BEEN_SET;
-    private static Text NB_HOME_ALLOWED;
+    private static Text HOME_ALREADY_EXIST;
+    private static Text HOME_SET_SUCCESS;
+    private static Text NB_HOME;
+    private static Text NB_ALLOWED_HOME;
+    private static Text HOME_NOT_FOUND;
+    private static Text HOME_ERROR;
+    private static Text HOME_TP_SUCCESS;
     private static Text PLAYER_NOT_FOUND;
-    private static Text WORLD_NOT_EXIST;
+    private static Text WORLD_ALREADY_EXIST;
+    private static Text WORLD_CREATED;
+    private static Text WORLD_NOT_FOUND;
+    private static Text WORLD_CREATION_ERROR;
+    private static Text WORLD_PROPERTIES_ERROR;
     private static Text TELEPORTED_TO_WORLD;
     private static Text PROTECT_PORTAL;
     private static Text TP_BACK;
@@ -78,7 +80,8 @@ public class MessageManager {
                 message.getNode("NO_PERMISSIONS").setValue(msg);
                 manager.save(message);
                 
-                msg.add("&6Cette commande ne peut s'ex\351cuter sur la console");
+                msg = new ArrayList<>();
+                msg.add("&6Cette commande ne peut pas s'ex\351cuter sur la console");
                 message.getNode("NO_CONSOLE").setValue(msg);
                 manager.save(message);
                                 
@@ -196,58 +199,69 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&eHome d\351j\340 d\351fini, veuillez ressaisir la commande pour le changer");
-                message.getNode("HOME_EXIST").setValue(msg);
+                msg.add("&cHome d\351j\340 d\351fini, veuillez le supprimer avant de pouvoir le red\351finir");
+                message.getNode("HOME_ALREADY_EXIST").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&eVous \352tes seulement autoris\351 \340 poss\351der %var1% maison(s)");
-                message.getNode("ALLOW_HOME").setValue(msg);
+                msg.add("&eLe home &6%var1% &ea \351t\351 cr\351\351 avec succ\350s");
+                message.getNode("HOME_SET_SUCCESS").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&cHome non d\351fini, veuillez taper la commande /sethome pour le d\351finir");
-                message.getNode("HOME_NOT_EXIST").setValue(msg);
+                msg.add("&eVous poss\351dez actuellement &6%var1% &esur &6%var2% &ehome possible");
+                message.getNode("NB_HOME").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&cLe point d'apparition de ce HOME' n'existe plus !");
-                message.getNode("TARGET_HOME_NOT_EXIST").setValue(msg);
+                msg.add("&eVous \352tes seulement autoris\351 \340 poss\351der %var1% home");
+                message.getNode("NB_ALLOWED_HOME").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&cHome introuvable !");
+                msg.add("&cVeuillez utiliser la commande /sethome pour le d\351finir");
+                message.getNode("HOME_NOT_FOUND").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&cUne erreur est survenue avec votre Home, t\351l\351portation impossible !");
+                message.getNode("HOME_ERROR").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
                 msg.add("&eT\351l\351portation sur votre home : &6%var1%");
-                message.getNode("TP_TO_HOME").setValue(msg);
+                message.getNode("HOME_TP_SUCCESS").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&cCe monde existe d\351j\340Ã‚Â ");
-                message.getNode("WORLD_EXIST").setValue(msg);
-                manager.save(message);
-                
-                msg = new ArrayList<>();
-                msg.add("&6%var1% &ca \351t\351 cr\351\351 avec succ\350s");
-                message.getNode("WORLD_CREATED").setValue(msg);
-                manager.save(message);
-                
-                msg = new ArrayList<>();
-                msg.add("&cle home &6%var1% &ca \351t\351 cr\351\351 avec succ\350s");
-                message.getNode("HOME_AS_BEEN_SET").setValue(msg);
-                manager.save(message);
-                
-                msg = new ArrayList<>();
-                msg.add("&cvous poss\351dez actuellement &6%var1% sur %var2% &cHome possible");
-                message.getNode("NB_HOME_ALLOWED").setValue(msg);
-                manager.save(message);
-                    
-                msg = new ArrayList<>();
-                msg.add("&6%name% &cn'est pas connect\351");
+                msg.add("&4%name% &cest introuvable, v\351rifiez l'\351criture");
                 message.getNode("PLAYER_NOT_FOUND").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&6%var1% &cn'existe pas ou n'est pas actif");
-                message.getNode("WORLD_NOT_EXIST").setValue(msg);
+                msg.add("&cCe monde existe d\351j\340");
+                message.getNode("WORLD_ALREADY_EXIST").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&c%var1% a \351t\351 cr\351\351 avec succ\350s");
+                message.getNode("WORLD_CREATED").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&4%var1% &cest introuvable");
+                message.getNode("WORLD_NOT_FOUND").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&4%ERREUR : &cLe monde n'a pas pu \352tre cr\351\351");
+                message.getNode("WORLD_CREATION_ERROR").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&4%ERREUR : &cLes propri\351t\351s du monde ne peuvent pas \352tre cr\351\351s");
+                message.getNode("WORLD_PROPERTIES_ERROR").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
@@ -455,31 +469,35 @@ public class MessageManager {
     
     public static Text PARCEL_SECURE(){return format(PARCEL_SECURE, "PARCEL_SECURE");}
     
-    public static Text HOME_EXIST(){return format(HOME_EXIST, "HOME_EXIST");}
+    public static Text HOME_ALREADY_EXIST(){return format(HOME_ALREADY_EXIST, "HOME_ALREADY_EXIST");}
     
-    public static Text ALLOW_HOME(Player player, String var1){return format(ALLOW_HOME, "ALLOW_HOME", player, var1, "");}
+    public static Text HOME_SET_SUCCESS(Player player, String var1){return format(HOME_SET_SUCCESS, "HOME_SET_SUCCESS",player,var1,"");}
     
-    public static Text HOME_NOT_EXIST(){return format(HOME_NOT_EXIST, "HOME_NOT_EXIST");}
+    public static Text NB_HOME(Player player, String var1, String var2){return format(NB_HOME, "NB_HOME",player,var1,var2);}
     
-    public static Text TARGET_HOME_NOT_EXIST(){return format(TARGET_HOME_NOT_EXIST, "TARGET_HOME_NOT_EXIST");}
+    public static Text NB_ALLOWED_HOME(Player player, String var1){return format(NB_ALLOWED_HOME, "NB_ALLOWED_HOME", player, var1, "");}
     
-    public static Text TP_TO_HOME(Player player, String var1){return format(TP_TO_HOME, "TP_TO_HOME", player, var1, "");}
+    public static Text HOME_NOT_FOUND(){return format(HOME_NOT_FOUND, "HOME_NOT_FOUND");}
     
-    public static Text WORLD_EXIST(){return format(WORLD_EXIST, "WORLD_EXIST");}
+    public static Text HOME_ERROR(){return format(HOME_ERROR, "HOME_ERROR");}
     
-    public static Text WORLD_CREATED(Player player, String var1){return format(WORLD_CREATED, "WORLD_CREATED",player,var1,"");}
-    
-    public static Text HOME_AS_BEEN_SET(Player player, String var1){return format(HOME_AS_BEEN_SET, "HOME_AS_BEEN_SET",player,var1,"");}
-    
-    public static Text NB_HOME_ALLOWED(Player player, String var1, String var2){return format(NB_HOME_ALLOWED, "NB_HOME_ALLOWED",player,var1,var2);}
+    public static Text HOME_TP_SUCCESS(Player player, String var1){return format(HOME_TP_SUCCESS, "HOME_TP_SUCCESS", player, var1, "");}
     
     public static Text PLAYER_NOT_FOUND(Player player){return format(PLAYER_NOT_FOUND, "PLAYER_NOT_FOUND",player);}
+    
+    public static Text WORLD_ALREADY_EXIST(){return format(WORLD_ALREADY_EXIST, "WORLD_ALREADY_EXIST");}
+    
+    public static Text WORLD_CREATED(Player player, String var1){return format(WORLD_CREATED, "WORLD_CREATED",player,var1,"");}
     
     public static Text TELEPORTED_TO_WORLD(Player player, String var1){return format(TELEPORTED_TO_WORLD, "TELEPORTED_TO_WORLD",player,var1,"");}
     
     public static Text OTHER_TELEPORTED_TO_WORLD(Player player, String var1){return format(TELEPORTED_TO_WORLD, "TELEPORTED_TO_WORLD",player,var1,"");}
     
-    public static Text WORLD_NOT_EXIST(Player player, String var1){return format(WORLD_NOT_EXIST, "WORLD_NOT_EXIST",player,var1,"");}
+    public static Text WORLD_NOT_FOUND(Player player, String var1){return format(WORLD_NOT_FOUND, "WORLD_NOT_FOUND",player,var1,"");}
+    
+    public static Text WORLD_PROPERTIES_ERROR(){return format(WORLD_PROPERTIES_ERROR, "WORLD_PROPERTIES_ERROR");}
+    
+    public static Text WORLD_CREATION_ERROR(){return format(WORLD_CREATION_ERROR, "WORLD_CREATION_ERROR");}
     
     public static Text PROTECT_PORTAL(){return format(PROTECT_PORTAL, "PROTECT_PORTAL");}
     

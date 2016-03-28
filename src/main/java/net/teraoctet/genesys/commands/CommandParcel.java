@@ -1,9 +1,7 @@
 package net.teraoctet.genesys.commands;
 
-import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
-import net.teraoctet.genesys.player.GPlayer;
 import static org.spongepowered.api.Sponge.getGame;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;

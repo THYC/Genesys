@@ -1,10 +1,10 @@
 package net.teraoctet.genesys.commands;
 
 import java.util.Optional;
-import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static net.teraoctet.genesys.utils.MessageManager.KILLED_BY;
 import static net.teraoctet.genesys.utils.MessageManager.SUICIDE;
+import static net.teraoctet.genesys.utils.MessageManager.USAGE;
 import static org.spongepowered.api.Sponge.getGame;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -35,7 +35,7 @@ public class CommandKill implements CommandExecutor {
             return CommandResult.success();
         } else {
             if(sender instanceof Player == false) { 
-                sender.sendMessage(NO_CONSOLE()); 
+                sender.sendMessage(USAGE("/kill <player>")); 
             } else {
                 Player player = (Player) sender;
                 player.offer(Keys.HEALTH, 0d);

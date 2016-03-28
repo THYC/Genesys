@@ -6,7 +6,9 @@ import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static net.teraoctet.genesys.utils.MessageManager.USAGE;
 import static net.teraoctet.genesys.utils.MessageManager.WORLD_CREATED;
-import static net.teraoctet.genesys.utils.MessageManager.WORLD_EXIST;
+import static net.teraoctet.genesys.utils.MessageManager.WORLD_ALREADY_EXIST;
+import static net.teraoctet.genesys.utils.MessageManager.WORLD_CREATION_ERROR;
+import static net.teraoctet.genesys.utils.MessageManager.WORLD_PROPERTIES_ERROR;
 import net.teraoctet.genesys.world.GWorld;
 import net.teraoctet.genesys.world.WorldManager;
 
@@ -56,7 +58,7 @@ public class CommandWorldCreate implements CommandExecutor {
 	String gamemodeI = ctx.<String> getOne("gamemode").get();
 	String difficultyI = ctx.<String> getOne("difficulty").get();
         
-        if(getGame().getServer().getWorld(name).isPresent()) {sender.sendMessage(WORLD_EXIST()); return CommandResult.success();}
+        if(getGame().getServer().getWorld(name).isPresent()) {sender.sendMessage(WORLD_ALREADY_EXIST()); return CommandResult.success();}
 
         Difficulty difficulty;
 	DimensionType dimension;
@@ -88,7 +90,7 @@ public class CommandWorldCreate implements CommandExecutor {
             default: sender.sendMessage(MESSAGE("&6<Difficulty> = &7easy, hard, normal, peaceful"));return CommandResult.success();
         }
 		
-        sender.sendMessage(MESSAGE("&7Creation du monde en cours ..."));
+        sender.sendMessage(MESSAGE("&cCr\351ation du monde en cours ..."));
             
         WorldCreationSettings worldSettings = getGame().getRegistry().createBuilder(WorldCreationSettings.Builder.class)
                 .name(name)
@@ -107,7 +109,7 @@ public class CommandWorldCreate implements CommandExecutor {
             if(world.isPresent()) {
                 world.get().getProperties().setDifficulty(difficulty);
                 GWorld w = new GWorld(
-                name, world.get().getUniqueId().toString(),"Vous etes sur " + name,
+                name, world.get().getUniqueId().toString(),"Vous \352tes sur " + name,
                 "&c[" + name + "] ", Difficulties.EASY, gamemode, true, true, 
                 true, world.get().getSpawnLocation(), 0, 2);
                 addWorld(name, w);
@@ -115,10 +117,10 @@ public class CommandWorldCreate implements CommandExecutor {
                 sender.sendMessage(WORLD_CREATED(player,name));
 
             } else {
-                sender.sendMessage(Text.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "The world could not be created."));
+                sender.sendMessage(WORLD_CREATION_ERROR());
             }
         } else {
-            sender.sendMessage(Text.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "The world properties could not be created."));
+            sender.sendMessage(WORLD_PROPERTIES_ERROR());
         }
         return CommandResult.success();
     }

@@ -6,7 +6,7 @@ import static net.teraoctet.genesys.utils.MessageManager.OTHER_TELEPORTED_TO_WOR
 import static net.teraoctet.genesys.utils.MessageManager.PLAYER_NOT_FOUND;
 import static net.teraoctet.genesys.utils.MessageManager.TELEPORTED_TO_WORLD;
 import static net.teraoctet.genesys.utils.MessageManager.USAGE;
-import static net.teraoctet.genesys.utils.MessageManager.WORLD_NOT_EXIST;
+import static net.teraoctet.genesys.utils.MessageManager.WORLD_NOT_FOUND;
 import net.teraoctet.genesys.world.GWorld;
 
 import static org.spongepowered.api.Sponge.getGame;
@@ -44,14 +44,14 @@ public class CommandWorldTP implements CommandExecutor {
         } 
                 
         if(!getGame().getServer().getWorld(worldName).isPresent()) { 
-            sender.sendMessage(WORLD_NOT_EXIST(player,worldName));return CommandResult.success(); 
+            sender.sendMessage(WORLD_NOT_FOUND(player,worldName));return CommandResult.success(); 
         }
         
         World world = getGame().getServer().getWorld(worldName).get(); 
         GWorld gworld = GData.getWorld(worldName);
         
         if(gworld == null) {
-            sender.sendMessage(WORLD_NOT_EXIST(player,worldName));return CommandResult.success();
+            sender.sendMessage(WORLD_NOT_FOUND(player,worldName));return CommandResult.success();
         }
                         
         if(!ctx.getOne("target").isPresent()) {		
