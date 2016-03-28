@@ -176,6 +176,13 @@ public class CommandManager {
                 .executor(new CommandHome())
                 .build();
         
+        public CommandSpec CommandDelhome = CommandSpec.builder()
+                .description(Text.of("/delhome [home]"))
+                .arguments(GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.string(Text.of("home")))))
+                .permission("genesys.delhome")
+                .executor(new CommandDelhome())
+                .build();
+        
         public CommandSpec CommandBack = CommandSpec.builder()
                 .description(Text.of("/back"))
                 .permission("genesys.back")
@@ -218,6 +225,14 @@ public class CommandManager {
                     GenericArguments.optional(GenericArguments.player(Text.of("player")))))
                 .permission("genesys.clearinventory")
                 .executor(new CommandClearinventory())
+                .build();
+        
+        public CommandSpec CommandInvsee = CommandSpec.builder()
+                .description(Text.of("/invsee [player]"))
+                .arguments(GenericArguments.seq(
+                    GenericArguments.onlyOne(GenericArguments.player(Text.of("target")))))
+                .permission("genesys.invsee")
+                .executor(new CommandInvsee())
                 .build();
         
         public CommandSpec CommandTest = CommandSpec.builder()

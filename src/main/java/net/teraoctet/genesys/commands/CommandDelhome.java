@@ -1,31 +1,29 @@
 package net.teraoctet.genesys.commands;
 
-import com.flowpowered.math.vector.Vector3d;
 import java.util.Optional;
-import net.teraoctet.genesys.utils.DeSerialize;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import net.teraoctet.genesys.utils.GHome;
 import net.teraoctet.genesys.player.GPlayer;
+import static net.teraoctet.genesys.utils.GData.commit;
+import static net.teraoctet.genesys.utils.MessageManager.HOME_DEL_SUCCESS;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static net.teraoctet.genesys.utils.MessageManager.HOME_NOT_FOUND;
-import static net.teraoctet.genesys.utils.MessageManager.HOME_ERROR;
-import static net.teraoctet.genesys.utils.MessageManager.HOME_TP_SUCCESS;
+import static net.teraoctet.genesys.utils.MessageManager.USAGE;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.world.Location;
 
-public class CommandHome implements CommandExecutor {
+public class CommandDelhome implements CommandExecutor {
     
     @Override
     public CommandResult execute(CommandSource sender, CommandContext ctx) throws CommandException {
 
         Player player = (Player) sender;
-        if(!player.hasPermission("genesys.home")) { 
+        if(!player.hasPermission("genesys.delhome")) { 
             sender.sendMessage(NO_PERMISSIONS()); 
             return CommandResult.success(); 
         }
@@ -49,21 +47,11 @@ public class CommandHome implements CommandExecutor {
             sender.sendMessage(HOME_NOT_FOUND()); 
             return CommandResult.success(); 
         }
-        Location lastLocation = player.getLocation();
         
-        if(!player.transferToWorld(ghome.getWorld(), new Vector3d(ghome.getX(), ghome.getY(), ghome.getZ()))) { 
-            sender.sendMessage(HOME_ERROR()); 
-            return CommandResult.success(); 
-        }
-        
-        gplayer.setLastposition(DeSerialize.location(lastLocation));
-        gplayer.update();
-        
-        if (homename.equalsIgnoreCase("default")){
-            sender.sendMessage(HOME_TP_SUCCESS(player,""));
-        } else {
-            sender.sendMessage(HOME_TP_SUCCESS(player,homename));
-        }
+        ghome.delete();
+        gplayer.removeGHome(homename);
+        commit();
+        sender.sendMessage(HOME_DEL_SUCCESS(player,""));
         return CommandResult.success();
     }
 }

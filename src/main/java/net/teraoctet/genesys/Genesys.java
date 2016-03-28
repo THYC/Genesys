@@ -69,11 +69,13 @@ public class Genesys {
 	getGame().getCommandManager().register(this, new CommandManager().CommandFly, "fly", "vole");
 	getGame().getCommandManager().register(this, new CommandManager().CommandSetHome, "sethome", "homeset");
 	getGame().getCommandManager().register(this, new CommandManager().CommandHome, "home");
+        getGame().getCommandManager().register(this, new CommandManager().CommandDelhome, "delhome");
 	getGame().getCommandManager().register(this, new CommandManager().CommandBack, "back", "gsback", "reviens");
 	getGame().getCommandManager().register(this, new CommandManager().CommandLevel, "level");
         getGame().getCommandManager().register(this, new CommandManager().CommandWorldCreate, "worldcreate", "createworld");
 	getGame().getCommandManager().register(this, new CommandManager().CommandWorldTP, "worldtp", "tpworld");
         getGame().getCommandManager().register(this, new CommandManager().CommandClearinventory, "clearinventory", "ci");
+        getGame().getCommandManager().register(this, new CommandManager().CommandInvsee, "invsee", "is");
 	getGame().getCommandManager().register(this, new CommandManager().CommandTest, "test");
         
         CommandSpec CommandRocket = CommandSpec.builder() 

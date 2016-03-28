@@ -49,6 +49,7 @@ public class MessageManager {
     private static Text MISSING_BALANCE;
     private static Text HOME_ALREADY_EXIST;
     private static Text HOME_SET_SUCCESS;
+    private static Text HOME_DEL_SUCCESS;
     private static Text NB_HOME;
     private static Text NB_ALLOWED_HOME;
     private static Text HOME_NOT_FOUND;
@@ -222,6 +223,11 @@ public class MessageManager {
                 msg = new ArrayList<>();
                 msg.add("&eLe home &6%var1% &ea \351t\351 cr\351\351 avec succ\350s");
                 message.getNode("HOME_SET_SUCCESS").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&eLe home &6%var1% &ea \351t\351 supprim\351 avec succ\350s");
+                message.getNode("HOME_DEL_SUCCESS").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
@@ -512,6 +518,8 @@ public class MessageManager {
     public static Text HOME_ALREADY_EXIST(){return format(HOME_ALREADY_EXIST, "HOME_ALREADY_EXIST");}
     
     public static Text HOME_SET_SUCCESS(Player player, String var1){return format(HOME_SET_SUCCESS, "HOME_SET_SUCCESS",player,var1,"");}
+    
+    public static Text HOME_DEL_SUCCESS(Player player, String var1){return format(HOME_DEL_SUCCESS, "HOME_DEL_SUCCESS",player,var1,"");}
     
     public static Text NB_HOME(Player player, String var1, String var2){return format(NB_HOME, "NB_HOME",player,var1,var2);}
     
