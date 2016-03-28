@@ -21,7 +21,9 @@ public class MessageManager {
     private static Text NO_PERMISSIONS;
     private static Text NO_CONSOLE;
     private static Text JOIN_MESSAGE;
+    private static Text EVENT_LOGIN_MESSAGE;
     private static Text FIRSTJOIN_MESSAGE;
+    private static Text FIRSTJOIN_BROADCAST_MESSAGE;
     private static Text NAME_CHANGE;
     private static Text SUN_MESSAGE;
     private static Text RAIN_MESSAGE;
@@ -63,6 +65,10 @@ public class MessageManager {
     private static Text TP_BACK;
     private static Text INVENTORY_CLEARED;
     private static Text CLEARINVENTORY_SUCCESS;
+    private static Text FLY_ENABLED;
+    private static Text FLY_DISABLED;
+    private static Text FLY_GIVEN;
+    private static Text FLY_RETIRED;
     private static Text KILLED_BY;
     private static Text SUICIDE;
        
@@ -76,12 +82,12 @@ public class MessageManager {
                 file.createNewFile();
                 
                 List<String> msg = new ArrayList<>();
-                msg.add("&6Vous n'avez pas la permission pour utiliser cette commande !");
+                msg.add("&cVous n'avez pas la permission pour utiliser cette commande !");
                 message.getNode("NO_PERMISSIONS").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&6Cette commande ne peut pas s'ex\351cuter sur la console");
+                msg.add("&cCette commande ne peut pas s'ex\351cuter sur la console");
                 message.getNode("NO_CONSOLE").setValue(msg);
                 manager.save(message);
                                 
@@ -93,11 +99,21 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
+                msg.add("&7%name% a rejoint le serveur");
+                message.getNode("EVENT_LOGIN_MESSAGE").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
                 msg.add("&eSalut &6%name%&e, c'est visiblement la premi\350re fois que tu viens !");
                 msg.add("&7Assure-toi d'avoir bien lu le r\350glement en tapant &e/rules");
                 msg.add("&7Si tu veux participer \340 la vie du serveur ou te tenir inform\351");
                 msg.add("&7inscris-toi sur notre forum &bhttp://craft.teraoctet.net\n");
                 message.getNode("FIRSTJOIN_MESSAGE").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&9%name% est nouveau sur le serveur !");
+                message.getNode("FIRSTJOIN_BROADCAST_MESSAGE").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
@@ -290,8 +306,28 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&eL'inventaire de %var1% a \351t\351 supprim\351");
+                msg.add("&eL'inventaire de &6%var1% a \351t\351 supprim\351");
                 message.getNode("CLEARINVENTORY_SUCCESS").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&eFly activ\351");
+                message.getNode("FLY_ENABLED").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&eFly d\351sactiv\351");
+                message.getNode("FLY_DISABLED").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&eVous avez activ\351 le fly de &6%var1%");
+                message.getNode("FLY_GIVEN").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&eVous avez d\351sactiv\351 le fly de &6%var1%");
+                message.getNode("FLY_RETIRED").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
@@ -420,8 +456,12 @@ public class MessageManager {
     public static Text NO_CONSOLE(){return format(NO_CONSOLE, "NO_CONSOLE");}
     
     public static Text JOIN_MESSAGE(Player player){return format(JOIN_MESSAGE, "JOIN_MESSAGE", player);}
+    
+    public static Text EVENT_LOGIN_MESSAGE(Player player){return format(EVENT_LOGIN_MESSAGE, "EVENT_LOGIN_MESSAGE", player);}
         
     public static Text FIRSTJOIN_MESSAGE(Player player){return format(FIRSTJOIN_MESSAGE, "FIRSTJOIN_MESSAGE", player);}
+    
+    public static Text FIRSTJOIN_BROADCAST_MESSAGE(Player player){return format(FIRSTJOIN_BROADCAST_MESSAGE, "FIRSTJOIN_BROADCAST_MESSAGE", player);}
     
     public static Text NAME_CHANGE(Player player){return format(NAME_CHANGE, "NAME_CHANGE", player);}
     
@@ -507,12 +547,20 @@ public class MessageManager {
     
     public static Text CLEARINVENTORY_SUCCESS(String target){return format(CLEARINVENTORY_SUCCESS, "CLEARINVENTORY_SUCCESS",target, "");}
     
+    public static Text FLY_ENABLED(){return format(FLY_ENABLED, "FLY_ENABLED");}
+    
+    public static Text FLY_DISABLED(){return format(FLY_DISABLED, "FLY_DISABLED");}
+    
+    public static Text FLY_GIVEN(String player){return format(FLY_GIVEN, "FLY_GIVEN",player, "");}
+    
+    public static Text FLY_RETIRED(String player){return format(FLY_RETIRED, "FLY_RETIRED",player, "");}
+    
     public static Text KILLED_BY(String player, String killer){return format(KILLED_BY, "KILLED_BY",player,killer);}
     
     public static Text SUICIDE(String player){return format(SUICIDE, "SUICIDE",player, "");}
                 
     public static Text USAGE(String usage){
-        Text USAGE = (Text.of(TextColors.YELLOW, "Usage: ", TextColors.GRAY, usage)); 
+        Text USAGE = (Text.of(TextColors.DARK_RED, "Usage: ", TextColors.RED, usage)); 
         return USAGE;
     }
     

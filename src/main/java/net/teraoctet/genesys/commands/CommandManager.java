@@ -157,6 +157,7 @@ public class CommandManager {
 
         public CommandSpec CommandFly = CommandSpec.builder()
                 .description(Text.of("/fly"))
+                .arguments(GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.player(Text.of("player")))))
                 .permission("genesys.fly")
                 .executor(new CommandFly())
                 .build();

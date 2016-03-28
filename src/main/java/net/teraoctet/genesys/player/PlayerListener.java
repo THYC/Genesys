@@ -18,6 +18,9 @@ import net.teraoctet.genesys.utils.GServer;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import net.teraoctet.genesys.utils.Permissions;
 import net.teraoctet.genesys.utils.DeSerialize;
+import static net.teraoctet.genesys.utils.MessageManager.FIRSTJOIN_BROADCAST_MESSAGE;
+import static net.teraoctet.genesys.utils.MessageManager.EVENT_LOGIN_MESSAGE;
+import static org.spongepowered.api.Sponge.getGame;
 
 import org.spongepowered.api.block.BlockTypes;
 import static org.spongepowered.api.block.BlockTypes.AIR;
@@ -50,12 +53,27 @@ public class PlayerListener {
     public PlayerListener() {}
     
     @Listener
+    public void onPlayerLogin(ClientConnectionEvent.Login event) {
+        Player player = (Player) event.getTargetUser();
+        String uuid = player.getUniqueId().toString();
+        String name = player.getName().toLowerCase();
+        
+        getGame().getServer().getBroadcastChannel().send(EVENT_LOGIN_MESSAGE(player));
+        GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
+        if(gplayer == null) {
+            getGame().getServer().getBroadcastChannel().send(FIRSTJOIN_BROADCAST_MESSAGE(player));
+        }
+    }
+    
+    @Listener
     public void onPlayerJoin(ClientConnectionEvent.Join event) {
     	
     	Player player = event.getTargetEntity();
         String uuid = player.getUniqueId().toString();
         String name = player.getName().toLowerCase();
-    	event.setMessage(JOIN_MESSAGE(player));
+        
+        event.setMessageCancelled(true);
+    	player.sendMessage(JOIN_MESSAGE(player));
     	
     	GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
         if(gplayer != null) {
@@ -64,7 +82,7 @@ public class PlayerListener {
             gplayer = new GPlayer(uuid, 0, name, "", 0, "", 20, "", "", System.currentTimeMillis(), System.currentTimeMillis());
             gplayer.insert();
             commit();
-            event.setMessage(FIRSTJOIN_MESSAGE(player));         		
+            player.sendMessage(FIRSTJOIN_MESSAGE(player));         		
         } 
 	
         GPlayer player_uuid = getGPlayer(uuid);

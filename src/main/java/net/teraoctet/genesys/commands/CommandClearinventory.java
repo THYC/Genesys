@@ -17,23 +17,26 @@ public class CommandClearinventory implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource sender, CommandContext ctx) throws CommandException {
         Optional<Player> player = ctx.<Player> getOne("player");
-        Player senderPlayer = (Player)sender;
         
         if(!sender.hasPermission("genesys.clearinventory")) { 
             sender.sendMessage(NO_PERMISSIONS()); 
             return CommandResult.success(); 
         }
         
-        if(!ctx.getOne("target").isPresent() && sender instanceof Player == false) { 
-            sender.sendMessage(USAGE("/clearinventory <player>"));
-            return CommandResult.success();
-        } 
-        
         if (player.isPresent()) { 
+            if(!sender.hasPermission("genesys.clearinventory.others")) { 
+                sender.sendMessage(NO_PERMISSIONS()); 
+                return CommandResult.success(); 
+            }
             player.get().getInventory().clear(); 
             player.get().sendMessage(INVENTORY_CLEARED());
-            senderPlayer.sendMessage(CLEARINVENTORY_SUCCESS(player.get().getName()));
+            sender.sendMessage(CLEARINVENTORY_SUCCESS(player.get().getName()));
         } else {
+            if(sender instanceof Player == false) {
+                sender.sendMessage(USAGE("/clearinventory <player>"));
+                return CommandResult.success(); 
+            }
+            Player senderPlayer = (Player)sender;
             senderPlayer.getInventory().clear();
             senderPlayer.sendMessage(INVENTORY_CLEARED());
         }
