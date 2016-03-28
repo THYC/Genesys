@@ -119,6 +119,7 @@ public class GPlayer {
         public double getTimejail() { return timejail; }
 	
 	public GHome getHome(String name) { if(homes == null) homes = new HashMap<>(); return homes.containsKey(name) ? homes.get(name) : null; }
+        public void removeGHome(String name) { if(homes.containsKey(name)) homes.remove(name); }
 	public HashMap<String, GHome> getHomes() { if(homes == null) homes = new HashMap<>(); return homes; }
 	public String getReply() { return reply; }
 	public HashMap<String, Double> getTPA() { return tpa; }

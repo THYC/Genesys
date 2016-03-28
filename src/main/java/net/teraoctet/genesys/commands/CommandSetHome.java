@@ -64,8 +64,13 @@ public class CommandSetHome implements CommandExecutor {
         ghome.insert();
         commit();
         gplayer.setHome(name, ghome);
-
-        sender.sendMessage(HOME_SET_SUCCESS(player,name));
+        
+        if(name.equalsIgnoreCase("default")){
+            sender.sendMessage(HOME_SET_SUCCESS(player,""));
+        } else {
+            sender.sendMessage(HOME_SET_SUCCESS(player,name));
+        }
+        
         if(!player.hasPermission("genesys.home.unlimited")) sender.sendMessage(NB_HOME(player,String.valueOf(homes.size()),"illimité"));
         else sender.sendMessage(NB_HOME(player,String.valueOf(homes.size()),String.valueOf(nbHomes)));
 
