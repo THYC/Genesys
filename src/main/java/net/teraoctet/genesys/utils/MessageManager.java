@@ -85,8 +85,7 @@ public class MessageManager {
                 msg = new ArrayList<>();
                 msg.add("&6Bienvenue, &e%name%!");
                 msg.add("&6Tu es sur la map &e%world%!");
-                msg.add("&7Assure toi d'avoir bien lu le r\350glement en tapant &e/rules");
-                msg.add("&7Bon jeu !");
+                msg.add("&7Bon jeu !\n");
                 message.getNode("JOIN_MESSAGE").setValue(msg);
                 manager.save(message);
                 
@@ -94,7 +93,7 @@ public class MessageManager {
                 msg.add("&eSalut &6%name%&e, c'est visiblement la premi\350re fois que tu viens !");
                 msg.add("&7Assure-toi d'avoir bien lu le r\350glement en tapant &e/rules");
                 msg.add("&7Si tu veux participer \340 la vie du serveur ou te tenir inform\351");
-                msg.add("&7inscris-toi sur notre forum &bhttp://craft.teraoctet.net");
+                msg.add("&7inscris-toi sur notre forum &bhttp://craft.teraoctet.net\n");
                 message.getNode("FIRSTJOIN_MESSAGE").setValue(msg);
                 manager.save(message);
                 
@@ -308,8 +307,13 @@ public class MessageManager {
         try { list = message.getNode(node).getList(TypeToken.of(String.class));
         } catch (ObjectMappingException ex) { Logger.getLogger(MessageManager.class.getName()).log(Level.SEVERE, null, ex);}
         String msg = "";
-        for(String s : list) { msg = msg + s + "\n"; }
-        
+        for(String s : list) {
+            if(s.equals(list.get(list.size()-1))){
+                msg = msg + s; 
+            } else {
+                msg = msg + s + "\n"; 
+            }       
+        }
         text = Text.builder().append(TextSerializers.formattingCode('&').deserialize(msg)).toText();
         return text;
     }
@@ -319,7 +323,13 @@ public class MessageManager {
         try { list = message.getNode(node).getList(TypeToken.of(String.class));
         } catch (ObjectMappingException ex) { Logger.getLogger(MessageManager.class.getName()).log(Level.SEVERE, null, ex);}
         String msg = "";
-        for(String s : list) { msg = msg + s + "\n"; }
+        for(String s : list) {
+            if(s.equals(list.get(list.size()-1))){
+                msg = msg + s; 
+            } else {
+                msg = msg + s + "\n"; 
+            }       
+        }
         msg = msg.replaceAll("%name%", player.getName());
         msg = msg.replaceAll("%world%", player.getWorld().getName());
         
@@ -332,7 +342,13 @@ public class MessageManager {
         try { list = message.getNode(node).getList(TypeToken.of(String.class));
         } catch (ObjectMappingException ex) { Logger.getLogger(MessageManager.class.getName()).log(Level.SEVERE, null, ex);}
         String msg = "";
-        for(String s : list) { msg = msg + s + "\n"; }
+        for(String s : list) {
+            if(s.equals(list.get(list.size()-1))){
+                msg = msg + s; 
+            } else {
+                msg = msg + s + "\n"; 
+            }       
+        }
         msg = msg.replaceAll("%name%", player.getName());
         msg = msg.replaceAll("%world%", player.getWorld().getName());
         msg = msg.replaceAll("%var1%", var1);
@@ -347,7 +363,13 @@ public class MessageManager {
         try { list = message.getNode(node).getList(TypeToken.of(String.class));
         } catch (ObjectMappingException ex) { Logger.getLogger(MessageManager.class.getName()).log(Level.SEVERE, null, ex);}
         String msg = "";
-        for(String s : list) { msg = msg + s + "\n"; }
+        for(String s : list) {
+            if(s.equals(list.get(list.size()-1))){
+                msg = msg + s; 
+            } else {
+                msg = msg + s + "\n"; 
+            }       
+        }
         msg = msg.replaceAll("%var1%", var1);
         msg = msg.replaceAll("%var2%", var2);
         
@@ -360,7 +382,13 @@ public class MessageManager {
         try { list = message.getNode(node).getList(TypeToken.of(String.class));
         } catch (ObjectMappingException ex) { Logger.getLogger(MessageManager.class.getName()).log(Level.SEVERE, null, ex);}
         String msg = "";
-        for(String s : list) { msg = msg + s + "\n"; }
+        for(String s : list) {
+            if(s.equals(list.get(list.size()-1))){
+                msg = msg + s; 
+            } else {
+                msg = msg + s + "\n"; 
+            }       
+        }
         msg = msg.replaceAll("%name%", player.getName());
         msg = msg.replaceAll("%world%", player.getWorld().getName());
         msg = msg.replaceAll("%allow%", allow);
@@ -473,7 +501,13 @@ public class MessageManager {
     public static Text MESSAGE(List<String> list, Player player, String var){
         Text MessageText = Text.of();
         String msg = "";
-        for(String s : list) { msg = msg + s + "\n"; }
+        for(String s : list) {
+            if(s.equals(list.get(list.size()-1))){
+                msg = msg + s; 
+            } else {
+                msg = msg + s + "\n"; 
+            }       
+        }
         msg = msg.replaceAll("%name%", player.getName());
         msg = msg.replaceAll("%world%", player.getWorld().getName());
         msg = msg.replaceAll("%var1%", var);
