@@ -70,11 +70,11 @@ public class MessageManager {
                 file.createNewFile();
                 
                 List<String> msg = new ArrayList<>();
-                msg.add("&6Je crois que tu n'a pas la permission d'utiliser cette commande !");
+                msg.add("&6Vous n'avez pas la permission pour utiliser cette commande !");
                 message.getNode("NO_PERMISSIONS").setValue(msg);
                 manager.save(message);
                 
-                msg.add("&6Ne peut demarrer sur la console");
+                msg.add("&6Cette commande ne peut s'ex\351cuter sur la console");
                 message.getNode("NO_CONSOLE").setValue(msg);
                 manager.save(message);
                                 
@@ -87,22 +87,26 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&6Si tu es fan de Minecraft, tu es le bienvenu, &e%name% !");
-                msg.add("&6C'est visiblement la premi\350re fois que tu viens");
-                msg.add("&7Assure toi d'avoir bien lu le r\350glement en tapant &e/rules");
-                msg.add("&7Si tu veux participer a la vie du serveur ou te tenir inform\351");
-                msg.add("&7inscrit toi sur notre forum &bhttp://craft.teraoctet.net");
+                msg.add("&eSalut &6%name%&e, c'est visiblement la premi\350re fois que tu viens !");
+                msg.add("&7Assure-toi d'avoir bien lu le r\350glement en tapant &e/rules");
+                msg.add("&7Si tu veux participer \340 la vie du serveur ou te tenir inform\351");
+                msg.add("&7inscris-toi sur notre forum &bhttp://craft.teraoctet.net");
                 message.getNode("FIRSTJOIN_MESSAGE").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&e%name% &6a mis le beau temps sur &e%world%");
+                msg.add("&e%name% &6a programm\351 le beau temps sur &e%world%");
                 message.getNode("SUN_MESSAGE").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&e%name% &6a mis la pluie sur &e%world%");
+                msg.add("&e%name% &6a programm\351 la pluie sur &e%world%");
                 message.getNode("RAIN_MESSAGE").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&e%name% &6a programm\351 l'orage sur &e%world%");
+                message.getNode("STORM_MESSAGE").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
@@ -114,27 +118,21 @@ public class MessageManager {
                 msg.add("&e%name% &6a mis la nuit sur &e%world%");
                 message.getNode("NIGHT_MESSAGE").setValue(msg);
                 manager.save(message);
-                
-                msg = new ArrayList<>();
-                msg.add("&e%name% &6a mis l'orage sur &e%world%");
-                message.getNode("STORM_MESSAGE").setValue(msg);
-                manager.save(message);
 
                 msg = new ArrayList<>();
-                msg.add("&6Le cout de la protection est de &e%var1% \351meraude");
-                msg.add("&6Que vous devez avoir sur votre compte !");
-                msg.add("&7Pour connaitre la somme qu'il vous reste tape &e/bank");
+                msg.add("&6Le co\373t pour prot\351ger cette parcelle est de &e%var1% \351meraudes");
+                msg.add("&6Vous poss\351dez actuellement x \351meraude(s) en banque");
                 message.getNode("AMOUNT_PARCEL").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&6La parcelle : &e%var1% &6 est maintenant prot\351g\351 : ");
+                msg.add("&6La parcelle : &e%var1% &6 est maintenant prot\351g\351e : ");
                 msg.add("&6Vous pouvez modifier les param\350tres avec la commande &e/parcel flag");
                 message.getNode("PROTECT_PARCEL").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&6La parcelle : &e%var1% &6 est maintenant prot\351g\351 de la bedrock jusqu'au ciel");
+                msg.add("&6La parcelle : &e%var1% &6 est maintenant prot\351g\351e de la bedrock jusqu'au ciel");
                 msg.add("&6Vous pouvez modifier les param\350tres avec la commande &e/parcel flag");
                 message.getNode("ALL_PROTECT_PARCEL").setValue(msg);
                 manager.save(message);
@@ -146,7 +144,8 @@ public class MessageManager {
                 
                 msg = new ArrayList<>();
                 msg.add("&aVous n'avez pas d\351fini les angles de votre parcelle");
-                msg.add("&aVous pouvez d\351finir les angles en utilisant la pelle en bois");
+                msg.add("&aLes angles se d\351finissent en utilisant une pelle en bois :");
+                msg.add("&aAngle1 = clic gauche / Angle2 = clic droit");
                 message.getNode("UNDEFINED_PARCEL").setValue(msg);
                 manager.save(message);
                                 
@@ -167,19 +166,19 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&cFly interdit sur cette parcelle");
+                msg.add("&cLe fly est interdit sur cette parcelle");
                 message.getNode("PROTECT_NO_FLY").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&cEntr\351e interdite");
+                msg.add("&cL'acc\350s \340 cette parcelle est interdit");
                 message.getNode("PROTECT_NO_ENTER").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
                 msg.add("&6Vous \352tes sur une parcelle proteg\351e : &e%parcel%");
                 msg.add("&6Propri\351taire : &e%owner%");
-                msg.add("&6Habitant : &e%allow%");
+                msg.add("&6Habitant(s) : &e%allow%");
                 message.getNode("INFO_PARCEL").setValue(msg);
                 manager.save(message);
                 
@@ -189,22 +188,22 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&eVous n'avez pas assez d'assez d'\351meraudes sur votre compte, tapez /bank pour voir votre solde");
+                msg.add("&eVous ne poss\351dez pas assez d'assez d'\351meraudes sur votre compte, tapez /bank pour voir votre solde");
                 message.getNode("MISSING_BALANCE").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&eCe home existe d\351j\340Ã‚Â , recommencez");
+                msg.add("&eHome d\351j\340 d\351fini, veuillez ressaisir la commande pour le changer");
                 message.getNode("HOME_EXIST").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&eVous \352tes seulement autoris\351 \340Ã‚Â  poss\351der %var1% maison(s)");
+                msg.add("&eVous \352tes seulement autoris\351 \340 poss\351der %var1% maison(s)");
                 message.getNode("ALLOW_HOME").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&cCe 'HOME' n'existe pas !");
+                msg.add("&cHome non d\351fini, veuillez taper la commande /sethome pour le d\351finir");
                 message.getNode("HOME_NOT_EXIST").setValue(msg);
                 manager.save(message);
                 
@@ -249,12 +248,12 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&ctu as \351t\351 teleport\351 sur &6%world%");
+                msg.add("&eT\351l\351portation sur : &6%world%");
                 message.getNode("TELEPORTED_TO_WORLD").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&6%name% &cas \350t\350 t\351l\351port\351 sur &6%world%");
+                msg.add("&6%name% &ea \350t\350 t\351l\351port\351 sur : &6%world%");
                 message.getNode("OTHER_TELEPORTED_TO_WORLD").setValue(msg);
                 manager.save(message);
                 
@@ -264,7 +263,7 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&6woshhhh...");
+                msg.add("&6Woshhhh ..!");
                 message.getNode("TP_BACK").setValue(msg);
                 manager.save(message);
                 
