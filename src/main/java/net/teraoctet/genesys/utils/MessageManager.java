@@ -59,6 +59,10 @@ public class MessageManager {
     private static Text TELEPORTED_TO_WORLD;
     private static Text PROTECT_PORTAL;
     private static Text TP_BACK;
+    private static Text INVENTORY_CLEARED;
+    private static Text CLEARINVENTORY_SUCCESS;
+    private static Text KILLED_BY;
+    private static Text SUICIDE;
        
     public static File file = new File("config/genesys/message.conf");
     public static final ConfigurationLoader<?> manager = HoconConfigurationLoader.builder().setFile(file).build();
@@ -253,7 +257,7 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&6%name% &ea \350t\350 t\351l\351port\351 sur : &6%world%");
+                msg.add("&6%name% &ea \351t\351 t\351l\351port\351 sur : &6%world%");
                 message.getNode("OTHER_TELEPORTED_TO_WORLD").setValue(msg);
                 manager.save(message);
                 
@@ -265,6 +269,26 @@ public class MessageManager {
                 msg = new ArrayList<>();
                 msg.add("&6Woshhhh ..!");
                 message.getNode("TP_BACK").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&cVotre inventaire a \351t\351 \351ffac\351");
+                message.getNode("INVENTORY_CLEARED").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&eL'inventaire de %var1% a \351t\351 supprim\351");
+                message.getNode("CLEARINVENTORY_SUCCESS").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&7%var1% a \351t\351 tu\351 par %var2%");
+                message.getNode("KILLED_BY").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&7%var1% s'est suicid\351");
+                message.getNode("SUICIDE").setValue(msg);
                 manager.save(message);
                 
             }
@@ -311,6 +335,19 @@ public class MessageManager {
         for(String s : list) { msg = msg + s + "\n"; }
         msg = msg.replaceAll("%name%", player.getName());
         msg = msg.replaceAll("%world%", player.getWorld().getName());
+        msg = msg.replaceAll("%var1%", var1);
+        msg = msg.replaceAll("%var2%", var2);
+        
+        text = Text.builder().append(TextSerializers.formattingCode('&').deserialize(msg)).toText();
+        return text;
+    }
+    
+    private static Text format(Text text, String node, String var1, String var2){
+        List<String> list = new ArrayList<>();
+        try { list = message.getNode(node).getList(TypeToken.of(String.class));
+        } catch (ObjectMappingException ex) { Logger.getLogger(MessageManager.class.getName()).log(Level.SEVERE, null, ex);}
+        String msg = "";
+        for(String s : list) { msg = msg + s + "\n"; }
         msg = msg.replaceAll("%var1%", var1);
         msg = msg.replaceAll("%var2%", var2);
         
@@ -419,6 +456,14 @@ public class MessageManager {
     public static Text PROTECT_PORTAL(){return format(PROTECT_PORTAL, "PROTECT_PORTAL");}
     
     public static Text TP_BACK(Player player){return format(TP_BACK, "TP_BACK",player);}
+    
+    public static Text INVENTORY_CLEARED(){return format(INVENTORY_CLEARED, "INVENTORY_CLEARED");}
+    
+    public static Text CLEARINVENTORY_SUCCESS(String target){return format(CLEARINVENTORY_SUCCESS, "CLEARINVENTORY_SUCCESS",target, "");}
+    
+    public static Text KILLED_BY(String player, String killer){return format(KILLED_BY, "KILLED_BY",player,killer);}
+    
+    public static Text SUICIDE(String player){return format(SUICIDE, "SUICIDE",player, "");}
                 
     public static Text USAGE(String usage){
         Text USAGE = (Text.of(TextColors.YELLOW, "Usage: ", TextColors.GRAY, usage)); 

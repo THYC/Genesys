@@ -73,6 +73,7 @@ public class Genesys {
 	getGame().getCommandManager().register(this, new CommandManager().CommandLevel, "level");
         getGame().getCommandManager().register(this, new CommandManager().CommandWorldCreate, "worldcreate", "createworld");
 	getGame().getCommandManager().register(this, new CommandManager().CommandWorldTP, "worldtp", "tpworld");
+        getGame().getCommandManager().register(this, new CommandManager().CommandClearinventory, "clearinventory", "ci");
 	getGame().getCommandManager().register(this, new CommandManager().CommandTest, "test");
         
         CommandSpec CommandRocket = CommandSpec.builder() 

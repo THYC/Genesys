@@ -211,6 +211,14 @@ public class CommandManager {
                 .executor(new CommandWorldTP())
                 .build();
         
+        public CommandSpec CommandClearinventory = CommandSpec.builder()
+                .description(Text.of("/clearinventory [player]"))
+                .arguments(GenericArguments.seq(
+                    GenericArguments.optional(GenericArguments.player(Text.of("player")))))
+                .permission("genesys.clearinventory")
+                .executor(new CommandClearinventory())
+                .build();
+        
         public CommandSpec CommandTest = CommandSpec.builder()
                 .description(Text.of("/test [arg0] [args1]"))
                 .arguments(GenericArguments.seq(

@@ -3,6 +3,9 @@ package net.teraoctet.genesys.commands;
 import java.util.Optional;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
+import static net.teraoctet.genesys.utils.MessageManager.KILLED_BY;
+import static net.teraoctet.genesys.utils.MessageManager.SUICIDE;
+import static org.spongepowered.api.Sponge.getGame;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -10,9 +13,6 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.chat.ChatTypes;
-import org.spongepowered.api.text.format.TextColors;
 
 public class CommandKill implements CommandExecutor {
     
@@ -27,11 +27,10 @@ public class CommandKill implements CommandExecutor {
 
         if (tplayer.isPresent()) {
             if(!sender.hasPermission("genesys.kills.others")) {
-                sender.sendMessage(Text.builder("Tu n'as pas la permission d'utiliser cette commande sur d'autres joueurs!").color(TextColors.RED).build());
+                sender.sendMessage(NO_PERMISSIONS()); 
             } else {
                 tplayer.get().offer(Keys.HEALTH, 0d);
-                sender.sendMessage(Text.of(TextColors.YELLOW, tplayer.get().getName(), TextColors.GRAY, " a été tué."));
-                tplayer.get().sendMessage(ChatTypes.CHAT,Text.of(TextColors.GRAY, "Tu as été tué par ", TextColors.YELLOW, sender.getName()));
+                getGame().getServer().getBroadcastChannel().send(KILLED_BY(tplayer.get().getName(), sender.getName()));
             }
             return CommandResult.success();
         } else {
@@ -40,7 +39,7 @@ public class CommandKill implements CommandExecutor {
             } else {
                 Player player = (Player) sender;
                 player.offer(Keys.HEALTH, 0d);
-                sender.sendMessage(Text.of(TextColors.YELLOW, "Tu ", TextColors.GRAY, "es mort."));
+                getGame().getServer().getBroadcastChannel().send(SUICIDE(sender.getName())); 
             }
         }
         return CommandResult.success();	 
