@@ -9,7 +9,6 @@ import static net.teraoctet.genesys.utils.MessageManager.USAGE;
 import static net.teraoctet.genesys.utils.MessageManager.WORLD_NOT_EXIST;
 import net.teraoctet.genesys.world.GWorld;
 
-import org.spongepowered.api.Game;
 import static org.spongepowered.api.Sponge.getGame;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -23,9 +22,6 @@ import org.spongepowered.api.world.World;
     
 public class CommandWorldTP implements CommandExecutor {
             
-    //public Game game;
-    //public CommandWorldTP(Game game) {this.game = game;}
-    
     @Override
     public CommandResult execute(CommandSource sender, CommandContext ctx) throws CommandException {
 	
@@ -34,25 +30,29 @@ public class CommandWorldTP implements CommandExecutor {
             player = (Player)sender;
             if(!player.hasPermission("genesys.world.worldtp")) { player.sendMessage(ChatTypes.CHAT,NO_PERMISSIONS()); return CommandResult.success();}
         }
-        
+        	 
+        if(!ctx.getOne("worldName").isPresent()) { 
+            sender.sendMessage(USAGE("/worldtp <world> [player]"));
+            return CommandResult.success();
+        }
+                
         String worldName = ctx.<String> getOne("worldName").get();
-	Player target = ctx.<Player> getOne("target").get();
-	 
-        if(!ctx.getOne("world").isPresent() && !ctx.getOne("target").isPresent()) { 
-            sender.sendMessage(USAGE("/worldtp <world> [player]"));
-            return CommandResult.success();
-        } 
         
-        if(ctx.getOne("world").isPresent() && !ctx.getOne("target").isPresent() && sender instanceof Player == false) { 
-            sender.sendMessage(USAGE("/worldtp <world> [player]"));
+        if(!ctx.getOne("target").isPresent() && sender instanceof Player == false) { 
+            sender.sendMessage(USAGE("/worldtp <world> <player>"));
             return CommandResult.success();
         } 
-
-        if(!getGame().getServer().getWorld(worldName).isPresent()) { sender.sendMessage(WORLD_NOT_EXIST(player,worldName));return CommandResult.success(); }
-        World world = getGame().getServer().getWorld(worldName).get();
-            
+                
+        if(!getGame().getServer().getWorld(worldName).isPresent()) { 
+            sender.sendMessage(WORLD_NOT_EXIST(player,worldName));return CommandResult.success(); 
+        }
+        
+        World world = getGame().getServer().getWorld(worldName).get(); 
         GWorld gworld = GData.getWorld(worldName);
-        if(gworld == null) {sender.sendMessage(WORLD_NOT_EXIST(player,worldName));return CommandResult.success();}
+        
+        if(gworld == null) {
+            sender.sendMessage(WORLD_NOT_EXIST(player,worldName));return CommandResult.success();
+        }
                         
         if(!ctx.getOne("target").isPresent()) {		
             player.setLocation(world.getSpawnLocation());
@@ -60,6 +60,8 @@ public class CommandWorldTP implements CommandExecutor {
             sender.sendMessage(TELEPORTED_TO_WORLD(player,worldName));
             return CommandResult.success();
         }
+        
+        Player target = ctx.<Player> getOne("target").get();
         
         if(!sender.hasPermission("genesys.admin.world.worldtp")) { sender.sendMessage(NO_PERMISSIONS()); return CommandResult.success();}
         	

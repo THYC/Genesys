@@ -129,11 +129,21 @@ public class CommandManager {
                 .executor(new CommandParcelOwnerset()) 
                 .build(); 
         
+        public CommandSpec CommandParcelList = CommandSpec.builder()
+                .description(Text.of("/parcel list [player]")) 
+                .permission("genesys.parcel.list") 
+                .arguments(
+                    GenericArguments.seq(
+                        GenericArguments.optional(GenericArguments.string(Text.of("player")))))
+                .executor(new CommandParcelList()) 
+                .build(); 
+        
         public CommandSpec CommandParcel = CommandSpec.builder()
                 .description(Text.of("/parcel")) 
                 .permission("genesys.parcel") 
                 .child(CommandParcelCreate, "create")
                 .child(CommandParcelCreateOK, "createok")
+                .child(CommandParcelList, "list")
                 .child(CommandParcelFlag, "flag")
                 .child(CommandParcelFlaglist, "flaglist")
                 .child(CommandParcelRemove, "remove")

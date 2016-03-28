@@ -122,7 +122,7 @@ public class ParcelManager {
         return this.border2;
     }
             
-    public Text listParcel(boolean flagJail){
+    public Text getListParcel(boolean flagJail){
         String listparcel = "";
         if (flagJail == true){
             for(GParcel jail : jails){
@@ -133,6 +133,18 @@ public class ParcelManager {
                 listparcel = listparcel + System.getProperty("line.separator") + parcel.getName();
             }
         }
+        Text text = Text.builder(listparcel).color(TextColors.GOLD).build();
+        return text;
+    }
+    
+    public Text getListParcel(String playerUUID){
+        String listparcel = "";
+        for(GParcel parcel : parcels){
+            if(parcel.getUuidOwner().equalsIgnoreCase(playerUUID)){
+                listparcel = listparcel + System.getProperty("line.separator") + parcel.getName();
+            }
+        }
+        
         Text text = Text.builder(listparcel).color(TextColors.GOLD).build();
         return text;
     }

@@ -31,7 +31,6 @@ public class CommandParcel implements CommandExecutor {
         }
         
         Player player = (Player) sender;
-        GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
 
         if(!player.hasPermission("genesys.parcel")) { 
             sender.sendMessage(NO_PERMISSIONS()); 
@@ -43,7 +42,8 @@ public class CommandParcel implements CommandExecutor {
 
         builder.title(Text.builder().append(TextSerializers.formattingCode('&').deserialize("&6Parcel")).toText())
             .contents(Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/parcel create <name> &5[strict] : &7creation d'une parcelle")).toText(),
-                Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/parcel remove &5[NomParcelle]: &7supprime une parcelle")).toText(),
+                Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/parcel list [player] : &7liste les parcelles appartenant au joueur")).toText(),
+                Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/parcel remove &5[NomParcelle] : &7supprime une parcelle")).toText(),
                 Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/parcel flaglist <NomParcelle> : &7liste les flags")).toText(),
                 Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/parcel flag <nameFlag]> <0|1> &5[NomParcelle] : &7modifie un flag")).toText(),
                 Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/parcel addplayer <player> &5[NomParcelle] : &7ajoute un habitant")).toText(),

@@ -39,6 +39,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.entity.HumanInventory;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
+import org.spongepowered.api.item.inventory.type.GridInventory;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 
@@ -162,7 +163,8 @@ public class PlayerListener {
             for (int i = 0, len = bar.size(); i < len; i++) {
                 Optional<ItemStack> optStack = bar.peek(i);
                 if (optStack.isPresent()) {
-                    chest.getInventory().set(optStack.get());
+                    chest.getInventory().query(GridInventory.class).offer(optStack.get());
+                    //chest.getInventory().set(optStack.get());
                 }
             }
             

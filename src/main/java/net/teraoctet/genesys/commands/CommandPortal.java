@@ -69,53 +69,7 @@ public class CommandPortal implements CommandExecutor {
            
             return CommandResult.success();	
         }
-        
-        if("createok".equalsIgnoreCase(args[0])) {
-            
-            Location[] c = {parcelManager.getBorder1(), parcelManager.getBorder2()};
-
-            Location <World> world = c[0];
-            String worldName = world.getExtent().getName();
-            String portalName = args[1];
-            int x1 = c[0].getBlockX();
-            int y1 = c[0].getBlockY();
-            int z1 = c[0].getBlockZ();
-            int x2 = c[1].getBlockX();
-            int y2 = c[1].getBlockY();
-            int z2 = c[1].getBlockZ();
-            String message = "&c.. vers l infini et au dela ...";
-
-            GPortal gportal = new GPortal(portalName,0,worldName,x1,y1,z1,x2,y2,z2,message);
-            gportal.insert();
-            GData.commit();
-            GData.addPortal(gportal);
-
-            player.sendMessage(ChatTypes.ACTION_BAR,PROTECT_LOADED_PARCEL(player,args[1]));
-            return CommandResult.success();
-        }
-        
-        if("create".equalsIgnoreCase(args[0])) {
-            if(args.length > 1){
-                String name = args[1];
-                if (portalManager.hasPortal(name) == false){
-                    Location[] c = {parcelManager.getBorder1(), parcelManager.getBorder2()};
-                    if ((c[0] == null) || (c[1] == null)){
-                        player.sendMessage(ChatTypes.CHAT,UNDEFINED_PARCEL());
-                        return CommandResult.success();
-                    }
-                    
-                    player.sendMessage(ChatTypes.CHAT,Text.builder("Click ici pour confirmer la création du portail").onClick(TextActions.runCommand("/portal createok " + name )).color(TextColors.AQUA).build());   
-                    return CommandResult.success();
-                } else {
-                    player.sendMessage(ChatTypes.CHAT,PARCEL_NAME_FAILED());
-                    return CommandResult.success();
-                }
-            } else {
-                player.sendMessage(ChatTypes.CHAT,USAGE("/portal create <name>"));
-                return CommandResult.success();
-            }
-        }
-                        
+                
         if("remove".equalsIgnoreCase(args[0])) {
             if(args.length > 1){
                 String name = args[1];

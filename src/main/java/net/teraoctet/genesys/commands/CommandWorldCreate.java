@@ -43,8 +43,11 @@ public class CommandWorldCreate implements CommandExecutor {
             if(!player.hasPermission("genesys.admin.world.worldcreate")) { player.sendMessage(ChatTypes.CHAT,NO_PERMISSIONS()); return CommandResult.success();}
         }
                 
-        if(!ctx.getOne("name").isPresent()) { 
+        if(!ctx.getOne("name").isPresent() || !ctx.getOne("environment").isPresent() || !ctx.getOne("gamemode").isPresent()) { 
             sender.sendMessage(USAGE("/worldcreate <name> <environnement> <gamemode> <difficulty>"));
+            sender.sendMessage(MESSAGE("&6<environment> = &7'overworld', 'flat', 'superflat', 'nether' ou 'end'"));
+            sender.sendMessage(MESSAGE("&6<gamemode> = &7survival, creative, adventure ou spectator"));
+            sender.sendMessage(MESSAGE("&6<Difficulty> = &7easy, hard, normal, peaceful"));
             return CommandResult.success();
         } 
         
