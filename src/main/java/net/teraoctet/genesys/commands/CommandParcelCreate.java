@@ -83,7 +83,7 @@ public class CommandParcelCreate implements CommandExecutor {
                 player.sendMessage(ChatTypes.CHAT,Text.builder("&bClick ici pour confirmer la création de ta parcelle").onClick(TextActions.runCommand("/p createok " + name + " " + amount + " " + strict)).color(TextColors.AQUA).build());   
                 return CommandResult.success();
             } else {
-                player.sendMessage(ChatTypes.CHAT,AMOUNT_PARCEL(player,String.valueOf(amount)));
+                player.sendMessage(ChatTypes.CHAT,AMOUNT_PARCEL(player,String.valueOf(amount),String.valueOf(gplayer.getMoney())));
                 return CommandResult.success();
             }
         } else {

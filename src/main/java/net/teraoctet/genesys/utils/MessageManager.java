@@ -124,7 +124,7 @@ public class MessageManager {
 
                 msg = new ArrayList<>();
                 msg.add("&6Le co\373t pour prot\351ger cette parcelle est de &e%var1% \351meraudes");
-                msg.add("&6Vous poss\351dez actuellement x \351meraude(s) en banque");
+                msg.add("&6Vous poss\351dez actuellement &e%var2% \351meraude(s) en banque");
                 message.getNode("AMOUNT_PARCEL").setValue(msg);
                 manager.save(message);
                 
@@ -392,7 +392,7 @@ public class MessageManager {
         msg = msg.replaceAll("%name%", player.getName());
         msg = msg.replaceAll("%world%", player.getWorld().getName());
         msg = msg.replaceAll("%allow%", allow);
-        msg = msg.replaceAll("%owner%", allow);
+        msg = msg.replaceAll("%owner%", owner);
         msg = msg.replaceAll("%parcel%", parcel);
         msg = msg.replaceAll("%var1%", var1);
         msg = msg.replaceAll("%var2%", var2);
@@ -421,7 +421,7 @@ public class MessageManager {
     
     public static Text STORM_MESSAGE(Player player){return format(STORM_MESSAGE, "STORM_MESSAGE", player);}
     
-    public static Text AMOUNT_PARCEL(Player player, String var1){return format(AMOUNT_PARCEL, "AMOUNT_PARCEL", player, var1, "");}
+    public static Text AMOUNT_PARCEL(Player player, String var1, String var2){return format(AMOUNT_PARCEL, "AMOUNT_PARCEL", player, var1, var2);}
     
     public static Text PROTECT_PARCEL(Player player, String var1){return format(PROTECT_PARCEL, "PROTECT_PARCEL", player, var1, "");}
     
