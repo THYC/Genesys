@@ -43,116 +43,116 @@ public class CommandManager {
                 .executor(new CommandNight())
                 .build();
                 
-        public CommandSpec CommandParcelCreate = CommandSpec.builder() 
-                .description(Text.of("/parcel create <name> [strict]")) 
-                .permission("genesys.parcel.create") 
+        public CommandSpec CommandPlotCreate = CommandSpec.builder() 
+                .description(Text.of("/plot create <name> [strict]")) 
+                .permission("genesys.plot.create") 
                 .arguments(
                     GenericArguments.seq(
                         GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))),
                         GenericArguments.optional(GenericArguments.string(Text.of("strict")))))
-                .executor(new CommandParcelCreate()) 
+                .executor(new CommandPlotCreate()) 
                 .build(); 
         
-        public CommandSpec CommandParcelCreateOK = CommandSpec.builder() 
-                .description(Text.of("use /parcel create <name> [strict]")) 
-                .permission("genesys.parcel.create") 
+        public CommandSpec CommandPlotCreateOK = CommandSpec.builder() 
+                .description(Text.of("use /plot create <name> [strict]")) 
+                .permission("genesys.plot.create") 
                 .arguments(
                     GenericArguments.seq(
                         GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))),
                         GenericArguments.onlyOne(GenericArguments.integer(Text.of("amount"))),
                         GenericArguments.onlyOne(GenericArguments.bool(Text.of("strict")))))
-                .executor(new CommandParcelCreateOK()) 
+                .executor(new CommandPlotCreateOK()) 
                 .build(); 
         
-        public CommandSpec CommandParcelFlag = CommandSpec.builder()
-                .description(Text.of("/parcel flag <flag> <0|1> [name]")) 
-                .permission("genesys.parcel.flag") 
+        public CommandSpec CommandPlotFlag = CommandSpec.builder()
+                .description(Text.of("/plot flag <flag> <0|1> [name]")) 
+                .permission("genesys.plot.flag") 
                 .arguments(
                     GenericArguments.seq(
                         GenericArguments.onlyOne(GenericArguments.string(Text.of("flag"))),
                         GenericArguments.onlyOne(GenericArguments.integer(Text.of("value"))),
                         GenericArguments.optional(GenericArguments.string(Text.of("name")))))
-                .executor(new CommandParcelFlag()) 
+                .executor(new CommandPlotFlag()) 
                 .build(); 
         
-        public CommandSpec CommandParcelFlaglist = CommandSpec.builder()
-                .description(Text.of("/parcel flaglist [name]")) 
-                .permission("genesys.parcel.flag")
+        public CommandSpec CommandPlotFlaglist = CommandSpec.builder()
+                .description(Text.of("/plot flaglist [name]")) 
+                .permission("genesys.plot.flag")
                 .arguments(GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.string(Text.of("name")))))
-                .executor(new CommandParcelFlaglist()) 
+                .executor(new CommandPlotFlaglist()) 
                 .build(); 
         
-        public CommandSpec CommandParcelRemove = CommandSpec.builder()
-                .description(Text.of("/parcel remove [name]")) 
-                .permission("genesys.parcel.remove")
+        public CommandSpec CommandPlotRemove = CommandSpec.builder()
+                .description(Text.of("/plot remove [name]")) 
+                .permission("genesys.plot.remove")
                 .arguments(GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.string(Text.of("name")))))
-                .executor(new CommandParcelRemove()) 
+                .executor(new CommandPlotRemove()) 
                 .build(); 
         
-        public CommandSpec CommandParcelSale = CommandSpec.builder()
-                .description(Text.of("/parcel sale <price> [name]")) 
-                .permission("genesys.parcel.sale") 
+        public CommandSpec CommandPlotSale = CommandSpec.builder()
+                .description(Text.of("/plot sale <price> [name]")) 
+                .permission("genesys.plot.sale") 
                 .arguments(
                     GenericArguments.seq(
                         GenericArguments.optional(GenericArguments.integer(Text.of("price"))),
                         GenericArguments.optional(GenericArguments.string(Text.of("name")))))
-                .executor(new CommandParcelSale()) 
+                .executor(new CommandPlotSale()) 
                 .build(); 
         
-        public CommandSpec CommandParcelAddplayer = CommandSpec.builder()
-                .description(Text.of("/parcel addplayer <player> [name]")) 
-                .permission("genesys.parcel.addplayer") 
+        public CommandSpec CommandPlotAddplayer = CommandSpec.builder()
+                .description(Text.of("/plot addplayer <player> [name]")) 
+                .permission("genesys.plot.addplayer") 
                 .arguments(
                     GenericArguments.seq(
                         GenericArguments.onlyOne(GenericArguments.player(Text.of("player"))),
                         GenericArguments.optional(GenericArguments.string(Text.of("name")))))
-                .executor(new CommandParcelAddplayer()) 
+                .executor(new CommandPlotAddplayer()) 
                 .build();
         
-        public CommandSpec CommandParcelRemoveplayer = CommandSpec.builder()
-                .description(Text.of("/parcel removeplayer <player> [name]")) 
-                .permission("genesys.parcel.removeplayer") 
+        public CommandSpec CommandPlotRemoveplayer = CommandSpec.builder()
+                .description(Text.of("/plot removeplayer <player> [name]")) 
+                .permission("genesys.plot.removeplayer") 
                 .arguments(
                     GenericArguments.seq(
                         GenericArguments.onlyOne(GenericArguments.player(Text.of("player"))),
                         GenericArguments.optional(GenericArguments.string(Text.of("name")))))
-                .executor(new CommandParcelRemoveplayer()) 
+                .executor(new CommandPlotRemoveplayer()) 
                 .build(); 
         
-        public CommandSpec CommandParcelOwnerset = CommandSpec.builder()
-                .description(Text.of("/parcel ownerset <player> [name]")) 
-                .permission("genesys.parcel.ownerset") 
+        public CommandSpec CommandPlotOwnerset = CommandSpec.builder()
+                .description(Text.of("/plot ownerset <player> [name]")) 
+                .permission("genesys.plot.ownerset") 
                 .arguments(
                     GenericArguments.seq(
                         GenericArguments.onlyOne(GenericArguments.player(Text.of("player"))),
                         GenericArguments.optional(GenericArguments.string(Text.of("name")))))
-                .executor(new CommandParcelOwnerset()) 
+                .executor(new CommandPlotOwnerset()) 
                 .build(); 
         
-        public CommandSpec CommandParcelList = CommandSpec.builder()
-                .description(Text.of("/parcel list [player]")) 
-                .permission("genesys.parcel.list") 
+        public CommandSpec CommandPlotList = CommandSpec.builder()
+                .description(Text.of("/plot list [player]")) 
+                .permission("genesys.plot.list") 
                 .arguments(
                     GenericArguments.seq(
                         GenericArguments.optional(GenericArguments.string(Text.of("player")))))
-                .executor(new CommandParcelList()) 
+                .executor(new CommandPlotList()) 
                 .build(); 
         
-        public CommandSpec CommandParcel = CommandSpec.builder()
-                .description(Text.of("/parcel")) 
-                .permission("genesys.parcel") 
-                .child(CommandParcelCreate, "create")
-                .child(CommandParcelCreateOK, "createok")
-                .child(CommandParcelList, "list")
-                .child(CommandParcelFlag, "flag")
-                .child(CommandParcelFlaglist, "flaglist")
-                .child(CommandParcelRemove, "remove")
-                .child(CommandParcelSale, "sale")
-                .child(CommandParcelAddplayer, "addplayer")
-                .child(CommandParcelRemoveplayer, "removeplayer")
-                .child(CommandParcelOwnerset, "ownerset")
+        public CommandSpec CommandPlot = CommandSpec.builder()
+                .description(Text.of("/plot")) 
+                .permission("genesys.plot") 
+                .child(CommandPlotCreate, "create")
+                .child(CommandPlotCreateOK, "createok")
+                .child(CommandPlotList, "list")
+                .child(CommandPlotFlag, "flag")
+                .child(CommandPlotFlaglist, "flaglist")
+                .child(CommandPlotRemove, "remove")
+                .child(CommandPlotSale, "sale")
+                .child(CommandPlotAddplayer, "addplayer")
+                .child(CommandPlotRemoveplayer, "removeplayer")
+                .child(CommandPlotOwnerset, "ownerset")
                 .arguments(GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.string(Text.of("arg")))))
-                .executor(new CommandParcel())
+                .executor(new CommandPlot())
                 .build();
 
         public CommandSpec CommandFly = CommandSpec.builder()

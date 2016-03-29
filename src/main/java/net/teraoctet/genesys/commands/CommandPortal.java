@@ -2,15 +2,9 @@ package net.teraoctet.genesys.commands;
 
 import java.util.Optional;
 import static net.teraoctet.genesys.Genesys.portalManager;
-import net.teraoctet.genesys.parcel.ParcelManager;
+import net.teraoctet.genesys.plot.PlotManager;
 import net.teraoctet.genesys.portal.GPortal;
 import net.teraoctet.genesys.utils.GData;
-import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
-import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
-import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
-import static net.teraoctet.genesys.utils.MessageManager.PARCEL_NAME_FAILED;
-import static net.teraoctet.genesys.utils.MessageManager.PROTECT_LOADED_PARCEL;
-import static net.teraoctet.genesys.utils.MessageManager.UNDEFINED_PARCEL;
 import static net.teraoctet.genesys.utils.MessageManager.USAGE;
 import org.spongepowered.api.Game;
 import static org.spongepowered.api.Sponge.getGame;
@@ -23,12 +17,12 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.service.pagination.PaginationList.Builder;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.chat.ChatTypes;
-import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
+import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
+import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
+import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
+import static net.teraoctet.genesys.utils.MessageManager.PLOT_NAME_ALREADY_USED;
 
 public class CommandPortal implements CommandExecutor {
     
@@ -38,7 +32,7 @@ public class CommandPortal implements CommandExecutor {
     public CommandResult execute(CommandSource sender, CommandContext ctx) throws CommandException {
 
         Player player = (Player) sender;
-        ParcelManager parcelManager = ParcelManager.getSett(player);
+        PlotManager plotManager = PlotManager.getSett(player);
         if(!player.hasPermission("genesys.admin.portal")) { 
                 sender.sendMessage(NO_PERMISSIONS()); 
                 return CommandResult.success(); 
@@ -57,12 +51,12 @@ public class CommandPortal implements CommandExecutor {
             Builder builder = paginationService.builder();
             
             builder.title(Text.builder().append(TextSerializers.formattingCode('&').deserialize("&6Portal")).toText())
-            .contents(Text.builder().append(TextSerializers.formattingCode('&').deserialize("&6/portal create <name> : &7creation d'un portail au point declare")).toText(),
+            .contents(Text.builder().append(TextSerializers.formattingCode('&').deserialize("&6/portal create <name> : &7cr\351ation d'un portail au point d\351clar\351")).toText(),
                 Text.builder().append(TextSerializers.formattingCode('&').deserialize("&6/portal remove <name> : &7supprime le portail")).toText(),
-                Text.builder().append(TextSerializers.formattingCode('&').deserialize("&6/portal tpfrom  <name> : &7enristre le point d'arrivé du portail")).toText(),
+                Text.builder().append(TextSerializers.formattingCode('&').deserialize("&6/portal tpfrom  <name> : &7enregistre le point d'arriv\351 du portail")).toText(),
                 Text.builder().append(TextSerializers.formattingCode('&').deserialize("&6/portal list : &7liste les portails")).toText(),
-                Text.builder().append(TextSerializers.formattingCode('&').deserialize("&6/portal message <name> : &7affiche le message d'arrivée du portail")).toText(),
-                Text.builder().append(TextSerializers.formattingCode('&').deserialize("&6/portal message <name> <message> : &7modifie le message d'arrivée du portail")).toText())
+                Text.builder().append(TextSerializers.formattingCode('&').deserialize("&6/portal message <name> : &7affiche le message d'arriv\351e du portail")).toText(),
+                Text.builder().append(TextSerializers.formattingCode('&').deserialize("&6/portal message <name> <message> : &7modifie le message d'arriv\351e du portail")).toText())
             .header(Text.builder().append(TextSerializers.formattingCode('&').deserialize("&eUsage:")).toText())
             .padding(Text.of("-"))
             .sendTo(sender);
@@ -78,9 +72,9 @@ public class CommandPortal implements CommandExecutor {
                     gportal.delete();
                     GData.commit();
                     GData.removePortal(gportal);
-                    player.sendMessage(ChatTypes.CHAT,MESSAGE("&e" + gportal.getName() + " &aa été supprimé"));
+                    player.sendMessage(ChatTypes.CHAT,MESSAGE("&e" + gportal.getName() + " &aa \351t\351 supprim\351"));
                 } else {
-                    player.sendMessage(ChatTypes.CHAT,PARCEL_NAME_FAILED());
+                    player.sendMessage(ChatTypes.CHAT,PLOT_NAME_ALREADY_USED());
                     return CommandResult.success();
                 }
             } else {
@@ -100,9 +94,9 @@ public class CommandPortal implements CommandExecutor {
                     gportal.settoZ(player.getLocation().getBlockZ());
                     gportal.update();
                     GData.commit();
-                    player.sendMessage(ChatTypes.CHAT,MESSAGE("&e" + gportal.getName() + ": &a point d'arrivé enregistré"));
+                    player.sendMessage(ChatTypes.CHAT,MESSAGE("&e" + gportal.getName() + ": &a point d'arriv\351 enregistr\351"));
                 } else {
-                    player.sendMessage(ChatTypes.CHAT,PARCEL_NAME_FAILED());
+                    player.sendMessage(ChatTypes.CHAT,PLOT_NAME_ALREADY_USED());
                     return CommandResult.success();
                 }
             } else {
@@ -138,7 +132,7 @@ public class CommandPortal implements CommandExecutor {
                         return CommandResult.success();
                     }     
                 } else {
-                    player.sendMessage(ChatTypes.CHAT,PARCEL_NAME_FAILED());
+                    player.sendMessage(ChatTypes.CHAT,PLOT_NAME_ALREADY_USED());
                     return CommandResult.success();
                 }   
             } else {

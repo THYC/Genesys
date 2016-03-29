@@ -1,4 +1,4 @@
-package net.teraoctet.genesys.parcel;
+package net.teraoctet.genesys.plot;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -21,10 +21,11 @@ import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
+import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 
-public class GParcel {
+public class GPlot {
     
-    private String parcelName;
+    private String plotName;
     private int level;
     private String world;
     private int x1;
@@ -49,11 +50,11 @@ public class GParcel {
     private String uuidOwner;
     private String uuidAllowed;
     
-    public GParcel(String parcelName, int level, String world, int x1, int y1, int z1, int x2, int y2, int z2, 
+    public GPlot(String plotName, int level, String world, int x1, int y1, int z1, int x2, int y2, int z2, 
     int jail, int noEnter, int noFly, int noBuild, int noBreak, int noTeleport, int noInteract, int noFire, 
     String message, int mode, int noMob, int noTNT, int noCommand, String uuidOwner, String uuidAllowed){
         
-        this.parcelName = parcelName;
+        this.plotName = plotName;
         this.level = level;
         this.world = world;
         this.x1 = x1;
@@ -79,8 +80,8 @@ public class GParcel {
         this.noCommand = noCommand;
     }
     
-    public GParcel(String world, int x1, int y1, int z1, int x2, int y2, int z2){
-        this.parcelName = "TMP";
+    public GPlot(String world, int x1, int y1, int z1, int x2, int y2, int z2){
+        this.plotName = "TMP";
         this.level = 0;
         this.world = world;
         this.x1 = x1;
@@ -107,21 +108,21 @@ public class GParcel {
     }
         
     public void insert() {
-	GData.queue("INSERT INTO gparcel VALUES ('" + parcelName + "', " + level + ", '" + world + "', " + x1 + ", " + y1 + ", " + z1
+	GData.queue("INSERT INTO gplot VALUES ('" + plotName + "', " + level + ", '" + world + "', " + x1 + ", " + y1 + ", " + z1
         + ", " + x2 + ", " + y2 + ", " + z2 + ", " + jail + ", " + noEnter + ", " + noFly + ", " + noBuild + ", " + noBreak + ", " + noTeleport 
         + ", " + noInteract + ", " + noFire + ", '" + message + "', " + mode + ", " + noMob + ", " + noTNT + ", " + noCommand + ", '" + uuidOwner + "', '" + uuidAllowed + "')");
     }
     
     public void addSale(Location loc) {
         String location = DeSerialize.location(loc);
-	GData.queue("INSERT INTO gplsale VALUES ('" + parcelName + "', '" + location + "')");
+	GData.queue("INSERT INTO gplsale VALUES ('" + plotName + "', '" + location + "')");
     }
     
     public void delSale() {
         try {
             Connection c = datasource.getConnection();
             Statement s = c.createStatement();
-            ResultSet rs = s.executeQuery("SELECT * FROM gplsale WHERE parcelName = '" + parcelName + "'");
+            ResultSet rs = s.executeQuery("SELECT * FROM gplsale WHERE plotName = '" + plotName + "'");
             while(rs.next()) {
                 Location loc = DeSerialize.getLocation(rs.getString("location"));
                 if (loc.getBlockType().equals(BlockTypes.STANDING_SIGN) || loc.getBlockType().equals(BlockTypes.WALL_SIGN)){
@@ -144,20 +145,20 @@ public class GParcel {
             s.close();
             c.close();
         } catch (SQLException e) {}
-	GData.queue("DELETE FROM gplsale WHERE parcelName = '" + parcelName + "'");
+	GData.queue("DELETE FROM gplsale WHERE plotName = '" + plotName + "'");
     }
     
 	
     public void update() {
-	GData.queue("UPDATE gparcel SET parcelName = '" + parcelName + "', level = " + level + ", world = '" + world 
+	GData.queue("UPDATE gplot SET plotName = '" + plotName + "', level = " + level + ", world = '" + world 
         + "', X1 = " + x1 + ", Y1 = " + y1 + ", Z1 = " + z1 + ", X2 = " + x2 + ", Y2 = " + y2 + ", Z2 = " + z2 + ", jail = " + jail 
         + ", noEnter = " + noEnter + ", noFly = " + noFly + ", noBuild = " + noBuild + ", noBreak = " + noBreak + ", noTeleport = " + noTeleport 
         + ", noInteract = " + noInteract + ", noFire = " + noFire + ", message = '" + message + "', mode = " + mode + ", uuidOwner = '" + uuidOwner 
-        + "', uuidAllowed = '" + uuidAllowed + "', noMob = " + noMob + ", noTNT = " + noTNT + ", noCommand = " + noTNT + " WHERE parcelName = '" + parcelName + "'");
+        + "', uuidAllowed = '" + uuidAllowed + "', noMob = " + noMob + ", noTNT = " + noTNT + ", noCommand = " + noTNT + " WHERE plotName = '" + plotName + "'");
     }
 	
     public void delete() {
-	GData.queue("DELETE FROM gparcel WHERE parcelName = '" + parcelName + "'");
+	GData.queue("DELETE FROM gplot WHERE plotName = '" + plotName + "'");
     }
     
     public String getFlag(){
@@ -179,7 +180,7 @@ public class GParcel {
     public void setUuidOwner(String uuidOwner){this.uuidOwner = uuidOwner;}
     public void setUuidAllowed(String uuidAllowed){this.uuidAllowed = uuidAllowed;}
     public void setNoInteract(int noInteract){this.noInteract = noInteract;}
-    public void setName(String parcelName){this.parcelName = parcelName;}
+    public void setName(String plotName){this.plotName = plotName;}
     public void setLevel(int level){this.level = level;}
     public void setworld(String world){this.world = world;}
     public void setX1(int x1){this.x1 = x1;}
@@ -204,7 +205,7 @@ public class GParcel {
     public String getUuidOwner(){return this.uuidOwner;}
     public String getUuidAllowed(){return this.uuidAllowed;}
     public int getNoInteract(){return this.noInteract;}
-    public String getName(){return this.parcelName;}
+    public String getName(){return this.plotName;}
     public int getLevel(){return this.level;}
     public String getworld(){return this.world;}
     public int getX1(){return this.x1;}

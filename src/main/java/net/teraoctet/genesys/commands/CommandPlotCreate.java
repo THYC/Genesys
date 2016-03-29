@@ -1,15 +1,8 @@
 package net.teraoctet.genesys.commands;
 
-import net.teraoctet.genesys.parcel.ParcelManager;
+import net.teraoctet.genesys.plot.PlotManager;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
-import static net.teraoctet.genesys.utils.MessageManager.AMOUNT_PARCEL;
-import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
-import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
-import static net.teraoctet.genesys.utils.MessageManager.PARCEL_NAME_FAILED;
-import static net.teraoctet.genesys.utils.MessageManager.RESERVED_PARCEL;
-import static net.teraoctet.genesys.utils.MessageManager.UNDEFINED_PARCEL;
 import net.teraoctet.genesys.player.GPlayer;
-import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.USAGE;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -22,8 +15,15 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
+import static net.teraoctet.genesys.utils.MessageManager.BUYING_COST_PLOT;
+import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
+import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
+import static net.teraoctet.genesys.utils.MessageManager.PLOT_NAME_ALREADY_USED;
+import static net.teraoctet.genesys.utils.MessageManager.ALREADY_OWNED_PLOT;
+import static net.teraoctet.genesys.utils.MessageManager.UNDEFINED_PLOT_ANGLES;
+import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 
-public class CommandParcelCreate implements CommandExecutor {
+public class CommandPlotCreate implements CommandExecutor {
            
     @Override
     public CommandResult execute(CommandSource sender, CommandContext ctx) throws CommandException {
@@ -31,8 +31,8 @@ public class CommandParcelCreate implements CommandExecutor {
         Player player = (Player) sender;
         GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
 
-        ParcelManager parcelManager = ParcelManager.getSett(player);
-        if(!player.hasPermission("genesys.parcel.create")) { 
+        PlotManager plotManager = PlotManager.getSett(player);
+        if(!player.hasPermission("genesys.plot.create")) { 
                 sender.sendMessage(NO_PERMISSIONS()); 
                 return CommandResult.success(); 
         }
@@ -43,23 +43,23 @@ public class CommandParcelCreate implements CommandExecutor {
         }
                 
         if(!ctx.getOne("name").isPresent()) { 
-            player.sendMessage(ChatTypes.CHAT,USAGE("/parcel create <name> [strict] : creation d'une parcelle"));
-            player.sendMessage(ChatTypes.CHAT,MESSAGE("&7option [strict] : protection sur les points déclares"));
+            player.sendMessage(ChatTypes.CHAT,USAGE("/plot create <name> [strict] : cr\351ation d'une parcelle"));
+            player.sendMessage(ChatTypes.CHAT,MESSAGE("&7option [strict] : protection sur les points d\351clar\351s"));
             return CommandResult.success();
         }
 
         String name = ctx.<String> getOne("name").get();
         Boolean strict = false;
 
-        if (parcelManager.hasParcel(name) == false){
-            Location[] c = {parcelManager.getBorder1(), parcelManager.getBorder2()};
+        if (plotManager.hasPlot(name) == false){
+            Location[] c = {plotManager.getBorder1(), plotManager.getBorder2()};
             if ((c[0] == null) || (c[1] == null)){
-                player.sendMessage(ChatTypes.CHAT,UNDEFINED_PARCEL());
+                player.sendMessage(ChatTypes.CHAT,UNDEFINED_PLOT_ANGLES());
                 return CommandResult.success();
             }
 
-            if(parcelManager.parcelAllow(parcelManager.getBorder1(), parcelManager.getBorder2())){
-                player.sendMessage(ChatTypes.CHAT,RESERVED_PARCEL());
+            if(plotManager.plotAllow(plotManager.getBorder1(), plotManager.getBorder2())){
+                player.sendMessage(ChatTypes.CHAT,ALREADY_OWNED_PLOT());
                 return CommandResult.success();
             }
 
@@ -79,15 +79,15 @@ public class CommandParcelCreate implements CommandExecutor {
                 if(ctx.getOne("strict").isPresent()){
                     if (ctx.<String> getOne("strict").get().equalsIgnoreCase("strict")) strict = true;
                 }
-                player.sendMessage(ChatTypes.CHAT,MESSAGE("&7Le cout de cette transaction est de : &e" + amount + " émeraudes"));
-                player.sendMessage(ChatTypes.CHAT,Text.builder("&bClick ici pour confirmer la création de ta parcelle").onClick(TextActions.runCommand("/p createok " + name + " " + amount + " " + strict)).color(TextColors.AQUA).build());   
+                player.sendMessage(ChatTypes.CHAT,MESSAGE("&7Le co\373t de cette transaction est de : &e" + amount + " \351meraudes"));
+                player.sendMessage(ChatTypes.CHAT,Text.builder("Clique ici pour confirmer la cr\351ation de ta parcelle").onClick(TextActions.runCommand("/p createok " + name + " " + amount + " " + strict)).color(TextColors.AQUA).build());   
                 return CommandResult.success();
             } else {
-                player.sendMessage(ChatTypes.CHAT,AMOUNT_PARCEL(player,String.valueOf(amount),String.valueOf(gplayer.getMoney())));
+                player.sendMessage(ChatTypes.CHAT,BUYING_COST_PLOT(player,String.valueOf(amount),String.valueOf(gplayer.getMoney())));
                 return CommandResult.success();
             }
         } else {
-            player.sendMessage(ChatTypes.CHAT,PARCEL_NAME_FAILED());
+            player.sendMessage(ChatTypes.CHAT,PLOT_NAME_ALREADY_USED());
             return CommandResult.success();
         }
     }

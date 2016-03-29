@@ -1,11 +1,7 @@
 package net.teraoctet.genesys.commands;
 
 import static net.teraoctet.genesys.Genesys.portalManager;
-import net.teraoctet.genesys.parcel.ParcelManager;
-import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
-import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
-import static net.teraoctet.genesys.utils.MessageManager.PARCEL_NAME_FAILED;
-import static net.teraoctet.genesys.utils.MessageManager.UNDEFINED_PARCEL;
+import net.teraoctet.genesys.plot.PlotManager;
 import static net.teraoctet.genesys.utils.MessageManager.USAGE;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -18,6 +14,10 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
+import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
+import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
+import static net.teraoctet.genesys.utils.MessageManager.PLOT_NAME_ALREADY_USED;
+import static net.teraoctet.genesys.utils.MessageManager.UNDEFINED_PLOT_ANGLES;
 
 public class CommandPortalCreate implements CommandExecutor {
            
@@ -25,7 +25,7 @@ public class CommandPortalCreate implements CommandExecutor {
     public CommandResult execute(CommandSource sender, CommandContext ctx) throws CommandException {
           
         Player player = (Player) sender;
-        ParcelManager parcelManager = ParcelManager.getSett(player);
+        PlotManager plotManager = PlotManager.getSett(player);
         if(!player.hasPermission("genesys.admin.portal")) { 
                 sender.sendMessage(NO_PERMISSIONS()); 
                 return CommandResult.success(); 
@@ -37,22 +37,22 @@ public class CommandPortalCreate implements CommandExecutor {
         }
         
          if(!ctx.getOne("name").isPresent()) { 
-            player.sendMessage(ChatTypes.CHAT,USAGE("/portal create <name> : creation d'un portail au point declare"));
+            player.sendMessage(ChatTypes.CHAT,USAGE("/portal create <name> : cr\351ation d'un portail au point d\351clar\351"));
             return CommandResult.success();
         }
 
         String name = ctx.<String> getOne("name").get();
 
         if (portalManager.hasPortal(name) == false){
-            Location[] c = {parcelManager.getBorder1(), parcelManager.getBorder2()};
+            Location[] c = {plotManager.getBorder1(), plotManager.getBorder2()};
             if ((c[0] == null) || (c[1] == null)){
-                player.sendMessage(ChatTypes.CHAT,UNDEFINED_PARCEL());
+                player.sendMessage(ChatTypes.CHAT,UNDEFINED_PLOT_ANGLES());
                 return CommandResult.success();
             }
                     
-            player.sendMessage(ChatTypes.CHAT,Text.builder("Click ici pour confirmer la création du portail").onClick(TextActions.runCommand("/portal createok " + name )).color(TextColors.AQUA).build());   
+            player.sendMessage(ChatTypes.CHAT,Text.builder("Clique ici pour confirmer la cr\351ation du portail").onClick(TextActions.runCommand("/portal createok " + name )).color(TextColors.AQUA).build());   
         } else {
-            player.sendMessage(ChatTypes.CHAT,PARCEL_NAME_FAILED());
+            player.sendMessage(ChatTypes.CHAT,PLOT_NAME_ALREADY_USED());
         } 
         return CommandResult.success();
     }                         

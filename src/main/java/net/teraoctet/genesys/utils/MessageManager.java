@@ -24,28 +24,29 @@ public class MessageManager {
     private static Text EVENT_LOGIN_MESSAGE;
     private static Text FIRSTJOIN_MESSAGE;
     private static Text FIRSTJOIN_BROADCAST_MESSAGE;
+    private static Text EVENT_DISCONNECT_MESSAGE;
     private static Text NAME_CHANGE;
     private static Text SUN_MESSAGE;
     private static Text RAIN_MESSAGE;
     private static Text DAY_MESSAGE;
     private static Text NIGHT_MESSAGE;
     private static Text STORM_MESSAGE;
-    private static Text AMOUNT_PARCEL;
-    private static Text PROTECT_PARCEL;
-    private static Text ALL_PROTECT_PARCEL;
-    private static Text PROTECT_LOADED_PARCEL;
-    private static Text UNDEFINED_PARCEL;
-    private static Text RESERVED_PARCEL;
-    private static Text PARCEL_NAME_FAILED;
-    private static Text NO_PARCEL;
-    private static Text PROTECT_NO_FLY;
-    private static Text PROTECT_NO_ENTER;
-    private static Text PROTECT_NO_BREAK;
-    private static Text PROTECT_NO_BUILD;
-    private static Text PROTECT_NO_FIRE;
-    private static Text PROTECT_NO_LEAVE;
-    private static Text INFO_PARCEL;
-    private static Text PARCEL_SECURE;
+    private static Text BUYING_COST_PLOT;
+    private static Text PROTECT_PLOT_SUCCESS;
+    private static Text BEDROCK2SKY_PROTECT_PLOT_SUCCESS;
+    private static Text PROTECT_LOADED_PLOT;
+    private static Text UNDEFINED_PLOT_ANGLES;
+    private static Text ALREADY_OWNED_PLOT;
+    private static Text PLOT_NAME_ALREADY_USED;
+    private static Text NO_PLOT;
+    private static Text PLOT_INFO;
+    private static Text PLOT_PROTECTED;
+    private static Text PLOT_NO_FLY;
+    private static Text PLOT_NO_ENTER;
+    private static Text PLOT_NO_BREAK;
+    private static Text PLOT_NO_BUILD;
+    private static Text PLOT_NO_FIRE;
+    private static Text PLOT_NO_EXIT;
     private static Text MISSING_BALANCE;
     private static Text HOME_ALREADY_EXIST;
     private static Text HOME_SET_SUCCESS;
@@ -118,6 +119,11 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
+                msg.add("&7%name% s'est d\351connect\351");
+                message.getNode("EVENT_DISCONNECT_MESSAGE").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
                 msg.add("&e%name% &6a programm\351 le beau temps sur &e%world%");
                 message.getNode("SUN_MESSAGE").setValue(msg);
                 manager.save(message);
@@ -145,69 +151,69 @@ public class MessageManager {
                 msg = new ArrayList<>();
                 msg.add("&6Le co\373t pour prot\351ger cette parcelle est de &e%var1% \351meraudes");
                 msg.add("&6Vous poss\351dez actuellement &e%var2% \351meraude(s) en banque");
-                message.getNode("AMOUNT_PARCEL").setValue(msg);
+                message.getNode("BUYING_COST_PLOT").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
                 msg.add("&6La parcelle : &e%var1% &6 est maintenant prot\351g\351e : ");
-                msg.add("&6Vous pouvez modifier les param\350tres avec la commande &e/parcel flag");
-                message.getNode("PROTECT_PARCEL").setValue(msg);
+                msg.add("&6Vous pouvez modifier les param\350tres avec la commande &e/plot flag");
+                message.getNode("PROTECT_PLOT_SUCCESS").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
                 msg.add("&6La parcelle : &e%var1% &6 est maintenant prot\351g\351e de la bedrock jusqu'au ciel");
-                msg.add("&6Vous pouvez modifier les param\350tres avec la commande &e/parcel flag");
-                message.getNode("ALL_PROTECT_PARCEL").setValue(msg);
+                msg.add("&6Vous pouvez modifier les param\350tres avec la commande &e/plot flag");
+                message.getNode("BEDROCK2SKY_PROTECT_PLOT_SUCCESS").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
                 msg.add("&6Parcelle &e%var1% &6: protection activ\351e");
-                message.getNode("PROTECT_LOADED_PARCEL").setValue(msg);
+                message.getNode("PROTECT_LOADED_PLOT").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&aVous n'avez pas d\351fini les angles de votre parcelle");
-                msg.add("&aLes angles se d\351finissent en utilisant une pelle en bois :");
-                msg.add("&aAngle1 = clic gauche / Angle2 = clic droit");
-                message.getNode("UNDEFINED_PARCEL").setValue(msg);
+                msg.add("&cVous n'avez pas d\351fini les angles de votre parcelle");
+                msg.add("&cLes angles se d\351finissent en utilisant une pelle en bois :");
+                msg.add("&cAngle1 = clic gauche / Angle2 = clic droit");
+                message.getNode("UNDEFINED_PLOT_ANGLES").setValue(msg);
                 manager.save(message);
                                 
                 msg = new ArrayList<>();
-                msg.add("&cVous ne pouvez pas cr\351er cette parcelle ici");
-                msg.add("&cil y a d\351j\340Ã‚Â  une parcelle prot\351g\351e dans cette s\351lection, recommencez");            
-                message.getNode("RESERVED_PARCEL").setValue(msg);
+                msg.add("&cVous ne pouvez pas cr\351er une parcelle ici");
+                msg.add("&cIl y a d\351j\340 une parcelle prot\351g\351e dans cette s\351lection !");            
+                message.getNode("ALREADY_OWNED_PLOT").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&cCe nom de parcelle est d\351j\340Ã‚Â utilis\351, recommencez");       
-                message.getNode("PARCEL_NAME_FAILED").setValue(msg);
+                msg.add("&cCe nom de parcelle est d\351j\340 utilis\351 !");       
+                message.getNode("PLOT_NAME_ALREADY_USED").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&6Aucune parcelle a cette position !");
-                message.getNode("NO_PARCEL").setValue(msg);
+                msg.add("&cAucune parcelle \340 cette position !");
+                message.getNode("NO_PLOT").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
                 msg.add("&cLe fly est interdit sur cette parcelle");
-                message.getNode("PROTECT_NO_FLY").setValue(msg);
+                message.getNode("PLOT_NO_FLY").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
                 msg.add("&cL'acc\350s \340 cette parcelle est interdit");
-                message.getNode("PROTECT_NO_ENTER").setValue(msg);
+                message.getNode("PLOT_NO_ENTER").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&6Vous \352tes sur une parcelle proteg\351e : &e%parcel%");
+                msg.add("&6Vous \352tes sur une parcelle proteg\351e : &e%plot%");
                 msg.add("&6Propri\351taire : &e%owner%");
                 msg.add("&6Habitant(s) : &e%allow%");
-                message.getNode("INFO_PARCEL").setValue(msg);
+                message.getNode("PLOT_INFO").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
                 msg.add("&eCette parcelle est prot\351g\351e par un sort magique !");
-                message.getNode("PARCEL_SECURE").setValue(msg);
+                message.getNode("PLOT_PROTECTED").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
@@ -433,7 +439,7 @@ public class MessageManager {
         return text;
     }
     
-    private static Text format(Text text, String node, Player player, String var1, String var2, String owner, String allow, String parcel){
+    private static Text format(Text text, String node, Player player, String var1, String var2, String owner, String allow, String plot){
         List<String> list = new ArrayList<>();
         try { list = message.getNode(node).getList(TypeToken.of(String.class));
         } catch (ObjectMappingException ex) { Logger.getLogger(MessageManager.class.getName()).log(Level.SEVERE, null, ex);}
@@ -449,7 +455,7 @@ public class MessageManager {
         msg = msg.replaceAll("%world%", player.getWorld().getName());
         msg = msg.replaceAll("%allow%", allow);
         msg = msg.replaceAll("%owner%", owner);
-        msg = msg.replaceAll("%parcel%", parcel);
+        msg = msg.replaceAll("%plot%", plot);
         msg = msg.replaceAll("%var1%", var1);
         msg = msg.replaceAll("%var2%", var2);
         
@@ -469,6 +475,8 @@ public class MessageManager {
     
     public static Text FIRSTJOIN_BROADCAST_MESSAGE(Player player){return format(FIRSTJOIN_BROADCAST_MESSAGE, "FIRSTJOIN_BROADCAST_MESSAGE", player);}
     
+    public static Text EVENT_DISCONNECT_MESSAGE(Player player){return format(EVENT_DISCONNECT_MESSAGE, "EVENT_DISCONNECT_MESSAGE", player);}
+    
     public static Text NAME_CHANGE(Player player){return format(NAME_CHANGE, "NAME_CHANGE", player);}
     
     public static Text SUN_MESSAGE(Player player){return format(SUN_MESSAGE, "SUN_MESSAGE", player);}
@@ -481,39 +489,39 @@ public class MessageManager {
     
     public static Text STORM_MESSAGE(Player player){return format(STORM_MESSAGE, "STORM_MESSAGE", player);}
     
-    public static Text AMOUNT_PARCEL(Player player, String var1, String var2){return format(AMOUNT_PARCEL, "AMOUNT_PARCEL", player, var1, var2);}
+    public static Text BUYING_COST_PLOT(Player player, String var1, String var2){return format(BUYING_COST_PLOT, "BUYING_COST_PLOT", player, var1, var2);}
     
-    public static Text PROTECT_PARCEL(Player player, String var1){return format(PROTECT_PARCEL, "PROTECT_PARCEL", player, var1, "");}
+    public static Text PROTECT_PLOT_SUCCESS(Player player, String var1){return format(PROTECT_PLOT_SUCCESS, "PROTECT_PLOT_SUCCESS", player, var1, "");}
     
-    public static Text ALL_PROTECT_PARCEL(Player player, String var1){return format(ALL_PROTECT_PARCEL, "ALL_PROTECT_PARCEL", player, var1, "");}
+    public static Text BEDROCK2SKY_PROTECT_PLOT_SUCCESS(Player player, String var1){return format(BEDROCK2SKY_PROTECT_PLOT_SUCCESS, "BEDROCK2SKY_PROTECT_PLOT_SUCCESS", player, var1, "");}
     
-    public static Text PROTECT_LOADED_PARCEL(Player player, String var1){return format(PROTECT_LOADED_PARCEL, "PROTECT_LOADED_PARCEL", player, var1, "");}
+    public static Text PROTECT_LOADED_PLOT(Player player, String var1){return format(PROTECT_LOADED_PLOT, "PROTECT_LOADED_PLOT", player, var1, "");}
     
-    public static Text UNDEFINED_PARCEL(){return format(UNDEFINED_PARCEL, "UNDEFINED_PARCEL");}
+    public static Text UNDEFINED_PLOT_ANGLES(){return format(UNDEFINED_PLOT_ANGLES, "UNDEFINED_PLOT_ANGLES");}
         
-    public static Text RESERVED_PARCEL(){return format(RESERVED_PARCEL, "RESERVED_PARCEL");}
+    public static Text ALREADY_OWNED_PLOT(){return format(ALREADY_OWNED_PLOT, "ALREADY_OWNED_PLOT");}
     
-    public static Text PARCEL_NAME_FAILED(){return format(PARCEL_NAME_FAILED, "PARCEL_NAME_FAILED");}
+    public static Text PLOT_NAME_ALREADY_USED(){return format(PLOT_NAME_ALREADY_USED, "PLOT_NAME_ALREADY_USED");}
     
-    public static Text NO_PARCEL(){return format(NO_PARCEL, "NO_PARCEL");}
+    public static Text NO_PLOT(){return format(NO_PLOT, "NO_PLOT");}
     
-    public static Text PROTECT_NO_ENTER(){return format(PROTECT_NO_ENTER, "PROTECT_NO_ENTER");}
+    public static Text PLOT_INFO(Player player, String owner, String allow, String plot){return format(PLOT_INFO, "PLOT_INFO", player, "","", owner, allow, plot);}
     
-    public static Text PROTECT_NO_FLY(){return format(PROTECT_NO_FLY, "PROTECT_NO_FLY");}
+    public static Text PLOT_PROTECTED(){return format(PLOT_PROTECTED, "PLOT_PROTECTED");}
     
-    public static Text PROTECT_NO_BREAK(){return format(PROTECT_NO_BREAK, "PROTECT_NO_BREAK");}
+    public static Text PLOT_NO_ENTER(){return format(PLOT_NO_ENTER, "PLOT_NO_ENTER");}
     
-    public static Text PROTECT_NO_BUILD(){return format(PROTECT_NO_BUILD, "PROTECT_NO_BUILD");}
+    public static Text PLOT_NO_FLY(){return format(PLOT_NO_FLY, "PLOT_NO_FLY");}
     
-    public static Text PROTECT_NO_FIRE(){return format(PROTECT_NO_FIRE, "PROTECT_NO_FIRE");}
+    public static Text PLOT_NO_BREAK(){return format(PLOT_NO_BREAK, "PLOT_NO_BREAK");}
     
-    public static Text PROTECT_NO_LEAVE(){return format(PROTECT_NO_LEAVE, "PROTECT_NO_LEAVE");}
+    public static Text PLOT_NO_BUILD(){return format(PLOT_NO_BUILD, "PLOT_NO_BUILD");}
     
-    public static Text INFO_PARCEL(Player player, String owner, String allow, String parcel){return format(INFO_PARCEL, "INFO_PARCEL", player, "","", owner, allow, parcel);}
+    public static Text PLOT_NO_FIRE(){return format(PLOT_NO_FIRE, "PLOT_NO_FIRE");}
+    
+    public static Text PLOT_NO_EXIT(){return format(PLOT_NO_EXIT, "PLOT_NO_EXIT");}
     
     public static Text MISSING_BALANCE(){return format(MISSING_BALANCE, "MISSING_BALANCE");}
-    
-    public static Text PARCEL_SECURE(){return format(PARCEL_SECURE, "PARCEL_SECURE");}
     
     public static Text HOME_ALREADY_EXIST(){return format(HOME_ALREADY_EXIST, "HOME_ALREADY_EXIST");}
     

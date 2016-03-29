@@ -4,9 +4,8 @@ import net.teraoctet.genesys.player.PlayerListener;
 import com.google.inject.Inject;
 
 import java.io.File;
-import net.teraoctet.genesys.commands.CommandRocket;
-import net.teraoctet.genesys.parcel.ParcelListener;
-import net.teraoctet.genesys.parcel.ParcelManager;
+import net.teraoctet.genesys.plot.PlotListener;
+import net.teraoctet.genesys.plot.PlotManager;
 import net.teraoctet.genesys.portal.PortalListener;
 import net.teraoctet.genesys.portal.PortalManager;
 import net.teraoctet.genesys.utils.GConfig;
@@ -20,8 +19,6 @@ import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 
 import static org.spongepowered.api.Sponge.getGame;
-import org.spongepowered.api.command.args.GenericArguments;
-import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GameLoadCompleteEvent;
@@ -29,23 +26,19 @@ import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
-import org.spongepowered.api.text.Text;
 
 @Plugin(id = "net.teraoctet.genesys", name = "genesys", version = "1.0", description = "manage your server", authors = {"THYC"})
 public class Genesys {
     
     @Inject private Logger logger;
     private static PluginContainer plugin;
-    public static ParcelManager parcelManager = new ParcelManager();
+    public static PlotManager plotManager = new PlotManager();
     public static PortalManager portalManager = new PortalManager();
     public Logger getLogger(){return logger;}  
-    //public static PluginContainer getPlugin() {return plugin;} 
     public static Game thisGame() {return getGame();}
                 
     @Listener
     public void onServerInit(GameInitializationEvent event) {
-        
-        //plugin = getGame().getPluginManager().getPlugin("genesys").get();
 	        
         File folder = new File("config/genesys");
     	if(!folder.exists()) folder.mkdir();
@@ -54,7 +47,7 @@ public class Genesys {
     	GData.load();
         MessageManager.init();
 
-        getGame().getEventManager().registerListeners(this, new ParcelListener());
+        getGame().getEventManager().registerListeners(this, new PlotListener());
         getGame().getEventManager().registerListeners(this, new PortalListener());
         getGame().getEventManager().registerListeners(this, new PlayerListener());
         getGame().getEventManager().registerListeners(this, new WorldListener());
@@ -65,7 +58,7 @@ public class Genesys {
 	getGame().getCommandManager().register(this, new CommandManager().CommandStorm, "storm", "orage");
 	getGame().getCommandManager().register(this, new CommandManager().CommandDay, "day", "timeday", "jour");
 	getGame().getCommandManager().register(this, new CommandManager().CommandNight, "night", "timenight", "nuit");
-        getGame().getCommandManager().register(this, new CommandManager().CommandParcel, "parcel", "parcelle", "p", "pl");
+        getGame().getCommandManager().register(this, new CommandManager().CommandPlot, "plot", "parcel", "parcelle", "p");
 	getGame().getCommandManager().register(this, new CommandManager().CommandFly, "fly", "vole");
 	getGame().getCommandManager().register(this, new CommandManager().CommandSetHome, "sethome", "homeset");
 	getGame().getCommandManager().register(this, new CommandManager().CommandHome, "home");
@@ -74,32 +67,14 @@ public class Genesys {
 	getGame().getCommandManager().register(this, new CommandManager().CommandLevel, "level");
         getGame().getCommandManager().register(this, new CommandManager().CommandWorldCreate, "worldcreate", "createworld");
 	getGame().getCommandManager().register(this, new CommandManager().CommandWorldTP, "worldtp", "tpworld");
-        getGame().getCommandManager().register(this, new CommandManager().CommandClearinventory, "clearinventory", "ci");
+        getGame().getCommandManager().register(this, new CommandManager().CommandClearinventory, "clearinventory", "ci", "clear");
         getGame().getCommandManager().register(this, new CommandManager().CommandInvsee, "invsee", "is");
 	getGame().getCommandManager().register(this, new CommandManager().CommandTest, "test");
-        
-        CommandSpec CommandRocket = CommandSpec.builder() 
-                .description(Text.of("Rocket Command")) 
-                //.permission("essentialcmds.rocket.use") 
-                .arguments(GenericArguments.firstParsing( 
-                    GenericArguments.flags() 
-                        .flag("-hard", "h") 
-                        .buildWith(GenericArguments.firstParsing(GenericArguments.optional(GenericArguments.player(Text.of("target"))), 
-                    GenericArguments.optional(GenericArguments.string(Text.of("targets"))))))) 
-                .executor(new CommandRocket()) 
-                .build();
-        getGame().getCommandManager().register(this, CommandRocket, "rocket");
-       /* 
-        
-        
-        game.getCommandDispatcher().register(this, new CommandPortal(game), "portal","portail");
-        game.getCommandDispatcher().register(this, new CommandHead(), "head","skull","tete");
-        */
-        
+        getGame().getCommandManager().register(this, new CommandManager().CommandRocket, "rocket");
+
         getLogger().info("-----------------------------"); 
- 	getLogger().info("Genesys was made by thyc82!"); 
- 	getLogger().info("-----------------------------"); 
 	getLogger().info("Genesys loaded!"); 
+        getLogger().info("-----------------------------"); 
     }
         
     @Listener

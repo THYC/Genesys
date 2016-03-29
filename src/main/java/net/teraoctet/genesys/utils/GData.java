@@ -1,6 +1,6 @@
 package net.teraoctet.genesys.utils;
 
-import net.teraoctet.genesys.parcel.GJail;
+import net.teraoctet.genesys.plot.GJail;
 import net.teraoctet.genesys.player.GPlayer;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.sql.DataSource;
-import net.teraoctet.genesys.parcel.GParcel;
-import net.teraoctet.genesys.parcel.ParcelManager;
+import net.teraoctet.genesys.plot.GPlot;
+import net.teraoctet.genesys.plot.PlotManager;
 import net.teraoctet.genesys.portal.GPortal;
 import net.teraoctet.genesys.world.GWorld;
 
@@ -125,9 +125,9 @@ public class GData {
                                 + "message TEXT)");
                 }
 
-                if(!tables.contains("gparcel")) {
-                        execute("CREATE TABLE gparcel ("
-                                + "parcelName TEXT, "
+                if(!tables.contains("gplot")) {
+                        execute("CREATE TABLE gplot ("
+                                + "plotName TEXT, "
                                 + "level INT, "
                                 + "world TEXT, "
                                 + "X1 INT, "
@@ -155,7 +155,7 @@ public class GData {
                 
                 if(!tables.contains("gplsale")) {
                         execute("CREATE TABLE gplsale ("
-                                + "parcelName TEXT, "
+                                + "plotName TEXT, "
                                 + "location TEXT)");
                 }
                 
@@ -246,10 +246,10 @@ public class GData {
             try {
                 Connection c = datasource.getConnection();
                 Statement s = c.createStatement();
-                ResultSet rs = s.executeQuery("SELECT * FROM gparcel");
+                ResultSet rs = s.executeQuery("SELECT * FROM gplot");
                 while(rs.next()) {
-                    GParcel gparcel = new GParcel(
-                        rs.getString("parcelName"),
+                    GPlot gplot = new GPlot(
+                        rs.getString("plotName"),
                         rs.getInt("level"),
                         rs.getString("world"),
                         rs.getInt("X1"), 
@@ -273,8 +273,8 @@ public class GData {
                         rs.getInt("noCommand"),
                         rs.getString("uuidOwner"), 
                         rs.getString("uuidAllowed"));
-                    if(gparcel.getJail()==1){jails.add(gparcel);}
-                    else{parcels.add(gparcel);}   
+                    if(gplot.getJail()==1){jails.add(gplot);}
+                    else{plots.add(gplot);}   
                 }
                 s.close();
                 c.close();
@@ -400,13 +400,13 @@ public class GData {
 	public static void removeUUID(String name) { if(uuids.containsKey(name)) uuids.remove(name); }
 	public static String getUUID(String name) { return uuids.containsKey(name) ? uuids.get(name) : null; }
         
-        public static HashMap<String, ParcelManager> setts = new HashMap();
-        public static final ArrayList<GParcel> parcels = new ArrayList<>();
-        public static final ArrayList<GParcel> jails = new ArrayList<>();
-        public static void addParcel(GParcel gparcel) { if(!parcels.contains(gparcel)) parcels.add(gparcel); }
-        public static void addJail(GParcel gparcel) { if(!jails.contains(gparcel)) jails.add(gparcel); }
-        public static void removeParcel(GParcel gparcel) { if(parcels.contains(gparcel)) parcels.remove(gparcel); }
-        public static void removeJail(GParcel gparcel) { if(jails.contains(gparcel)) parcels.remove(gparcel); }
+        public static HashMap<String, PlotManager> setts = new HashMap();
+        public static final ArrayList<GPlot> plots = new ArrayList<>();
+        public static final ArrayList<GPlot> jails = new ArrayList<>();
+        public static void addPlot(GPlot gplot) { if(!plots.contains(gplot)) plots.add(gplot); }
+        public static void addJail(GPlot gplot) { if(!jails.contains(gplot)) jails.add(gplot); }
+        public static void removePlot(GPlot gplot) { if(plots.contains(gplot)) plots.remove(gplot); }
+        public static void removeJail(GPlot gplot) { if(jails.contains(gplot)) plots.remove(gplot); }
 
         public static final ArrayList<GPortal> gportals = new ArrayList<>();
         public static void addPortal(GPortal gportal) { if(!gportals.contains(gportal)) gportals.add(gportal); } 

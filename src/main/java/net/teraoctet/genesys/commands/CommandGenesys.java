@@ -19,7 +19,7 @@ public class CommandGenesys {
                     .paddingString("-")
                     .sendTo(player);
             } catch (TextMessageException ex) {
-                Logger.getLogger(CommandParcel.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CommandPlot.class.getName()).log(Level.SEVERE, null, ex);
             }
             return CommandResult.success();*/	
         

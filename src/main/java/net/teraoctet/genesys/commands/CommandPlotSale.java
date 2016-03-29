@@ -3,16 +3,12 @@ package net.teraoctet.genesys.commands;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import static net.teraoctet.genesys.Genesys.parcelManager;
-import net.teraoctet.genesys.parcel.GParcel;
+import static net.teraoctet.genesys.Genesys.plotManager;
+import net.teraoctet.genesys.plot.GPlot;
 import net.teraoctet.genesys.utils.GData;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
-import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
-import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
-import static net.teraoctet.genesys.utils.MessageManager.RESERVED_PARCEL;
 import static net.teraoctet.genesys.utils.MessageManager.USAGE;
 import net.teraoctet.genesys.player.GPlayer;
-import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import org.spongepowered.api.block.BlockTypes;
 import static org.spongepowered.api.block.BlockTypes.STANDING_SIGN;
 import org.spongepowered.api.block.tileentity.Sign;
@@ -31,8 +27,12 @@ import org.spongepowered.api.util.blockray.BlockRay;
 import org.spongepowered.api.util.blockray.BlockRayHit;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
+import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
+import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
+import static net.teraoctet.genesys.utils.MessageManager.ALREADY_OWNED_PLOT;
+import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 
-public class CommandParcelSale implements CommandExecutor {
+public class CommandPlotSale implements CommandExecutor {
        
     @Override
     @SuppressWarnings("UnusedAssignment")
@@ -41,7 +41,7 @@ public class CommandParcelSale implements CommandExecutor {
         Player player = (Player) sender;
         GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
 
-        if(!player.hasPermission("genesys.parcel.sale")) { 
+        if(!player.hasPermission("genesys.plot.sale")) { 
                 sender.sendMessage(NO_PERMISSIONS()); 
                 return CommandResult.success(); 
         }
@@ -52,33 +52,33 @@ public class CommandParcelSale implements CommandExecutor {
         }
         
         if(!ctx.getOne("price").isPresent()){
-            player.sendMessage(ChatTypes.CHAT,USAGE("/parcel sale <price>"));
-            player.sendMessage(ChatTypes.CHAT,USAGE("/parcel sale <price> [parcelName]"));
+            player.sendMessage(ChatTypes.CHAT,USAGE("/plot sale <price>"));
+            player.sendMessage(ChatTypes.CHAT,USAGE("/plot sale <price> [plotName]"));
             return CommandResult.success();  
         }
 
-        GParcel gparcel = null;
+        GPlot gplot = null;
         
         if(ctx.getOne("name").isPresent()){
-            String parcelName = ctx.<String> getOne("name").get();
-            if (parcelManager.hasParcel(parcelName)){  
-                gparcel = parcelManager.getParcel(parcelName); 
+            String plotName = ctx.<String> getOne("name").get();
+            if (plotManager.hasPlot(plotName)){  
+                gplot = plotManager.getPlot(plotName); 
             } else {
-                player.sendMessage(ChatTypes.CHAT,MESSAGE("&7parcelle &e" + parcelName + " &7introuvable"));
-                player.sendMessage(ChatTypes.CHAT,USAGE("/parcel sale <price> [parcelName]"));
+                player.sendMessage(ChatTypes.CHAT,MESSAGE("&7parcelle &e" + plotName + " &7introuvable"));
+                player.sendMessage(ChatTypes.CHAT,USAGE("/plot sale <price> [plotName]"));
                 return CommandResult.success();  
             }       
         } else {
-            gparcel = parcelManager.getParcel(player.getLocation());
-            if (gparcel == null){
-                player.sendMessage(ChatTypes.CHAT,MESSAGE("&7vous devez etre sur la parcelle ou renseigner le nom de parcelle"));
-                player.sendMessage(ChatTypes.CHAT,USAGE("/parcel sale <price> [parcelName]"));
+            gplot = plotManager.getPlot(player.getLocation());
+            if (gplot == null){
+                player.sendMessage(ChatTypes.CHAT,MESSAGE("&7vous devez \352tre sur la parcelle ou renseigner le nom de parcelle"));
+                player.sendMessage(ChatTypes.CHAT,USAGE("/plot sale <price> [plotName]"));
                 return CommandResult.success();  
             }
         }
 
-        if (!gparcel.getUuidOwner().equalsIgnoreCase(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
-            player.sendMessage(ChatTypes.CHAT,RESERVED_PARCEL());
+        if (!gplot.getUuidOwner().equalsIgnoreCase(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
+            player.sendMessage(ChatTypes.CHAT,ALREADY_OWNED_PLOT());
             return CommandResult.success();
         }
         
@@ -111,13 +111,13 @@ public class CommandParcelSale implements CommandExecutor {
         SignData signData = opSign.get();
         List<Text> sale = new ArrayList<>();
         sale.add(MESSAGE("&1PARCELLE A VENDRE"));
-        sale.add(MESSAGE("&1" + gparcel.getName()));
+        sale.add(MESSAGE("&1" + gplot.getName()));
         sale.add(MESSAGE("&4" + String.valueOf(price)));
         sale.add(MESSAGE("&1Emeraudes"));
         signData.set(Keys.SIGN_LINES,sale );
         sign.offer(signData);
         
-        gparcel.addSale(location);
+        gplot.addSale(location);
         GData.commit();
         return CommandResult.success();	
     }   

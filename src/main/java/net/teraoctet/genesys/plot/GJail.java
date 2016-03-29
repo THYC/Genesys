@@ -1,4 +1,4 @@
-package net.teraoctet.genesys.parcel;
+package net.teraoctet.genesys.plot;
 
 import net.teraoctet.genesys.utils.GData;
 

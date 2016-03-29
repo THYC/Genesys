@@ -13,6 +13,7 @@ import static net.teraoctet.genesys.utils.GData.removeGPlayer;
 import static net.teraoctet.genesys.utils.GData.removeUUID;
 import static net.teraoctet.genesys.utils.MessageManager.FIRSTJOIN_MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.JOIN_MESSAGE;
+import static net.teraoctet.genesys.utils.MessageManager.EVENT_DISCONNECT_MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.NAME_CHANGE;
 import net.teraoctet.genesys.utils.GServer;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
@@ -95,6 +96,12 @@ public class PlayerListener {
             player_uuid.update();
             GServer.broadcast(NAME_CHANGE(player));
         }
+    }
+    
+    @Listener
+    public void onPlayerDisconnect(ClientConnectionEvent.Disconnect event) {
+        Player player = (Player) event.getTargetEntity();
+        event.setMessage(EVENT_DISCONNECT_MESSAGE(player));
     }
     
     @Listener

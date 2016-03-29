@@ -1,15 +1,15 @@
-package net.teraoctet.genesys.parcel;
+package net.teraoctet.genesys.plot;
 
 import java.util.Optional;
-import static net.teraoctet.genesys.Genesys.parcelManager;
+import static net.teraoctet.genesys.Genesys.plotManager;
 import net.teraoctet.genesys.utils.GData;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
-import static net.teraoctet.genesys.utils.MessageManager.INFO_PARCEL;
+import static net.teraoctet.genesys.utils.MessageManager.PLOT_INFO;
 import static net.teraoctet.genesys.utils.MessageManager.MISSING_BALANCE;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
-import static net.teraoctet.genesys.utils.MessageManager.PARCEL_SECURE;
-import static net.teraoctet.genesys.utils.MessageManager.PROTECT_NO_ENTER;
-import static net.teraoctet.genesys.utils.MessageManager.PROTECT_NO_FLY;
+import static net.teraoctet.genesys.utils.MessageManager.PLOT_PROTECTED;
+import static net.teraoctet.genesys.utils.MessageManager.PLOT_NO_ENTER;
+import static net.teraoctet.genesys.utils.MessageManager.PLOT_NO_FLY;
 import net.teraoctet.genesys.player.GPlayer;
 import org.spongepowered.api.block.BlockSnapshot;
 import static org.spongepowered.api.block.BlockTypes.AIR;
@@ -37,10 +37,24 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.explosion.Explosion;
+import static net.teraoctet.genesys.utils.MessageManager.MISSING_BALANCE;
+import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
+import static net.teraoctet.genesys.utils.MessageManager.MISSING_BALANCE;
+import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
+import static net.teraoctet.genesys.utils.MessageManager.MISSING_BALANCE;
+import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
+import static net.teraoctet.genesys.utils.MessageManager.MISSING_BALANCE;
+import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
+import static net.teraoctet.genesys.utils.MessageManager.MISSING_BALANCE;
+import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
+import static net.teraoctet.genesys.utils.MessageManager.MISSING_BALANCE;
+import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
+import static net.teraoctet.genesys.utils.MessageManager.MISSING_BALANCE;
+import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 
-public class ParcelListener {
+public class PlotListener {
         
-    public ParcelListener() {}
+    public PlotListener() {}
 
     @Listener
     @SuppressWarnings("null")
@@ -54,19 +68,19 @@ public class ParcelListener {
         BlockSnapshot b = event.getTargetBlock();
         Location loc = b.getLocation().get();
         Optional<ItemStack> itemInHand = player.getItemInHand();
-        GParcel parcel = parcelManager.getParcel(loc);
+        GPlot plot = plotManager.getPlot(loc);
         
-        // Event click gauche -- saisie angle 1 parcel
+        // Event click gauche -- saisie angle 1 plot
         if (event instanceof InteractBlockEvent.Primary){
             if(itemInHand.isPresent()){
                 if(itemInHand.get().getItem() == WOODEN_SHOVEL){
-                    if (parcel != null) {
-                        player.sendMessage(ChatTypes.CHAT,INFO_PARCEL(player,parcel.getNameAllowed(),parcel.getNameOwner(),parcel.getName()));
+                    if (plot != null) {
+                        player.sendMessage(ChatTypes.CHAT,PLOT_INFO(player,plot.getNameAllowed(),plot.getNameOwner(),plot.getName()));
                         event.setCancelled(true);
                         return;
                     } else {
-                        ParcelManager parcelPlayer = ParcelManager.getSett(player);
-                        parcelPlayer.setBorder(1, loc);
+                        PlotManager plotPlayer = PlotManager.getSett(player);
+                        plotPlayer.setBorder(1, loc);
                         player.sendMessage(ChatTypes.CHAT,Text.of(TextColors.GREEN, "Angle1 : ", TextColors.YELLOW, String.format("%d %d %d", new Object[] { loc.getBlockX(), loc.getBlockY(), loc.getBlockZ() })));
                         event.setCancelled(true);
                         return;
@@ -75,17 +89,17 @@ public class ParcelListener {
             }
         }
         
-        // Event click droit -- saisie angle 2 parcel
+        // Event click droit -- saisie angle 2 plot
 	if (event instanceof InteractBlockEvent.Secondary){
             if(itemInHand.isPresent()){
                 if(itemInHand.get().getItem() == WOODEN_SHOVEL){
-                    if (parcel != null) {
-                        player.sendMessage(ChatTypes.CHAT,INFO_PARCEL(player,parcel.getNameAllowed(),parcel.getNameOwner(),parcel.getName()));
+                    if (plot != null) {
+                        player.sendMessage(ChatTypes.CHAT,PLOT_INFO(player,plot.getNameAllowed(),plot.getNameOwner(),plot.getName()));
                         event.setCancelled(true);
                         return;
                     } else {
-                        ParcelManager parcelPlayer = ParcelManager.getSett(player);
-                        parcelPlayer.setBorder(2, loc);
+                        PlotManager plotPlayer = PlotManager.getSett(player);
+                        plotPlayer.setBorder(2, loc);
                         player.sendMessage(ChatTypes.CHAT,Text.of(TextColors.GREEN, "Angle2 : ", TextColors.YELLOW, String.format("%d %d %d", new Object[] { loc.getBlockX(), loc.getBlockY(), loc.getBlockZ() })));
                         event.setCancelled(true);
                     }
@@ -111,20 +125,20 @@ public class ParcelListener {
                             if (gplayer.getMoney()< cout){
                                 player.sendMessage(ChatTypes.CHAT,MISSING_BALANCE());
                             }
-                            parcel = parcelManager.getParcel(Text.of(offering.getValue(Keys.SIGN_LINES).get().get(1)).toPlain());
-                            if (!parcel.getUuidOwner().contains("ADMIN")){
-                                GPlayer vendeur = getGPlayer(parcel.getUuidOwner());
+                            plot = plotManager.getPlot(Text.of(offering.getValue(Keys.SIGN_LINES).get().get(1)).toPlain());
+                            if (!plot.getUuidOwner().contains("ADMIN")){
+                                GPlayer vendeur = getGPlayer(plot.getUuidOwner());
                                 vendeur.creditMoney(cout);
                                 vendeur.sendMessage(MESSAGE("&6" + player.getName() + " &7vient d'acheter votre parcelle"));
                                 vendeur.sendMessage(MESSAGE("&6" + cout + " emeraudes &7ont ete ajoute a votre compte"));
                                 vendeur.sendMessage(MESSAGE("&6/bank &7pour consulter votre compte"));  
                             }
                             player.sendMessage(ChatTypes.CHAT,MESSAGE("&eVous etes maintenant le nouveau proprietaire de cette parcelle"));
-                            parcel.delSale();
+                            plot.delSale();
                             gplayer.debitMoney(cout);
-                            parcel.setUuidOwner(gplayer.getUUID());
-                            parcel.setUuidAllowed(gplayer.getUUID());
-                            parcel.update();
+                            plot.setUuidOwner(gplayer.getUUID());
+                            plot.setUuidAllowed(gplayer.getUUID());
+                            plot.update();
                             GData.commit();
                             return;
                         } 
@@ -134,37 +148,37 @@ public class ParcelListener {
         }
         
         // Interact sur autre block
-        if (parcel != null && !parcel.getUuidAllowed().contains(player.getUniqueId().toString()) 
-                && parcel.getNoInteract() == 1 && gplayer.getLevel() != 10) {
-            player.sendMessage(ChatTypes.CHAT,PARCEL_SECURE());
+        if (plot != null && !plot.getUuidAllowed().contains(player.getUniqueId().toString()) 
+                && plot.getNoInteract() == 1 && gplayer.getLevel() != 10) {
+            player.sendMessage(ChatTypes.CHAT,PLOT_PROTECTED());
             event.setCancelled(true);
         }
     }
     
     @Listener
-    public void onPlayerMoveParcel(DisplaceEntityEvent.Move event) {
+    public void onPlayerMovePlot(DisplaceEntityEvent.Move event) {
         if (event.getTargetEntity() instanceof Player){
             Player player = (Player) event.getTargetEntity();
             GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
             Location locTo = event.getToTransform().getLocation();
             Location locFrom = event.getFromTransform().getLocation();
-            GParcel gparcel = parcelManager.getParcel(locTo);
-            GParcel jail = parcelManager.getParcel(locFrom,true);
+            GPlot gplot = plotManager.getPlot(locTo);
+            GPlot jail = plotManager.getPlot(locFrom,true);
 
-            if (gparcel != null && !gparcel.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
+            if (gplot != null && !gplot.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
                 if (player.get(Keys.CAN_FLY).isPresent()) { 
-                    if(player.get(Keys.CAN_FLY).get() == true && gparcel.getNoFly() == 1) {
+                    if(player.get(Keys.CAN_FLY).get() == true && gplot.getNoFly() == 1) {
                         player.offer(Keys.IS_FLYING, false); 
                         player.offer(Keys.CAN_FLY, false); 
-                        player.sendMessage(ChatTypes.CHAT,PROTECT_NO_FLY());
+                        player.sendMessage(ChatTypes.CHAT,PLOT_NO_FLY());
                         event.setCancelled(true);
                     }
 
-                    if(parcelManager.getParcel(locFrom) == null) {
-                        player.sendMessage(ChatTypes.CHAT,MESSAGE(gparcel.getMessage(),player));
-                        if(gparcel.getNoEnter() == 1 && !player.hasPermission("genesys.parcel.enter")) {
+                    if(plotManager.getPlot(locFrom) == null) {
+                        player.sendMessage(ChatTypes.CHAT,MESSAGE(gplot.getMessage(),player));
+                        if(gplot.getNoEnter() == 1 && !player.hasPermission("genesys.plot.enter")) {
                             player.setLocation(locFrom);
-                            player.sendMessage(ChatTypes.CHAT,PROTECT_NO_ENTER());
+                            player.sendMessage(ChatTypes.CHAT,PLOT_NO_ENTER());
                             event.setCancelled(true);
                         }
                     }
@@ -172,9 +186,9 @@ public class ParcelListener {
             }
 
             if (jail != null){
-                if(parcelManager.getParcel(locTo, true) == null && gplayer.getJail().equalsIgnoreCase(jail.getName())) {
+                if(plotManager.getPlot(locTo, true) == null && gplayer.getJail().equalsIgnoreCase(jail.getName())) {
                     player.setLocation(locFrom);
-                    player.sendMessage(ChatTypes.CHAT,PROTECT_NO_ENTER());
+                    player.sendMessage(ChatTypes.CHAT,PLOT_NO_ENTER());
                 }
             }
         }
@@ -189,9 +203,9 @@ public class ParcelListener {
         Player player = optPlayer.get();
         GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
         Location loc = player.getLocation();
-        GParcel gparcel = parcelManager.getParcel(loc);
-        if (gparcel != null && !gparcel.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
-            player.sendMessage(ChatTypes.CHAT,PARCEL_SECURE());
+        GPlot gplot = plotManager.getPlot(loc);
+        if (gplot != null && !gplot.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
+            player.sendMessage(ChatTypes.CHAT,PLOT_PROTECTED());
             event.setCancelled(true);
         }
         
@@ -209,9 +223,9 @@ public class ParcelListener {
         Optional<Location<World>> optLoc = block.getOriginal().getLocation();
         Location loc = optLoc.get();
     
-        GParcel gparcel = parcelManager.getParcel(loc);
-        if (gparcel != null && gparcel.getNoBreak() == 1 && !gparcel.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
-            player.sendMessage(ChatTypes.CHAT,PARCEL_SECURE());
+        GPlot gplot = plotManager.getPlot(loc);
+        if (gplot != null && gplot.getNoBreak() == 1 && !gplot.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
+            player.sendMessage(ChatTypes.CHAT,PLOT_PROTECTED());
             event.setCancelled(true);
         }
     }
@@ -229,9 +243,9 @@ public class ParcelListener {
         Optional<Location<World>> optLoc = block.getOriginal().getLocation();
         Location loc = optLoc.get();
         
-        GParcel gparcel = parcelManager.getParcel(loc);
-        if (gparcel != null && gparcel.getNoBuild() == 1 && !gparcel.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
-            player.sendMessage(ChatTypes.CHAT,PARCEL_SECURE());
+        GPlot gplot = plotManager.getPlot(loc);
+        if (gplot != null && gplot.getNoBuild() == 1 && !gplot.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
+            player.sendMessage(ChatTypes.CHAT,PLOT_PROTECTED());
             event.setCancelled(true);
         }
     }
@@ -249,9 +263,9 @@ public class ParcelListener {
         Optional<Location<World>> optLoc = block.getOriginal().getLocation();
         Location loc = optLoc.get();
         
-        GParcel gparcel = parcelManager.getParcel(loc);
-        if (gparcel != null && !gparcel.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
-            player.sendMessage(ChatTypes.CHAT,PARCEL_SECURE());
+        GPlot gplot = plotManager.getPlot(loc);
+        if (gplot != null && !gplot.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
+            player.sendMessage(ChatTypes.CHAT,PLOT_PROTECTED());
             event.setCancelled(true);
         }
     }
@@ -261,9 +275,9 @@ public class ParcelListener {
         Transaction<BlockSnapshot> block = event.getTransactions().get(0);
         Optional<Location<World>> optLoc = block.getOriginal().getLocation();
         Location loc = optLoc.get();
-        GParcel gparcel = parcelManager.getParcel(loc);
-        if (gparcel != null){
-            if(block.getFinal().getState().getType() == FIRE && gparcel.getNoFire() == 1){                
+        GPlot gplot = plotManager.getPlot(loc);
+        if (gplot != null){
+            if(block.getFinal().getState().getType() == FIRE && gplot.getNoFire() == 1){                
                 event.setCancelled(true);   
                 return;
             }
@@ -272,8 +286,8 @@ public class ParcelListener {
             Optional<Explosive> optExplosive = event.getCause().first(Explosive.class);
             
             if(block.getFinal().getState().getType() == AIR && block.getOriginal().getState().getType() != FLOWING_LAVA && 
-            block.getOriginal().getState().getType() != FLOWING_WATER && !optPlayer.isPresent() && !optExplosive.isPresent() && gparcel.getNoFire() == 1){
-                event.setCancelled(true);        
+            block.getOriginal().getState().getType() != FLOWING_WATER && !optPlayer.isPresent() && !optExplosive.isPresent() && gplot.getNoFire() == 1){
+                event.setCancelled(true);   
             }
         }
     }
@@ -282,9 +296,9 @@ public class ParcelListener {
     public void onExplosion(ExplosionEvent.Pre event) {
         Explosion explosion = event.getExplosion();
         Location loc = new Location(event.getTargetWorld(),explosion.getOrigin());
-        GParcel gparcel = parcelManager.getParcel(loc);
-        if (gparcel != null){
-            if (gparcel.getNoTNT() == 1){ event.setCancelled(true);;}
+        GPlot gplot = plotManager.getPlot(loc);
+        if (gplot != null){
+            if (gplot.getNoTNT() == 1){ event.setCancelled(true);;}
         }
     }
 }

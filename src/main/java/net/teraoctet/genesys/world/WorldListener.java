@@ -9,8 +9,8 @@ import java.util.Optional;
 import java.util.Random;
 
 //import static net.teraoctet.genesys.Genesys.getPlugin;
-import static net.teraoctet.genesys.Genesys.parcelManager;
-import net.teraoctet.genesys.parcel.GParcel;
+import static net.teraoctet.genesys.Genesys.plotManager;
+import net.teraoctet.genesys.plot.GPlot;
 import net.teraoctet.genesys.utils.DeSerialize;
 import net.teraoctet.genesys.utils.GData;
 import net.teraoctet.genesys.player.GPlayer;
@@ -130,8 +130,8 @@ public class WorldListener {
     public void onTNTexplode(final ExplosionEvent.Pre event){ 
         Explosion explosion = event.getExplosion();
         Location loc = new Location(event.getTargetWorld(),explosion.getOrigin());
-        GParcel gparcel = parcelManager.getParcel(loc);
-        if (gparcel == null){
+        GPlot gplot = plotManager.getPlot(loc);
+        if (gplot == null){
             if (event.getCause().first(PrimedTNT.class).isPresent()){
                 event.setCancelled(true);
             }
@@ -142,8 +142,8 @@ public class WorldListener {
     public void onExplosion(final ExplosionEvent.Detonate event){ 
         Explosion explosion = event.getExplosion();
         Location loc = new Location(event.getTargetWorld(),explosion.getOrigin());
-        GParcel gparcel = parcelManager.getParcel(loc);
-        if (gparcel == null){
+        GPlot gplot = plotManager.getPlot(loc);
+        if (gplot == null){
             if (!event.getCause().first(PrimedTNT.class).isPresent()){
                 List<Transaction<BlockSnapshot>> bs = event.getTransactions();
                 Restore restore = new Restore(bs);
