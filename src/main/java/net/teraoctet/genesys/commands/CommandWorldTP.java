@@ -17,64 +17,71 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.world.World;
     
 public class CommandWorldTP implements CommandExecutor {
             
     @Override
-    public CommandResult execute(CommandSource sender, CommandContext ctx) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException {
 	
-        Player player = null;
-        if (sender instanceof Player){
-            player = (Player)sender;
-            if(!player.hasPermission("genesys.world.worldtp")) { player.sendMessage(ChatTypes.CHAT,NO_PERMISSIONS()); return CommandResult.success();}
-        }
-        	 
-        if(!ctx.getOne("worldName").isPresent()) { 
-            sender.sendMessage(USAGE("/worldtp <world> [player]"));
-            return CommandResult.success();
-        }
-                
-        String worldName = ctx.<String> getOne("worldName").get();
-        
-        if(!ctx.getOne("target").isPresent() && sender instanceof Player == false) { 
-            sender.sendMessage(USAGE("/worldtp <world> <player>"));
-            return CommandResult.success();
-        } 
-                
-        if(!getGame().getServer().getWorld(worldName).isPresent()) { 
-            sender.sendMessage(WORLD_NOT_FOUND(player,worldName));return CommandResult.success(); 
-        }
-        
-        World world = getGame().getServer().getWorld(worldName).get(); 
-        GWorld gworld = GData.getWorld(worldName);
-        
-        if(gworld == null) {
-            sender.sendMessage(WORLD_NOT_FOUND(player,worldName));return CommandResult.success();
-        }
-                        
-        if(!ctx.getOne("target").isPresent()) {		
-            player.setLocation(world.getSpawnLocation());
-            player.offer(Keys.GAME_MODE, gworld.getGamemode());
-            sender.sendMessage(TELEPORTED_TO_WORLD(player,worldName));
-            return CommandResult.success();
-        }
-        
-        Player target = ctx.<Player> getOne("target").get();
-        
-        if(!sender.hasPermission("genesys.admin.world.worldtp")) { sender.sendMessage(NO_PERMISSIONS()); return CommandResult.success();}
-        	
-        if(ctx.getOne("target").isPresent()) {
-            if(target == null) {
-                sender.sendMessage(PLAYER_NOT_FOUND(target));
-                return CommandResult.success();
+        if (src.hasPermission("genesys.world.worldtp")){ 
+            //si le joueur ne tape pas le <world>
+            if(!ctx.getOne("worldName").isPresent() && src instanceof Player) { 
+                src.sendMessage(USAGE("/worldtp <world> [player]"));
             }
-            target.setLocation(world.getSpawnLocation());
-            target.offer(Keys.GAME_MODE, gworld.getGamemode());
-            sender.sendMessage(OTHER_TELEPORTED_TO_WORLD(target,worldName));
-            target.sendMessage(ChatTypes.CHAT,TELEPORTED_TO_WORLD(target,worldName));
+
+            //si ce n'est pas un joueur (console) et que <world> ou <player> ne sont pas renseignés
+            else if((!ctx.getOne("target").isPresent() || !ctx.getOne("worldName").isPresent()) && !(src instanceof Player)) { 
+                src.sendMessage(USAGE("/worldtp <world> <player>"));
+            }
+
+            //quand la commande est correctement renseignée par la source
+            else {
+                String worldName = ctx.<String> getOne("worldName").get();
+                GWorld gworld = GData.getWorld(worldName);
+            
+                //monde introuvable
+                if(!getGame().getServer().getWorld(worldName).isPresent()) { 
+                    src.sendMessage(WORLD_NOT_FOUND(worldName));
+                } else if(gworld == null) {
+                    src.sendMessage(WORLD_NOT_FOUND(worldName));
+                }
+                //le monde est correctement trouvé
+                else {
+                    World world = getGame().getServer().getWorld(worldName).get(); 
+
+                    //si [player] n'est pas renseigné, la source est ciblé (doit être un joueur)
+                    if(!ctx.getOne("target").isPresent()) {
+                        Player player = (Player)src;
+                        player.setLocation(world.getSpawnLocation());
+                        player.offer(Keys.GAME_MODE, gworld.getGamemode());
+                        src.sendMessage(TELEPORTED_TO_WORLD(player,worldName));
+                    }
+
+                    //lorsque un [player] est ciblé par la commande
+                    else if(ctx.getOne("target").isPresent() && src.hasPermission("genesys.admin.world.worldtp")) {
+                        if(src.hasPermission("genesys.admin.world.worldtp")){
+                            Player target = ctx.<Player> getOne("target").get();
+                            if(target != null) {
+                                target.setLocation(world.getSpawnLocation());
+                                target.offer(Keys.GAME_MODE, gworld.getGamemode());
+                                src.sendMessage(OTHER_TELEPORTED_TO_WORLD(target,worldName));
+                                target.sendMessage(TELEPORTED_TO_WORLD(target,worldName));
+                            } else {
+                                src.sendMessage(PLAYER_NOT_FOUND(target));
+                            }
+                        } else {
+                            src.sendMessage(NO_PERMISSIONS());
+                        }  
+                    }   
+                }
+            }
         }
+        
+        else {
+            src.sendMessage(NO_PERMISSIONS());
+        }
+        
         return CommandResult.success();
     }
 }

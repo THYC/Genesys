@@ -15,30 +15,27 @@ import org.spongepowered.api.entity.living.player.Player;
 public class CommandClearinventory implements CommandExecutor {
         
     @Override
-    public CommandResult execute(CommandSource sender, CommandContext ctx) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException {
         Optional<Player> player = ctx.<Player> getOne("player");
         
-        if(!sender.hasPermission("genesys.clearinventory")) { 
-            sender.sendMessage(NO_PERMISSIONS()); 
-            return CommandResult.success(); 
-        }
-        
-        if (player.isPresent()) { 
-            if(!sender.hasPermission("genesys.clearinventory.others")) { 
-                sender.sendMessage(NO_PERMISSIONS()); 
-                return CommandResult.success(); 
-            }
+        if (player.isPresent() && src.hasPermission("genesys.clearinventory.others")) { 
             player.get().getInventory().clear(); 
             player.get().sendMessage(INVENTORY_CLEARED());
-            sender.sendMessage(CLEARINVENTORY_SUCCESS(player.get().getName()));
-        } else {
-            if(sender instanceof Player == false) {
-                sender.sendMessage(USAGE("/clearinventory <player>"));
-                return CommandResult.success(); 
+            src.sendMessage(CLEARINVENTORY_SUCCESS(player.get().getName()));
+        } 
+        
+        else if (src.hasPermission("genesys.clearinventory")){
+            if(src instanceof Player){
+                Player senderPlayer = (Player)src;
+                senderPlayer.getInventory().clear();
+                senderPlayer.sendMessage(INVENTORY_CLEARED());
+            } else {
+                src.sendMessage(USAGE("/clearinventory <player>"));    
             }
-            Player senderPlayer = (Player)sender;
-            senderPlayer.getInventory().clear();
-            senderPlayer.sendMessage(INVENTORY_CLEARED());
+        } 
+        
+        else {
+            src.sendMessage(NO_PERMISSIONS());
         }
         
         return CommandResult.success();

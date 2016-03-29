@@ -42,7 +42,6 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.entity.HumanInventory;
-import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.type.GridInventory;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
@@ -56,11 +55,9 @@ public class PlayerListener {
     @Listener
     public void onPlayerLogin(ClientConnectionEvent.Login event) {
         Player player = (Player) event.getTargetUser();
-        String uuid = player.getUniqueId().toString();
-        String name = player.getName().toLowerCase();
-        
         getGame().getServer().getBroadcastChannel().send(EVENT_LOGIN_MESSAGE(player));
         GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
+        
         if(gplayer == null) {
             getGame().getServer().getBroadcastChannel().send(FIRSTJOIN_BROADCAST_MESSAGE(player));
         }
@@ -68,23 +65,21 @@ public class PlayerListener {
     
     @Listener
     public void onPlayerJoin(ClientConnectionEvent.Join event) {
-    	
     	Player player = event.getTargetEntity();
         String uuid = player.getUniqueId().toString();
         String name = player.getName().toLowerCase();
-        
+        GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
         event.setMessageCancelled(true);
-    	player.sendMessage(JOIN_MESSAGE(player));
     	
-    	GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
-        if(gplayer != null) {
-            addGPlayer(gplayer.getUUID(), gplayer);
-        } else {
+        if(gplayer == null) {
             gplayer = new GPlayer(uuid, 0, name, "", 0, "", 20, "", "", System.currentTimeMillis(), System.currentTimeMillis());
             gplayer.insert();
             commit();
-            player.sendMessage(FIRSTJOIN_MESSAGE(player));         		
-        } 
+            player.sendMessage(FIRSTJOIN_MESSAGE(player)); 
+        } else {
+            addGPlayer(gplayer.getUUID(), gplayer);
+            player.sendMessage(JOIN_MESSAGE(player));
+        }
 	
         GPlayer player_uuid = getGPlayer(uuid);
         GPlayer player_name = getGPlayer(getUUID(name));

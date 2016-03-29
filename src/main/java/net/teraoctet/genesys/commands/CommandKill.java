@@ -17,31 +17,29 @@ import org.spongepowered.api.entity.living.player.Player;
 public class CommandKill implements CommandExecutor {
     
     @Override
-    public CommandResult execute(CommandSource sender, CommandContext ctx) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException {
         Optional<Player> tplayer = ctx.<Player> getOne("player");
+        
+        if (tplayer.isPresent() && src.hasPermission("genesys.kills.others")) {
+            tplayer.get().offer(Keys.HEALTH, 0d);
+            getGame().getServer().getBroadcastChannel().send(KILLED_BY(tplayer.get().getName(), src.getName()));
             
-        if(!sender.hasPermission("genesys.kills")) { 
-            sender.sendMessage(NO_PERMISSIONS()); 
-            return CommandResult.success(); 
-        }
-
-        if (tplayer.isPresent()) {
-            if(!sender.hasPermission("genesys.kills.others")) {
-                sender.sendMessage(NO_PERMISSIONS()); 
-            } else {
-                tplayer.get().offer(Keys.HEALTH, 0d);
-                getGame().getServer().getBroadcastChannel().send(KILLED_BY(tplayer.get().getName(), sender.getName()));
-            }
-            return CommandResult.success();
-        } else {
-            if(sender instanceof Player == false) { 
-                sender.sendMessage(USAGE("/kill <player>")); 
-            } else {
-                Player player = (Player) sender;
+        } 
+        
+        else if (src.hasPermission("genesys.kills")){
+            if(src instanceof Player) {
+                Player player = (Player) src;
                 player.offer(Keys.HEALTH, 0d);
-                getGame().getServer().getBroadcastChannel().send(SUICIDE(sender.getName())); 
+                getGame().getServer().getBroadcastChannel().send(SUICIDE(src.getName())); 
+            } else {
+                src.sendMessage(USAGE("/kill <player>"));
             }
         }
+        
+        else {
+            src.sendMessage(NO_PERMISSIONS());
+        }
+        
         return CommandResult.success();	 
     }
 }

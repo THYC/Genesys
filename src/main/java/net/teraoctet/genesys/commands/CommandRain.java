@@ -8,6 +8,7 @@ import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
+import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.world.World;
@@ -16,23 +17,22 @@ import org.spongepowered.api.world.weather.Weathers;
 public class CommandRain implements CommandExecutor {
     
     @Override
-    public CommandResult execute(CommandSource sender, CommandContext ctx) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException {
 
-        if(sender instanceof Player == false) { 
-            sender.sendMessage(NO_CONSOLE()); 
-            return CommandResult.success(); 
-        }  
+        if(src instanceof Player && src.hasPermission("genesys.weather.rain")) { 
+            Player player = (Player) src; 
+            World world = player.getWorld();
+            world.setWeather(Weathers.RAIN);
+            getGame().getServer().getBroadcastChannel().send(RAIN_MESSAGE(player));
+        } 
         
-        Player player = (Player) sender;  
-        
-        if(!player.hasPermission("genesys.weather.rain")) { 
-            sender.sendMessage(NO_PERMISSIONS()); 
-            return CommandResult.success(); 
+        else if (src instanceof ConsoleSource) {
+            src.sendMessage(NO_CONSOLE()); 
         }
-        
-        World world = player.getWorld();
-        world.setWeather(Weathers.RAIN);
-        getGame().getServer().getBroadcastChannel().send(RAIN_MESSAGE(player));
+
+        else {
+            src.sendMessage(NO_PERMISSIONS());
+        }
         
         return CommandResult.success();	
     }

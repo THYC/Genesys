@@ -134,7 +134,7 @@ public class CommandManager {
                 .permission("genesys.plot.list") 
                 .arguments(
                     GenericArguments.seq(
-                        GenericArguments.optional(GenericArguments.string(Text.of("player")))))
+                        GenericArguments.optional(GenericArguments.string(Text.of("tplayer")))))
                 .executor(new CommandPlotList()) 
                 .build(); 
         

@@ -13,6 +13,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors; 
 
 import java.util.Optional; 
+import static net.teraoctet.genesys.utils.MessageManager.USAGE;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.chat.ChatTypes;
 
@@ -41,9 +42,11 @@ public class CommandRocket implements CommandExecutor{
                 player.offer(Keys.VELOCITY, velocity); 
                 
                 player.sendMessage(ChatTypes.CHAT,Text.of(TextColors.YELLOW, "Rocketed!"));  			
-            } 
+            } else {
+               src.sendMessage(USAGE("/rocket <player>")); 
+            }
         } 
-        else if(targets.isPresent())// && src.hasPermission("essentialcmds.rocket.others")) 
+        else if(targets.isPresent())
         { 
                 String targ = targets.get(); 
 
@@ -73,7 +76,7 @@ public class CommandRocket implements CommandExecutor{
                         src.sendMessage(Text.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Invalid argument supplied!")); 
                 } 
         } 
-        else if(target.isPresent())// && src.hasPermission("essentialcmds.rocket.others")) 
+        else if(target.isPresent())
         { 
                 Player player = target.get(); 
                 Vector3d velocity = null; 

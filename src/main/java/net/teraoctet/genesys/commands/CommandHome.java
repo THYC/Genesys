@@ -15,6 +15,7 @@ import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
+import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.world.Location;
@@ -22,48 +23,49 @@ import org.spongepowered.api.world.Location;
 public class CommandHome implements CommandExecutor {
     
     @Override
-    public CommandResult execute(CommandSource sender, CommandContext ctx) throws CommandException {
-
-        Player player = (Player) sender;
-        if(!player.hasPermission("genesys.home")) { 
-            sender.sendMessage(NO_PERMISSIONS()); 
-            return CommandResult.success(); 
-        }
+    public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException {       
                    
-        if(sender instanceof Player == false) { 
-            sender.sendMessage(NO_CONSOLE()); 
-            return CommandResult.success(); 
-        }
-            
-        GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
-        String homename = "default"; 
-        Optional<String> home = ctx.<String> getOne("home");
-        
-        if(home.isPresent()) { 
-            homename = home.get().toLowerCase();
-        }
-        
-        GHome ghome = gplayer.getHome(homename);
+        if(src instanceof Player && src.hasPermission("genesys.home")) { 
+            Player player = (Player) src;           
+            GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
+            String homename = "default"; 
+            Optional<String> home = ctx.<String> getOne("home");
 
-        if(ghome == null) { 
-            sender.sendMessage(HOME_NOT_FOUND()); 
-            return CommandResult.success(); 
-        }
-        Location lastLocation = player.getLocation();
+            if(home.isPresent()) { 
+                homename = home.get().toLowerCase();
+            }
+
+            GHome ghome = gplayer.getHome(homename);
+            if(ghome == null) { 
+                src.sendMessage(HOME_NOT_FOUND()); 
+                return CommandResult.success(); 
+            }
+           
+            Location lastLocation = player.getLocation();
+
+            if(!player.transferToWorld(ghome.getWorld(), new Vector3d(ghome.getX(), ghome.getY(), ghome.getZ()))) { 
+                src.sendMessage(HOME_ERROR()); 
+                return CommandResult.success(); 
+            }
+
+            gplayer.setLastposition(DeSerialize.location(lastLocation));
+            gplayer.update();
+
+            if (homename.equalsIgnoreCase("default")){
+                src.sendMessage(HOME_TP_SUCCESS(player,""));
+            } else {
+                src.sendMessage(HOME_TP_SUCCESS(player,homename));
+            }   
+        } 
         
-        if(!player.transferToWorld(ghome.getWorld(), new Vector3d(ghome.getX(), ghome.getY(), ghome.getZ()))) { 
-            sender.sendMessage(HOME_ERROR()); 
-            return CommandResult.success(); 
+        else if (src instanceof ConsoleSource){
+            src.sendMessage(NO_CONSOLE());
         }
         
-        gplayer.setLastposition(DeSerialize.location(lastLocation));
-        gplayer.update();
-        
-        if (homename.equalsIgnoreCase("default")){
-            sender.sendMessage(HOME_TP_SUCCESS(player,""));
-        } else {
-            sender.sendMessage(HOME_TP_SUCCESS(player,homename));
+        else {
+            src.sendMessage (NO_PERMISSIONS());
         }
+        
         return CommandResult.success();
     }
 }
