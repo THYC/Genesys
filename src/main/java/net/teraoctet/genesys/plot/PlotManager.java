@@ -7,6 +7,7 @@ import static net.teraoctet.genesys.utils.GData.setts;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.extent.Extent;
@@ -123,7 +124,7 @@ public class PlotManager {
     }
             
     public Text getListPlot(boolean flagJail){
-        String listplot = "";
+        String listplot = "&6";
         if (flagJail == true){
             for(GPlot jail : jails){
                 listplot = listplot + System.getProperty("line.separator") + jail.getName();
@@ -133,19 +134,18 @@ public class PlotManager {
                 listplot = listplot + System.getProperty("line.separator") + plot.getName();
             }
         }
-        Text text = Text.builder(listplot).color(TextColors.GOLD).build();
+        Text text = Text.builder().append(TextSerializers.formattingCode('&').deserialize(listplot)).toText();
         return text;
     }
     
     public Text getListPlot(String playerUUID){
-        String listplot = "";
+        String listplot = "&6";
         for(GPlot plot : plots){
             if(plot.getUuidOwner().equalsIgnoreCase(playerUUID)){
                 listplot = listplot + System.getProperty("line.separator") + plot.getName();
             }
         }
-        
-        Text text = Text.builder(listplot).color(TextColors.GOLD).build();
+        Text text = Text.builder().append(TextSerializers.formattingCode('&').deserialize(listplot)).toText();
         return text;
     }
     

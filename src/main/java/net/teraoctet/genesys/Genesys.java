@@ -25,13 +25,11 @@ import org.spongepowered.api.event.game.state.GameLoadCompleteEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.plugin.PluginContainer;
 
 @Plugin(id = "net.teraoctet.genesys", name = "genesys", version = "1.0", description = "manage your server", authors = {"THYC"})
 public class Genesys {
     
     @Inject private Logger logger;
-    private static PluginContainer plugin;
     public static PlotManager plotManager = new PlotManager();
     public static PortalManager portalManager = new PortalManager();
     public Logger getLogger(){return logger;}  
@@ -69,11 +67,14 @@ public class Genesys {
 	getGame().getCommandManager().register(this, new CommandManager().CommandWorldTP, "worldtp", "tpworld");
         getGame().getCommandManager().register(this, new CommandManager().CommandClearinventory, "clearinventory", "ci", "clear");
         getGame().getCommandManager().register(this, new CommandManager().CommandInvsee, "invsee", "is");
+        getGame().getCommandManager().register(this, new CommandManager().CommandPlayerinfo, "playerinfo", "pi", "info");
+        getGame().getCommandManager().register(this, new CommandManager().CommandBroadcastmessage, "broadcastmessage", "broadcast", "bm");
 	getGame().getCommandManager().register(this, new CommandManager().CommandTest, "test");
         getGame().getCommandManager().register(this, new CommandManager().CommandRocket, "rocket");
 
         getLogger().info("-----------------------------"); 
-	getLogger().info("Genesys loaded!"); 
+	getLogger().info("...........Genesys..........."); 
+        getLogger().info("developped by THYC and Votop"); 
         getLogger().info("-----------------------------"); 
     }
         

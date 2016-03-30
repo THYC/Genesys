@@ -40,6 +40,8 @@ public class MessageManager {
     private static Text PLOT_NAME_ALREADY_USED;
     private static Text NO_PLOT;
     private static Text PLOT_INFO;
+    private static Text TARGET_PLOT_LIST;
+    private static Text PLOT_LIST;
     private static Text PLOT_PROTECTED;
     private static Text PLOT_NO_FLY;
     private static Text PLOT_NO_ENTER;
@@ -57,12 +59,14 @@ public class MessageManager {
     private static Text HOME_ERROR;
     private static Text HOME_TP_SUCCESS;
     private static Text PLAYER_NOT_FOUND;
+    private static Text PLAYER_DATA_NOT_FOUND;
     private static Text WORLD_ALREADY_EXIST;
     private static Text WORLD_CREATED;
     private static Text WORLD_NOT_FOUND;
     private static Text WORLD_CREATION_ERROR;
     private static Text WORLD_PROPERTIES_ERROR;
     private static Text TELEPORTED_TO_WORLD;
+    private static Text OTHER_TELEPORTED_TO_WORLD;
     private static Text PROTECT_PORTAL;
     private static Text TP_BACK;
     private static Text INVENTORY_CLEARED;
@@ -95,8 +99,7 @@ public class MessageManager {
                                 
                 msg = new ArrayList<>();
                 msg.add("&6Bienvenue, &e%name%!");
-                msg.add("&6Tu es sur la map &e%world%!");
-                msg.add("&7Bon jeu !\n");
+                msg.add("&6Tu es sur la map &e%world%!\n");
                 message.getNode("JOIN_MESSAGE").setValue(msg);
                 manager.save(message);
                 
@@ -116,6 +119,11 @@ public class MessageManager {
                 msg = new ArrayList<>();
                 msg.add("&9%name% est nouveau sur le serveur !");
                 message.getNode("FIRSTJOIN_BROADCAST_MESSAGE").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&1%var1% &9a chang\351 son nom en &1%var2%");
+                message.getNode("NAME_CHANGE").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
@@ -149,20 +157,20 @@ public class MessageManager {
                 manager.save(message);
 
                 msg = new ArrayList<>();
-                msg.add("&6Le co\373t pour prot\351ger cette parcelle est de &e%var1% \351meraudes");
-                msg.add("&6Vous poss\351dez actuellement &e%var2% \351meraude(s) en banque");
+                msg.add("\n&6Le co\373t pour prot\351ger cette parcelle est de &e%var1% \351meraudes");
+                msg.add("&6Vous poss\351dez actuellement &e%var2% \351meraude(s) en banque\n");
                 message.getNode("BUYING_COST_PLOT").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&6La parcelle : &e%var1% &6 est maintenant prot\351g\351e : ");
-                msg.add("&6Vous pouvez modifier les param\350tres avec la commande &e/plot flag");
+                msg.add("\n&6La parcelle : &e%var1% &6 est maintenant prot\351g\351e : ");
+                msg.add("&6Vous pouvez modifier les param\350tres avec la commande &e/plot flag\n");
                 message.getNode("PROTECT_PLOT_SUCCESS").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&6La parcelle : &e%var1% &6 est maintenant prot\351g\351e de la bedrock jusqu'au ciel");
-                msg.add("&6Vous pouvez modifier les param\350tres avec la commande &e/plot flag");
+                msg.add("\n&6La parcelle : &e%var1% &6 est maintenant prot\351g\351e de la bedrock jusqu'au ciel");
+                msg.add("&6Vous pouvez modifier les param\350tres avec la commande &e/plot flag\n");
                 message.getNode("BEDROCK2SKY_PROTECT_PLOT_SUCCESS").setValue(msg);
                 manager.save(message);
                 
@@ -172,15 +180,14 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&cVous n'avez pas d\351fini les angles de votre parcelle");
+                msg.add("\n&cVous n'avez pas d\351fini les angles de votre parcelle");
                 msg.add("&cLes angles se d\351finissent en utilisant une pelle en bois :");
-                msg.add("&cAngle1 = clic gauche / Angle2 = clic droit");
+                msg.add("&cAngle1 = clic gauche / Angle2 = clic droit\n");
                 message.getNode("UNDEFINED_PLOT_ANGLES").setValue(msg);
                 manager.save(message);
                                 
                 msg = new ArrayList<>();
-                msg.add("&cVous ne pouvez pas cr\351er une parcelle ici");
-                msg.add("&cIl y a d\351j\340 une parcelle prot\351g\351e dans cette s\351lection !");            
+                msg.add("&cVous ne pouvez pas cr\351er cette parcelle, d\351j\340 une parcelle prot\351g\351e dans cette s\351lection !");         
                 message.getNode("ALREADY_OWNED_PLOT").setValue(msg);
                 manager.save(message);
                 
@@ -205,10 +212,20 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&6Vous \352tes sur une parcelle proteg\351e : &e%plot%");
+                msg.add("\n&6Vous \352tes sur une parcelle proteg\351e : &e%plot%");
                 msg.add("&6Propri\351taire : &e%owner%");
-                msg.add("&6Habitant(s) : &e%allow%");
+                msg.add("&6Habitant(s) : &e%allow%\n");
                 message.getNode("PLOT_INFO").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("\n&bListe des parcelles vous appartenant :");
+                message.getNode("PLOT_LIST").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("\n&bListe des parcelles appartenant \340 &3%var1% :");
+                message.getNode("TARGET_PLOT_LIST").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
@@ -263,8 +280,13 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&4%name% &cest introuvable, v\351rifiez l'\351criture");
+                msg.add("&4%name% &cest introuvable");
                 message.getNode("PLAYER_NOT_FOUND").setValue(msg);
+                manager.save(message);
+                        
+                msg = new ArrayList<>();
+                msg.add("&4%var1% &cn'est pas enregistr\351 dans la base de donn\351e");
+                message.getNode("PLAYER_DATA_NOT_FOUND").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
@@ -477,7 +499,7 @@ public class MessageManager {
     
     public static Text EVENT_DISCONNECT_MESSAGE(Player player){return format(EVENT_DISCONNECT_MESSAGE, "EVENT_DISCONNECT_MESSAGE", player);}
     
-    public static Text NAME_CHANGE(Player player){return format(NAME_CHANGE, "NAME_CHANGE", player);}
+    public static Text NAME_CHANGE(String oldName, String newName){return format(NAME_CHANGE, "NAME_CHANGE", oldName, newName);}
     
     public static Text SUN_MESSAGE(Player player){return format(SUN_MESSAGE, "SUN_MESSAGE", player);}
     
@@ -506,6 +528,10 @@ public class MessageManager {
     public static Text NO_PLOT(){return format(NO_PLOT, "NO_PLOT");}
     
     public static Text PLOT_INFO(Player player, String owner, String allow, String plot){return format(PLOT_INFO, "PLOT_INFO", player, "","", owner, allow, plot);}
+    
+    public static Text PLOT_LIST(){return format(PLOT_LIST, "PLOT_LIST");}
+     
+    public static Text TARGET_PLOT_LIST(String target){return format(TARGET_PLOT_LIST, "TARGET_PLOT_LIST",target,"");}
     
     public static Text PLOT_PROTECTED(){return format(PLOT_PROTECTED, "PLOT_PROTECTED");}
     
@@ -541,15 +567,17 @@ public class MessageManager {
     
     public static Text PLAYER_NOT_FOUND(Player player){return format(PLAYER_NOT_FOUND, "PLAYER_NOT_FOUND",player);}
     
+    public static Text PLAYER_DATA_NOT_FOUND(String player){return format(PLAYER_DATA_NOT_FOUND, "PLAYER_DATA_NOT_FOUND",player, "");}
+    
     public static Text WORLD_ALREADY_EXIST(){return format(WORLD_ALREADY_EXIST, "WORLD_ALREADY_EXIST");}
     
     public static Text WORLD_CREATED(Player player, String var1){return format(WORLD_CREATED, "WORLD_CREATED",player,var1,"");}
     
     public static Text TELEPORTED_TO_WORLD(Player player, String var1){return format(TELEPORTED_TO_WORLD, "TELEPORTED_TO_WORLD",player,var1,"");}
     
-    public static Text OTHER_TELEPORTED_TO_WORLD(Player player, String var1){return format(TELEPORTED_TO_WORLD, "TELEPORTED_TO_WORLD",player,var1,"");}
+    public static Text OTHER_TELEPORTED_TO_WORLD(Player player, String var1){return format(OTHER_TELEPORTED_TO_WORLD, "OTHER_TELEPORTED_TO_WORLD",player,var1,"");}
     
-    public static Text WORLD_NOT_FOUND(Player player, String var1){return format(WORLD_NOT_FOUND, "WORLD_NOT_FOUND",player,var1,"");}
+    public static Text WORLD_NOT_FOUND(String worldname){return format(WORLD_NOT_FOUND, "WORLD_NOT_FOUND",worldname,"");}
     
     public static Text WORLD_PROPERTIES_ERROR(){return format(WORLD_PROPERTIES_ERROR, "WORLD_PROPERTIES_ERROR");}
     
