@@ -4,7 +4,6 @@ import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static net.teraoctet.genesys.utils.MessageManager.STORM_MESSAGE;
 import static org.spongepowered.api.Sponge.getGame;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -17,13 +16,14 @@ import org.spongepowered.api.world.weather.Weathers;
 public class CommandStorm implements CommandExecutor {
         
     @Override
-    public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext ctx){
 
         if(src instanceof Player && src.hasPermission("genesys.weather.storm")) { 
             Player player = (Player) src;
             World world = player.getLocation().getExtent();
             world.setWeather(Weathers.THUNDER_STORM);
             getGame().getServer().getBroadcastChannel().send(STORM_MESSAGE(player));
+            return CommandResult.success();
         } 
         
         else if (src instanceof ConsoleSource) {
@@ -34,7 +34,7 @@ public class CommandStorm implements CommandExecutor {
             src.sendMessage(NO_PERMISSIONS());
         }
 
-        return CommandResult.success();	
+        return CommandResult.empty();	
     }
 }
 

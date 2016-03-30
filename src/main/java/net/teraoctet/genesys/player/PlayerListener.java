@@ -15,7 +15,6 @@ import static net.teraoctet.genesys.utils.MessageManager.FIRSTJOIN_MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.JOIN_MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.EVENT_DISCONNECT_MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.NAME_CHANGE;
-import net.teraoctet.genesys.utils.GServer;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import net.teraoctet.genesys.utils.Permissions;
 import net.teraoctet.genesys.utils.DeSerialize;
@@ -29,10 +28,13 @@ import static org.spongepowered.api.block.BlockTypes.STANDING_SIGN;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.block.tileentity.carrier.Chest;
+import org.spongepowered.api.command.source.CommandBlockSource;
+import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.command.SendCommandEvent;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.cause.Last;
@@ -45,11 +47,11 @@ import org.spongepowered.api.item.inventory.entity.HumanInventory;
 import org.spongepowered.api.item.inventory.type.GridInventory;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 public class PlayerListener {
     
     public static ArrayList<Inventory> inventorys = new ArrayList<>();
-    //public PlayerListener(Genesys genesys) { this.genesys = genesys;}
     public PlayerListener() {}
     
     @Listener
@@ -67,7 +69,7 @@ public class PlayerListener {
     public void onPlayerJoin(ClientConnectionEvent.Join event) {
     	Player player = event.getTargetEntity();
         String uuid = player.getUniqueId().toString();
-        String name = player.getName().toLowerCase();
+        String name = player.getName();
         GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
         event.setMessageCancelled(true);
     	
@@ -82,14 +84,14 @@ public class PlayerListener {
         }
 	
         GPlayer player_uuid = getGPlayer(uuid);
-        GPlayer player_name = getGPlayer(getUUID(name));
         
-        if(player_uuid != null && player_name == null) {
+        if(player_uuid != null && getUUID(name) == null) {
+            getGame().getServer().getBroadcastChannel().send(NAME_CHANGE(player_uuid.getName(),player.getName()));
             removeGPlayer(player_uuid.getUUID());
             removeUUID(player_uuid.getName());
             player_uuid.setName(name);
             player_uuid.update();
-            GServer.broadcast(NAME_CHANGE(player));
+            commit();
         }
     }
     
@@ -97,6 +99,32 @@ public class PlayerListener {
     public void onPlayerDisconnect(ClientConnectionEvent.Disconnect event) {
         Player player = (Player) event.getTargetEntity();
         event.setMessage(EVENT_DISCONNECT_MESSAGE(player));
+    }
+    
+    //-Credits : 
+    //CommandLogger : https://github.com/prism/CommandLogger
+    //Author : viveleroi
+    @Listener
+    public void onSendCommand(final SendCommandEvent event){
+        StringBuilder builder = new StringBuilder();
+
+        Optional<Player> optionalPlayer = event.getCause().first(Player.class);
+        if (optionalPlayer.isPresent()) {
+            builder.append(optionalPlayer.get().getName());
+
+            Location<World> loc = optionalPlayer.get().getLocation();
+            builder.append(String.format(" (%s @ %d %d %d) ", loc.getExtent().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
+        }
+        else if(event.getCause().first(ConsoleSource.class).isPresent()) {
+            builder.append("console");
+        }
+        else if(event.getCause().first(CommandBlockSource.class).isPresent()) {
+            builder.append("command block");
+        }
+
+        builder.append(": /").append(event.getCommand()).append(" ").append(event.getArguments());
+
+        getGame().getServer().getConsole().sendMessage(Text.of(builder.toString()));
     }
     
     @Listener

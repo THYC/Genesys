@@ -30,9 +30,9 @@ import org.spongepowered.api.world.storage.WorldProperties;
 public class CommandTest implements CommandExecutor {
             
     @Override
-    public CommandResult execute(CommandSource sender, CommandContext ctx) throws CommandException {    
+    public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException {    
 
-        Player player = (Player) sender;
+        Player player = (Player) src;
         /*if(!player.hasPermission("genesys.test")) { 
             sender.sendMessage(NO_PERMISSIONS()); 
             return CommandResult.success(); 
@@ -95,7 +95,7 @@ public class CommandTest implements CommandExecutor {
         player.getSubjectData().setPermission(SubjectData.GLOBAL_CONTEXT, "genesys.fly", Tristate.FALSE); 
         List<String> msg = new ArrayList<>();
         msg = Permissions.getGroups(player);
-        sender.sendMessage(MESSAGE(msg,player,""));
+        src.sendMessage(MESSAGE(msg,player,""));
         
         
         return CommandResult.success();

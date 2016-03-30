@@ -8,7 +8,6 @@ import net.teraoctet.genesys.utils.GData;
 import static net.teraoctet.genesys.utils.MessageManager.USAGE;
 import org.spongepowered.api.Game;
 import static org.spongepowered.api.Sponge.getGame;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -17,7 +16,6 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.service.pagination.PaginationList.Builder;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.text.serializer.TextSerializers;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
@@ -30,7 +28,7 @@ public class CommandPortal implements CommandExecutor {
     public CommandPortal(Game game){}
        
     @Override
-    public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext ctx) {
 
         if(src instanceof Player && src.hasPermission("genesys.admin.portal")) { 
             Optional<String> arguments = ctx.<String> getOne("arguments");
@@ -51,7 +49,7 @@ public class CommandPortal implements CommandExecutor {
                 .padding(Text.of("-"))
                 .sendTo(src);
 
-                return CommandResult.success();	
+                return CommandResult.empty();
             }
 
             Player player = (Player) src;
@@ -65,14 +63,14 @@ public class CommandPortal implements CommandExecutor {
                         gportal.delete();
                         GData.commit();
                         GData.removePortal(gportal);
-                        player.sendMessage(ChatTypes.CHAT,MESSAGE("&e" + gportal.getName() + " &aa \351t\351 supprim\351"));
+                        player.sendMessage(MESSAGE("&e" + gportal.getName() + " &aa \351t\351 supprim\351"));
                     } else {
-                        player.sendMessage(ChatTypes.CHAT,PLOT_NAME_ALREADY_USED());
-                        return CommandResult.success();
+                        player.sendMessage(PLOT_NAME_ALREADY_USED());
+                        return CommandResult.empty();
                     }
                 } else {
-                    player.sendMessage(ChatTypes.CHAT,USAGE("/portal remove <name>"));
-                    return CommandResult.success();
+                    player.sendMessage(USAGE("/portal remove <name>"));
+                    return CommandResult.empty();
                 }	
             }
 
@@ -87,20 +85,20 @@ public class CommandPortal implements CommandExecutor {
                         gportal.settoZ(player.getLocation().getBlockZ());
                         gportal.update();
                         GData.commit();
-                        player.sendMessage(ChatTypes.CHAT,MESSAGE("&e" + gportal.getName() + ": &a point d'arriv\351 enregistr\351"));
+                        player.sendMessage(MESSAGE("&e" + gportal.getName() + ": &a point d'arriv\351 enregistr\351"));
                     } else {
-                        player.sendMessage(ChatTypes.CHAT,PLOT_NAME_ALREADY_USED());
-                        return CommandResult.success();
+                        player.sendMessage(PLOT_NAME_ALREADY_USED());
+                        return CommandResult.empty();
                     }
                 } else {
-                    player.sendMessage(ChatTypes.CHAT,USAGE("/portal tpfrom <name>"));
-                    return CommandResult.success();
+                    player.sendMessage(USAGE("/portal tpfrom <name>"));
+                    return CommandResult.empty();
                 }	
             }
 
             if("list".equalsIgnoreCase(args[0])) {
                 Text list = portalManager.listPortal();
-                player.sendMessage(ChatTypes.CHAT,list); 
+                player.sendMessage(list); 
                 return CommandResult.success();	
             }
 
@@ -111,7 +109,7 @@ public class CommandPortal implements CommandExecutor {
                         GPortal gportal = portalManager.getPortal(name);
                         if(args.length == 2){
                             Text msg = MESSAGE(gportal.getMessage());
-                            player.sendMessage(ChatTypes.CHAT,msg); 
+                            player.sendMessage(msg); 
                             return CommandResult.success();
                         } else if (args.length > 2) {
                             String smsg = "";
@@ -120,17 +118,17 @@ public class CommandPortal implements CommandExecutor {
                             }
                             Text msg = MESSAGE(smsg);
                             gportal.setMessage(smsg);
-                            player.sendMessage(ChatTypes.CHAT,MESSAGE("&cMessage :"));
-                            player.sendMessage(ChatTypes.CHAT,msg);
+                            player.sendMessage(MESSAGE("&cMessage :"));
+                            player.sendMessage(msg);
                             return CommandResult.success();
                         }     
                     } else {
-                        player.sendMessage(ChatTypes.CHAT,PLOT_NAME_ALREADY_USED());
-                        return CommandResult.success();
+                        player.sendMessage(PLOT_NAME_ALREADY_USED());
+                        return CommandResult.empty();
                     }   
                 } else {
-                    player.sendMessage(ChatTypes.CHAT,USAGE("/portal message <name> [message]"));
-                    return CommandResult.success();
+                    player.sendMessage(USAGE("/portal message <name> [message]"));
+                    return CommandResult.empty();
                 }
             }    
         } 
@@ -143,6 +141,6 @@ public class CommandPortal implements CommandExecutor {
             src.sendMessage(NO_PERMISSIONS());
         }
 
-        return CommandResult.success();
+        return CommandResult.empty();
     }
 }

@@ -7,7 +7,6 @@ import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static net.teraoctet.genesys.utils.MessageManager.PLAYER_NOT_FOUND;
 import static net.teraoctet.genesys.utils.MessageManager.USAGE;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -18,7 +17,7 @@ import org.spongepowered.api.entity.living.player.Player;
 public class CommandLevel implements CommandExecutor {
     
     @Override
-    public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext ctx) {
         
         if(src.hasPermission("genesys.admin.level")) { 
             if(!ctx.getOne("level").isPresent() || (src instanceof ConsoleSource && !ctx.getOne("player").isPresent())){
@@ -27,7 +26,7 @@ public class CommandLevel implements CommandExecutor {
                 } else {
                     src.sendMessage(USAGE("/level <level> <player>"));
                 }
-                return CommandResult.success();
+                return CommandResult.empty();
             }
 
             Optional<Integer> level = ctx.<Integer> getOne("level");
@@ -36,9 +35,9 @@ public class CommandLevel implements CommandExecutor {
             
             if(ctx.getOne("player").isPresent()) {
                 player = ctx.<Player> getOne("player").get();
-                if(!player.isOnline()) {  //----------------------------- ne s'affiche pas, affiche le message par défaut de sponge (No values matching pattern 'erawin' present for player!)
+                if(!player.isOnline()) {
                     src.sendMessage(PLAYER_NOT_FOUND(player));
-                    return CommandResult.success();
+                    return CommandResult.empty();
                 }
             } else {
                 player = (Player) src; 
@@ -47,12 +46,13 @@ public class CommandLevel implements CommandExecutor {
             gplayer = getGPlayer(player.getUniqueId().toString()); 
             gplayer.setLevel(level.get());
             src.sendMessage(MESSAGE("&6%name% est mont\351e au level %var1%",player,String.valueOf(level.get())));
+            return CommandResult.success();
         }
         
         else {
             src.sendMessage(NO_PERMISSIONS());
         }
  
-        return CommandResult.success();
+        return CommandResult.empty();
     }
 }

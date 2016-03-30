@@ -1,11 +1,9 @@
 package net.teraoctet.genesys.commands;
 
-import java.util.Optional;
 import static net.teraoctet.genesys.Genesys.plotManager;
 import net.teraoctet.genesys.player.GPlayer;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import static net.teraoctet.genesys.utils.GServer.getPlayer;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -22,7 +20,7 @@ import org.spongepowered.api.command.source.ConsoleSource;
 public class CommandPlotList implements CommandExecutor {
     
     @Override
-    public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext ctx) {
         if(src instanceof Player && src.hasPermission("genesys.plot.list")) {
             Player player = (Player) src;
 
@@ -32,6 +30,7 @@ public class CommandPlotList implements CommandExecutor {
                 // si <tplayer> n'est pas dans la base de donnée
                 if(gplayer == null){
                     player.sendMessage(PLAYER_NOT_FOUND(getPlayer(targetName)));
+                    return CommandResult.empty();
                 } else {    //lorsque <tplayer> est dans la base de donnée
                     String targetUUID = getPlayer(targetName).getIdentifier();
                     Text listPlot = plotManager.getListPlot(targetUUID);
@@ -45,6 +44,7 @@ public class CommandPlotList implements CommandExecutor {
                 player.sendMessage(PLOT_LIST());
                 player.sendMessage(listPlot);
             }
+            return CommandResult.success();
         } 
         
         else if (src instanceof ConsoleSource) {
@@ -55,6 +55,6 @@ public class CommandPlotList implements CommandExecutor {
             src.sendMessage(NO_PERMISSIONS());
         }
         
-        return CommandResult.success();	
+        return CommandResult.empty();	
     }
 }

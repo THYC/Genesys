@@ -1,7 +1,6 @@
 package net.teraoctet.genesys.commands;
 
 import static org.spongepowered.api.Sponge.getGame;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -18,10 +17,10 @@ import org.spongepowered.api.command.source.ConsoleSource;
 public class CommandPlot implements CommandExecutor {
            
     @Override
-    public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext ctx) {
         
         if(ctx.getOne("arg").isPresent()){
-            return CommandResult.success(); 
+            return CommandResult.success();
         }
         
         if(src instanceof Player && src.hasPermission("genesys.plot")) {
@@ -41,16 +40,18 @@ public class CommandPlot implements CommandExecutor {
                 .header(Text.builder().append(TextSerializers.formattingCode('&').deserialize("&eUsage:")).toText())
                 .padding(Text.of("-"))
                 .sendTo(src); 
+            
+            return CommandResult.success();
         } 
         
         else if (src instanceof ConsoleSource) {
-            src.sendMessage(NO_CONSOLE()); 
+            src.sendMessage(NO_CONSOLE());
         }
         
         else {
             src.sendMessage(NO_PERMISSIONS());
         }
         
-        return CommandResult.success();
+        return CommandResult.empty();
     }
 }

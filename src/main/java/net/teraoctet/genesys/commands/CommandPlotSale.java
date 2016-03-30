@@ -13,7 +13,6 @@ import org.spongepowered.api.block.BlockTypes;
 import static org.spongepowered.api.block.BlockTypes.STANDING_SIGN;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.block.tileentity.TileEntity;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -22,7 +21,6 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.util.blockray.BlockRay;
 import org.spongepowered.api.util.blockray.BlockRayHit;
 import org.spongepowered.api.world.Location;
@@ -37,16 +35,16 @@ public class CommandPlotSale implements CommandExecutor {
        
     @Override
     @SuppressWarnings("UnusedAssignment")
-    public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext ctx) {
 
         if(src instanceof Player && src.hasPermission("genesys.plot.sale")) { 
             Player player = (Player) src;
             GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
         
             if(!ctx.getOne("price").isPresent()){
-                player.sendMessage(ChatTypes.CHAT,USAGE("/plot sale <price>"));
-                player.sendMessage(ChatTypes.CHAT,USAGE("/plot sale <price> [plotName]"));
-                return CommandResult.success();  
+                player.sendMessage(USAGE("/plot sale <price>"));
+                player.sendMessage(USAGE("/plot sale <price> [plotName]"));
+                return CommandResult.empty();  
             }
 
             GPlot gplot = null;
@@ -56,22 +54,22 @@ public class CommandPlotSale implements CommandExecutor {
                 if (plotManager.hasPlot(plotName)){  
                     gplot = plotManager.getPlot(plotName); 
                 } else {
-                    player.sendMessage(ChatTypes.CHAT,MESSAGE("&7parcelle &e" + plotName + " &7introuvable"));
-                    player.sendMessage(ChatTypes.CHAT,USAGE("/plot sale <price> [plotName]"));
-                    return CommandResult.success();  
+                    player.sendMessage(MESSAGE("&7parcelle &e" + plotName + " &7introuvable"));
+                    player.sendMessage(USAGE("/plot sale <price> [plotName]"));
+                    return CommandResult.empty();
                 }       
             } else {
                 gplot = plotManager.getPlot(player.getLocation());
                 if (gplot == null){
-                    player.sendMessage(ChatTypes.CHAT,MESSAGE("&7Vous devez renseigner le nom de la parcelle ou \352tre dessus"));
-                    player.sendMessage(ChatTypes.CHAT,USAGE("/plot sale <price> [plotName]"));
-                    return CommandResult.success();  
+                    player.sendMessage(MESSAGE("&7Vous devez renseigner le nom de la parcelle ou \352tre dessus"));
+                    player.sendMessage(USAGE("/plot sale <price> [plotName]"));
+                    return CommandResult.empty(); 
                 }
             }
 
             if (!gplot.getUuidOwner().equalsIgnoreCase(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
-                player.sendMessage(ChatTypes.CHAT,ALREADY_OWNED_PLOT());
-                return CommandResult.success();
+                player.sendMessage(ALREADY_OWNED_PLOT());
+                return CommandResult.empty();
             }
 
             Location location = null;
@@ -111,6 +109,7 @@ public class CommandPlotSale implements CommandExecutor {
 
             gplot.addSale(location);
             GData.commit();
+            return CommandResult.success();
         } 
         
         else if (src instanceof ConsoleSource) {
@@ -121,6 +120,6 @@ public class CommandPlotSale implements CommandExecutor {
             src.sendMessage(NO_PERMISSIONS());
         }
         
-        return CommandResult.success();	
+        return CommandResult.empty();	
     }   
 }

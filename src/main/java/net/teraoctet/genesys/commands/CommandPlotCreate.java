@@ -4,7 +4,6 @@ import net.teraoctet.genesys.plot.PlotManager;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import net.teraoctet.genesys.player.GPlayer;
 import static net.teraoctet.genesys.utils.MessageManager.USAGE;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -12,7 +11,6 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
-import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import static net.teraoctet.genesys.utils.MessageManager.BUYING_COST_PLOT;
@@ -27,7 +25,7 @@ import org.spongepowered.api.command.source.ConsoleSource;
 public class CommandPlotCreate implements CommandExecutor {
            
     @Override
-    public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext ctx) {
         
         if(src instanceof Player && src.hasPermission("genesys.plot.create")) { 
             Player player = (Player) src;
@@ -35,9 +33,9 @@ public class CommandPlotCreate implements CommandExecutor {
             PlotManager plotManager = PlotManager.getSett(player);
 
             if(!ctx.getOne("name").isPresent()) { 
-                player.sendMessage(ChatTypes.CHAT,USAGE("/plot create <name> [strict] : cr\351ation d'une parcelle"));
-                player.sendMessage(ChatTypes.CHAT,MESSAGE("&7option [strict] : protection sur les points d\351clar\351s"));
-                return CommandResult.success();
+                player.sendMessage(USAGE("/plot create <name> [strict] : cr\351ation d'une parcelle"));
+                player.sendMessage(MESSAGE("&7option [strict] : protection sur les points d\351clar\351s"));
+                return CommandResult.empty();
             }
 
             String name = ctx.<String> getOne("name").get();
@@ -46,13 +44,13 @@ public class CommandPlotCreate implements CommandExecutor {
             if (plotManager.hasPlot(name) == false){
                 Location[] c = {plotManager.getBorder1(), plotManager.getBorder2()};
                 if ((c[0] == null) || (c[1] == null)){
-                    player.sendMessage(ChatTypes.CHAT,UNDEFINED_PLOT_ANGLES());
-                    return CommandResult.success();
+                    player.sendMessage(UNDEFINED_PLOT_ANGLES());
+                    return CommandResult.empty();
                 }
 
                 if(plotManager.plotAllow(plotManager.getBorder1(), plotManager.getBorder2())){
-                    player.sendMessage(ChatTypes.CHAT,ALREADY_OWNED_PLOT());
-                    return CommandResult.success();
+                    player.sendMessage(ALREADY_OWNED_PLOT());
+                    return CommandResult.empty();
                 }
 
                 int X = (int) Math.round(c[0].getX()-c[1].getX());
@@ -72,7 +70,8 @@ public class CommandPlotCreate implements CommandExecutor {
                         if (ctx.<String> getOne("strict").get().equalsIgnoreCase("strict")) strict = true;
                     }
                     player.sendMessage(MESSAGE("&7Le co\373t de cette transaction est de : &e" + amount + " \351meraudes"));
-                    player.sendMessage(Text.builder("Clique ici pour confirmer la cr\351ation de ta parcelle").onClick(TextActions.runCommand("/p createok " + name + " " + amount + " " + strict)).color(TextColors.AQUA).build());   
+                    player.sendMessage(Text.builder("Clique ici pour confirmer la cr\351ation de ta parcelle").onClick(TextActions.runCommand("/p createok " + name + " " + amount + " " + strict)).color(TextColors.AQUA).build());  
+                    return CommandResult.success();
                 } else {
                     player.sendMessage(BUYING_COST_PLOT(player,String.valueOf(amount),String.valueOf(gplayer.getMoney())));
                 }
@@ -89,6 +88,6 @@ public class CommandPlotCreate implements CommandExecutor {
             src.sendMessage(NO_PERMISSIONS());
         }
         
-        return CommandResult.success();
+        return CommandResult.empty();
     }
 }

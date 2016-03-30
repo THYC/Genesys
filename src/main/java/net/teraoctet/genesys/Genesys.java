@@ -67,11 +67,14 @@ public class Genesys {
 	getGame().getCommandManager().register(this, new CommandManager().CommandWorldTP, "worldtp", "tpworld");
         getGame().getCommandManager().register(this, new CommandManager().CommandClearinventory, "clearinventory", "ci", "clear");
         getGame().getCommandManager().register(this, new CommandManager().CommandInvsee, "invsee", "is");
+        getGame().getCommandManager().register(this, new CommandManager().CommandPlayerinfo, "playerinfo", "pi", "info");
+        getGame().getCommandManager().register(this, new CommandManager().CommandBroadcastmessage, "broadcastmessage", "broadcast", "bm");
 	getGame().getCommandManager().register(this, new CommandManager().CommandTest, "test");
         getGame().getCommandManager().register(this, new CommandManager().CommandRocket, "rocket");
 
         getLogger().info("-----------------------------"); 
-	getLogger().info("Genesys loaded!"); 
+	getLogger().info("...........Genesys..........."); 
+        getLogger().info("developped by THYC and Votop"); 
         getLogger().info("-----------------------------"); 
     }
         

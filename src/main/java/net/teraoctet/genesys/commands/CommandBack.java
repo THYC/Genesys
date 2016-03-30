@@ -7,7 +7,6 @@ import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static net.teraoctet.genesys.utils.MessageManager.TP_BACK;
 import static net.teraoctet.genesys.utils.DeSerialize.getLocation;
 import net.teraoctet.genesys.player.GPlayer;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -20,7 +19,7 @@ import org.spongepowered.api.world.World;
 public class CommandBack implements CommandExecutor {
     
     @Override
-    public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext ctx) {
                 
         if (src instanceof Player && src.hasPermission("genesys.back")){           
             Player player = (Player) src;
@@ -31,13 +30,11 @@ public class CommandBack implements CommandExecutor {
                 
             if (player.getLocation().getExtent().getUniqueId().equals(location.getExtent().getUniqueId())) {
                 player.setLocation(location);
-            } 
-            
-            else {
+            } else {
                 player.transferToWorld(location.getExtent().getUniqueId(), location.getPosition());
             }		
-            
             src.sendMessage(TP_BACK(player));
+            return CommandResult.success();
 	} 
        
         else if(src instanceof ConsoleSource) {
@@ -48,6 +45,6 @@ public class CommandBack implements CommandExecutor {
             src.sendMessage(NO_PERMISSIONS());
         }
         
-	return CommandResult.success();
+	return CommandResult.empty();
     }
 }

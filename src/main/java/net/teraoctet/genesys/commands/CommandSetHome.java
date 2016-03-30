@@ -12,7 +12,6 @@ import static net.teraoctet.genesys.utils.MessageManager.HOME_ALREADY_EXIST;
 import static net.teraoctet.genesys.utils.MessageManager.NB_HOME;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -24,7 +23,7 @@ import org.spongepowered.api.entity.living.player.Player;
 public class CommandSetHome implements CommandExecutor {
     
     @Override
-    public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext ctx) {
 
         if(src instanceof Player && src.hasPermission("genesys.sethome")) { 
             Player player = (Player) src;
@@ -37,7 +36,7 @@ public class CommandSetHome implements CommandExecutor {
             HashMap<String, GHome> homes = gplayer.getHomes();
             if(homes.containsKey(name)) {
                 src.sendMessage(HOME_ALREADY_EXIST());
-                return CommandResult.success(); 
+                return CommandResult.empty(); 
             }
 
             int nbHomes = 0;
@@ -45,7 +44,7 @@ public class CommandSetHome implements CommandExecutor {
 
             if(!player.hasPermission("genesys.home.unlimited") && nbHomes <= homes.size()) {
                 src.sendMessage(NB_ALLOWED_HOME(player,String.valueOf(nbHomes)));
-                return CommandResult.success(); 
+                return CommandResult.empty(); 
             }
 
             String world = player.getWorld().getName();
@@ -66,6 +65,8 @@ public class CommandSetHome implements CommandExecutor {
 
             if(!player.hasPermission("genesys.home.unlimited")) src.sendMessage(NB_HOME(player,String.valueOf(homes.size()),"illimité"));
             else src.sendMessage(NB_HOME(player,String.valueOf(homes.size()),String.valueOf(nbHomes)));  
+            
+            return CommandResult.success();
         } 
         
         else if (src instanceof ConsoleSource) {
@@ -76,6 +77,6 @@ public class CommandSetHome implements CommandExecutor {
             src.sendMessage(NO_PERMISSIONS());
         }
         
-	return CommandResult.success();
+	return CommandResult.empty();
     }
 }

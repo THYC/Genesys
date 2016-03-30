@@ -13,7 +13,6 @@ import net.teraoctet.genesys.world.GWorld;
 import net.teraoctet.genesys.world.WorldManager;
 
 import static org.spongepowered.api.Sponge.getGame;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -21,7 +20,6 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
-import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.world.DimensionType;
 import org.spongepowered.api.world.DimensionTypes;
 import org.spongepowered.api.world.GeneratorType;
@@ -35,7 +33,7 @@ import org.spongepowered.api.world.storage.WorldProperties;
 public class CommandWorldCreate implements CommandExecutor {
                 
     @Override
-    public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext ctx) {
         
         if (src instanceof Player && src.hasPermission("genesys.admin.world.worldcreate")){
             Player player = null;
@@ -46,7 +44,7 @@ public class CommandWorldCreate implements CommandExecutor {
                 src.sendMessage(MESSAGE("&6<environment> = &7'overworld', 'flat', 'superflat', 'nether' ou 'end'"));
                 src.sendMessage(MESSAGE("&6<gamemode> = &7survival, creative, adventure ou spectator"));
                 src.sendMessage(MESSAGE("&6<Difficulty> = &7easy, hard, normal, peaceful"));
-                return CommandResult.success();
+                return CommandResult.empty();
             } 
 
             String name = ctx.<String> getOne("name").get();
@@ -111,7 +109,7 @@ public class CommandWorldCreate implements CommandExecutor {
                     addWorld(name, w);
                     WorldManager.save(w);
                     src.sendMessage(WORLD_CREATED(player,name));
-
+                    return CommandResult.success();
                 } else {
                     src.sendMessage(WORLD_CREATION_ERROR());
                 }
@@ -124,6 +122,6 @@ public class CommandWorldCreate implements CommandExecutor {
             src.sendMessage(NO_PERMISSIONS());
         }
         
-        return CommandResult.success();
+        return CommandResult.empty();
     }
 }

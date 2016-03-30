@@ -9,8 +9,6 @@ import static net.teraoctet.genesys.utils.MessageManager.HOME_DEL_SUCCESS;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static net.teraoctet.genesys.utils.MessageManager.HOME_NOT_FOUND;
-import static net.teraoctet.genesys.utils.MessageManager.USAGE;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -21,7 +19,7 @@ import org.spongepowered.api.entity.living.player.Player;
 public class CommandDelhome implements CommandExecutor {
     
     @Override
-    public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext ctx) {
 
         if(src instanceof Player && src.hasPermission("genesys.delhome")) {
             Player player = (Player) src;  
@@ -35,16 +33,15 @@ public class CommandDelhome implements CommandExecutor {
 
             GHome ghome = gplayer.getHome(homename);
 
-            if(ghome == null) { 
+            if(ghome != null) { 
+                ghome.delete();
+                gplayer.removeGHome(homename);
+                commit();
+                src.sendMessage(HOME_DEL_SUCCESS(player,""));
+                return CommandResult.success();
+            } else {
                 src.sendMessage(HOME_NOT_FOUND()); 
-                return CommandResult.success(); 
             }
-
-            ghome.delete();
-            gplayer.removeGHome(homename);
-            commit();
-            src.sendMessage(HOME_DEL_SUCCESS(player,""));
-            
         } 
         
         else if (src instanceof ConsoleSource) {
@@ -55,6 +52,6 @@ public class CommandDelhome implements CommandExecutor {
             src.sendMessage(NO_PERMISSIONS());
         }
  
-        return CommandResult.success();
+        return CommandResult.empty();
     }
 }

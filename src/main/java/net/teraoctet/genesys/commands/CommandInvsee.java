@@ -2,7 +2,6 @@ package net.teraoctet.genesys.commands;
 
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -15,11 +14,12 @@ import org.spongepowered.api.event.cause.NamedCause;
 public class CommandInvsee implements CommandExecutor {
     
     @Override
-    public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext ctx) {
         if(src instanceof Player && src.hasPermission("genesys.invsee")) {
             Player target = ctx.<Player> getOne("target").get();
             Player player = (Player) src; 
             player.openInventory(target.getInventory(), Cause.of(NamedCause.source(src)));
+            return CommandResult.success();
         }
         
         else if (src instanceof ConsoleSource) {
@@ -30,6 +30,6 @@ public class CommandInvsee implements CommandExecutor {
             src.sendMessage(NO_PERMISSIONS());
         }
 
-	return CommandResult.success();
+	return CommandResult.empty();
     }
 }

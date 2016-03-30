@@ -59,6 +59,7 @@ public class MessageManager {
     private static Text HOME_ERROR;
     private static Text HOME_TP_SUCCESS;
     private static Text PLAYER_NOT_FOUND;
+    private static Text PLAYER_DATA_NOT_FOUND;
     private static Text WORLD_ALREADY_EXIST;
     private static Text WORLD_CREATED;
     private static Text WORLD_NOT_FOUND;
@@ -118,6 +119,11 @@ public class MessageManager {
                 msg = new ArrayList<>();
                 msg.add("&9%name% est nouveau sur le serveur !");
                 message.getNode("FIRSTJOIN_BROADCAST_MESSAGE").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&1%var1% &9a chang\351 son nom en &1%var2%");
+                message.getNode("NAME_CHANGE").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
@@ -276,6 +282,11 @@ public class MessageManager {
                 msg = new ArrayList<>();
                 msg.add("&4%name% &cest introuvable");
                 message.getNode("PLAYER_NOT_FOUND").setValue(msg);
+                manager.save(message);
+                        
+                msg = new ArrayList<>();
+                msg.add("&4%var1% &cn'est pas enregistr\351 dans la base de donn\351e");
+                message.getNode("PLAYER_DATA_NOT_FOUND").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
@@ -488,7 +499,7 @@ public class MessageManager {
     
     public static Text EVENT_DISCONNECT_MESSAGE(Player player){return format(EVENT_DISCONNECT_MESSAGE, "EVENT_DISCONNECT_MESSAGE", player);}
     
-    public static Text NAME_CHANGE(Player player){return format(NAME_CHANGE, "NAME_CHANGE", player);}
+    public static Text NAME_CHANGE(String oldName, String newName){return format(NAME_CHANGE, "NAME_CHANGE", oldName, newName);}
     
     public static Text SUN_MESSAGE(Player player){return format(SUN_MESSAGE, "SUN_MESSAGE", player);}
     
@@ -555,6 +566,8 @@ public class MessageManager {
     public static Text HOME_TP_SUCCESS(Player player, String var1){return format(HOME_TP_SUCCESS, "HOME_TP_SUCCESS", player, var1, "");}
     
     public static Text PLAYER_NOT_FOUND(Player player){return format(PLAYER_NOT_FOUND, "PLAYER_NOT_FOUND",player);}
+    
+    public static Text PLAYER_DATA_NOT_FOUND(String player){return format(PLAYER_DATA_NOT_FOUND, "PLAYER_DATA_NOT_FOUND",player, "");}
     
     public static Text WORLD_ALREADY_EXIST(){return format(WORLD_ALREADY_EXIST, "WORLD_ALREADY_EXIST");}
     

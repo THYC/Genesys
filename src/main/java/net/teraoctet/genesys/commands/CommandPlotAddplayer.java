@@ -5,13 +5,11 @@ import net.teraoctet.genesys.plot.GPlot;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import static net.teraoctet.genesys.utils.MessageManager.USAGE;
 import net.teraoctet.genesys.player.GPlayer;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.chat.ChatTypes;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PLOT;
@@ -22,7 +20,7 @@ import org.spongepowered.api.command.source.ConsoleSource;
 public class CommandPlotAddplayer implements CommandExecutor {
        
     @Override
-    public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext ctx) {
 
         if(src instanceof Player && src.hasPermission("genesys.plot.addplayer")) { 
             Player player = (Player) src;
@@ -37,38 +35,38 @@ public class CommandPlotAddplayer implements CommandExecutor {
             }
 
             if (gplot == null){
-                player.sendMessage(ChatTypes.CHAT,NO_PLOT());
-                player.sendMessage(ChatTypes.CHAT,USAGE("/plot addplayer : ajoute un habitant - vous devez \352tre sur la parcelle"));
-                player.sendMessage(ChatTypes.CHAT,USAGE("/plot addplayer <NomParcelle> : ajoute un habitant sur la parcelle nomm\351e"));
-                return CommandResult.success(); 
+                player.sendMessage(NO_PLOT());
+                player.sendMessage(USAGE("/plot addplayer : ajoute un habitant - vous devez \352tre sur la parcelle"));
+                player.sendMessage(USAGE("/plot addplayer <nomParcelle> : ajoute un habitant sur la parcelle nomm\351e"));
+                return CommandResult.empty();
             } else if (!gplot.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
-                player.sendMessage(ChatTypes.CHAT,ALREADY_OWNED_PLOT());
-                return CommandResult.success();   
+                player.sendMessage(ALREADY_OWNED_PLOT());
+                return CommandResult.empty();   
             }
 
             if(ctx.getOne("player").isPresent()){
                 Player target = ctx.<Player> getOne("player").get();  
                 if (target == null){
-                    player.sendMessage(ChatTypes.CHAT,MESSAGE("&e" + target + " &7 doit \352tre connect\351 pour l'ajouter"));
-                    return CommandResult.success();
+                    player.sendMessage(MESSAGE("&e" + target + " &7 doit \352tre connect\351 pour l'ajouter"));
+                    return CommandResult.empty();
                 }
-
                 gplot.setUuidAllowed(gplot.getUuidAllowed() + " " + target.getUniqueId().toString());
-                player.sendMessage(ChatTypes.CHAT,MESSAGE("&e" + target.getName() + " &7 a \351t\351 ajout\351 à la liste des habitants"));
-                target.sendMessage(ChatTypes.CHAT,MESSAGE("&7Vous \352tes maintenant habitant de &e" + gplot.getName()));
+                player.sendMessage(MESSAGE("&e" + target.getName() + " &7 a \351t\351 ajout\351 à la liste des habitants"));
+                target.sendMessage(MESSAGE("&7Vous \352tes maintenant habitant de &e" + gplot.getName()));
+                return CommandResult.success();
             } else {
-                player.sendMessage(ChatTypes.CHAT,USAGE("/plot addplayer <playerName> [NomParcelle]"));
+                player.sendMessage(USAGE("/plot addplayer <playerName> [nomParcelle]"));
             }
         } 
         
         else if (src instanceof ConsoleSource) {
-            src.sendMessage(NO_CONSOLE()); 
+            src.sendMessage(NO_CONSOLE());
         }
         
         else {
             src.sendMessage(NO_PERMISSIONS());
         }
 
-        return CommandResult.success();	
+        return CommandResult.empty();	
     }
 }

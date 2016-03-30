@@ -5,7 +5,6 @@ import net.teraoctet.genesys.utils.GServer;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static org.spongepowered.api.Sponge.getGame;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -24,9 +23,8 @@ import org.spongepowered.api.text.format.TextColors;
 public class CommandHead implements CommandExecutor {
     
     @Override
-    public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext ctx) {
         
-                   
         if(src instanceof Player && src.hasPermission("genesys.head")) { 
             Player player = (Player) src;           
             Optional<String> head = ctx.<String> getOne("head");
@@ -58,17 +56,19 @@ public class CommandHead implements CommandExecutor {
 
                     player.sendMessage(ChatTypes.CHAT,Text.of(TextColors.GREEN, "Success! ", TextColors.YELLOW, "Created skull of player's head. Enjoy!"));
                 }
+                
+                return CommandResult.success();
             }   
         } 
         
         else if (src instanceof ConsoleSource){
-           src.sendMessage(NO_CONSOLE());  
+           src.sendMessage(NO_CONSOLE());
         }
         
         else {
             src.sendMessage(NO_PERMISSIONS());
         }
 
-        return CommandResult.success();
+        return CommandResult.empty();
     }
 }

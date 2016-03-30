@@ -10,7 +10,6 @@ import static net.teraoctet.genesys.utils.MessageManager.WORLD_NOT_FOUND;
 import net.teraoctet.genesys.world.GWorld;
 
 import static org.spongepowered.api.Sponge.getGame;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -22,7 +21,7 @@ import org.spongepowered.api.world.World;
 public class CommandWorldTP implements CommandExecutor {
             
     @Override
-    public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext ctx) {
 	
         if (src.hasPermission("genesys.world.worldtp")){ 
             //si le joueur ne tape pas le <world>
@@ -56,6 +55,7 @@ public class CommandWorldTP implements CommandExecutor {
                         player.setLocation(world.getSpawnLocation());
                         player.offer(Keys.GAME_MODE, gworld.getGamemode());
                         src.sendMessage(TELEPORTED_TO_WORLD(player,worldName));
+                        return CommandResult.success();
                     }
 
                     //lorsque un [player] est ciblé par la commande
@@ -67,6 +67,7 @@ public class CommandWorldTP implements CommandExecutor {
                                 target.offer(Keys.GAME_MODE, gworld.getGamemode());
                                 src.sendMessage(OTHER_TELEPORTED_TO_WORLD(target,worldName));
                                 target.sendMessage(TELEPORTED_TO_WORLD(target,worldName));
+                                return CommandResult.success();
                             } else {
                                 src.sendMessage(PLAYER_NOT_FOUND(target));
                             }
@@ -82,6 +83,6 @@ public class CommandWorldTP implements CommandExecutor {
             src.sendMessage(NO_PERMISSIONS());
         }
         
-        return CommandResult.success();
+        return CommandResult.empty();
     }
 }

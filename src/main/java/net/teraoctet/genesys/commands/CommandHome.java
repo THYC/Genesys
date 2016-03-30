@@ -11,7 +11,6 @@ import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static net.teraoctet.genesys.utils.MessageManager.HOME_NOT_FOUND;
 import static net.teraoctet.genesys.utils.MessageManager.HOME_ERROR;
 import static net.teraoctet.genesys.utils.MessageManager.HOME_TP_SUCCESS;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -23,7 +22,7 @@ import org.spongepowered.api.world.Location;
 public class CommandHome implements CommandExecutor {
     
     @Override
-    public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException {       
+    public CommandResult execute(CommandSource src, CommandContext ctx) {       
                    
         if(src instanceof Player && src.hasPermission("genesys.home")) { 
             Player player = (Player) src;           
@@ -38,14 +37,14 @@ public class CommandHome implements CommandExecutor {
             GHome ghome = gplayer.getHome(homename);
             if(ghome == null) { 
                 src.sendMessage(HOME_NOT_FOUND()); 
-                return CommandResult.success(); 
+                return CommandResult.empty();
             }
            
             Location lastLocation = player.getLocation();
 
             if(!player.transferToWorld(ghome.getWorld(), new Vector3d(ghome.getX(), ghome.getY(), ghome.getZ()))) { 
                 src.sendMessage(HOME_ERROR()); 
-                return CommandResult.success(); 
+                return CommandResult.empty(); 
             }
 
             gplayer.setLastposition(DeSerialize.location(lastLocation));
@@ -55,7 +54,8 @@ public class CommandHome implements CommandExecutor {
                 src.sendMessage(HOME_TP_SUCCESS(player,""));
             } else {
                 src.sendMessage(HOME_TP_SUCCESS(player,homename));
-            }   
+            }
+            return CommandResult.success();
         } 
         
         else if (src instanceof ConsoleSource){
@@ -66,6 +66,6 @@ public class CommandHome implements CommandExecutor {
             src.sendMessage (NO_PERMISSIONS());
         }
         
-        return CommandResult.success();
+        return CommandResult.empty();
     }
 }

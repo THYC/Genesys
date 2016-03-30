@@ -7,7 +7,6 @@ import static net.teraoctet.genesys.utils.MessageManager.FLY_GIVEN;
 import static net.teraoctet.genesys.utils.MessageManager.FLY_RETIRED;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static net.teraoctet.genesys.utils.MessageManager.USAGE;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -19,7 +18,7 @@ import org.spongepowered.api.entity.living.player.Player;
 public class CommandFly implements CommandExecutor {
     
     @Override
-    public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext ctx) {
          Optional<Player> tplayer = ctx.<Player> getOne("player");
         
         if (tplayer.isPresent() && src.hasPermission("genesys.fly.others")) {           
@@ -35,7 +34,8 @@ public class CommandFly implements CommandExecutor {
                 tplayer.get().offer(Keys.CAN_FLY,true);
                 tplayer.get().sendMessage(FLY_ENABLED());
                 src.sendMessage(FLY_GIVEN(tplayer.get().getName()));
-            }  
+            } 
+            return CommandResult.success();
         } 
         
         else if (src.hasPermission("genesys.fly")) {
@@ -52,6 +52,7 @@ public class CommandFly implements CommandExecutor {
                     player.offer(Keys.CAN_FLY,true);
                     player.sendMessage(FLY_ENABLED());
                 }
+                return CommandResult.success();
             } else {
                 src.sendMessage(USAGE("/fly <player>"));
             }
@@ -61,6 +62,6 @@ public class CommandFly implements CommandExecutor {
             src.sendMessage(NO_PERMISSIONS());
         }
         
-        return CommandResult.success();	
+        return CommandResult.empty();	
     }
 }

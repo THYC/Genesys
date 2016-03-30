@@ -228,11 +228,28 @@ public class CommandManager {
                 .build();
         
         public CommandSpec CommandInvsee = CommandSpec.builder()
-                .description(Text.of("/invsee [player]"))
+                .description(Text.of("/invsee <player>"))
                 .arguments(GenericArguments.seq(
                     GenericArguments.onlyOne(GenericArguments.player(Text.of("target")))))
                 .permission("genesys.invsee")
                 .executor(new CommandInvsee())
+                .build();
+        
+        public CommandSpec CommandPlayerinfo = CommandSpec.builder()
+                .description(Text.of("/playerinfo [player]"))
+                .arguments(GenericArguments.seq(
+                    GenericArguments.optional(GenericArguments.string(Text.of("tplayer")))))
+                .permission("genesys.playerinfo")
+                .executor(new CommandPlayerinfo())
+                .build();
+        
+         public CommandSpec CommandBroadcastmessage = CommandSpec.builder()
+                .description(Text.of("/broadcast [hide = 0:1] <message..>"))
+                .arguments(GenericArguments.seq(
+                    GenericArguments.onlyOne(GenericArguments.bool(Text.of("hide"))),
+                    GenericArguments.remainingJoinedStrings(Text.of("message"))))
+                .permission("genesys.broadcastmessage")
+                .executor(new CommandBroadcastmessage())
                 .build();
         
         public CommandSpec CommandTest = CommandSpec.builder()
