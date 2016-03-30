@@ -138,11 +138,21 @@ public class CommandManager {
                 .executor(new CommandPlotList()) 
                 .build(); 
         
+        public CommandSpec CommandPlotExtand = CommandSpec.builder()
+                .description(Text.of("/plot extand <value>")) 
+                .permission("genesys.plot.extand") 
+                .arguments(
+                    GenericArguments.seq(
+                        GenericArguments.optional(GenericArguments.integer(Text.of("value")))))
+                .executor(new CommandPlotExtand()) 
+                .build(); 
+        
         public CommandSpec CommandPlot = CommandSpec.builder()
                 .description(Text.of("/plot")) 
                 .permission("genesys.plot") 
                 .child(CommandPlotCreate, "create")
                 .child(CommandPlotCreateOK, "createok")
+                .child(CommandPlotExtand, "extand")
                 .child(CommandPlotList, "list")
                 .child(CommandPlotFlag, "flag")
                 .child(CommandPlotFlaglist, "flaglist")

@@ -40,6 +40,7 @@ public class CommandPlot implements CommandExecutor {
 
         builder.title(Text.builder().append(TextSerializers.formattingCode('&').deserialize("&6Plot")).toText())
             .contents(Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot create <name> &5[strict] : &7cr\351ation d'une parcelle")).toText(),
+                Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot extand <value> : &7agrandis la taille de la parcelle")).toText(),
                 Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot list [player] : &7liste des parcelles poss\351d\351es par un joueur")).toText(),
                 Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot remove &5[NomParcelle] : &7supprime une parcelle")).toText(),
                 Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot flaglist <NomParcelle> : &7liste les diff\351rents flags")).toText(),

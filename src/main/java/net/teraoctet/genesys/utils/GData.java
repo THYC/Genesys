@@ -406,7 +406,7 @@ public class GData {
         public static void addPlot(GPlot gplot) { if(!plots.contains(gplot)) plots.add(gplot); }
         public static void addJail(GPlot gplot) { if(!jails.contains(gplot)) jails.add(gplot); }
         public static void removePlot(GPlot gplot) { if(plots.contains(gplot)) plots.remove(gplot); }
-        public static void removeJail(GPlot gplot) { if(jails.contains(gplot)) plots.remove(gplot); }
+        public static void removeJail(GPlot gplot) { if(jails.contains(gplot)) jails.remove(gplot); }
 
         public static final ArrayList<GPortal> gportals = new ArrayList<>();
         public static void addPortal(GPortal gportal) { if(!gportals.contains(gportal)) gportals.add(gportal); } 

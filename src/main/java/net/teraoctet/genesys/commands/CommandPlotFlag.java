@@ -93,7 +93,7 @@ public class CommandPlotFlag implements CommandExecutor {
             String flag = ctx.<String> getOne("flag").get();
             Integer value = ctx.<Integer> getOne("value").get(); 
             
-            if (value != 1 || value != 0){
+            if (value != 1 && value != 0){
                 player.sendMessage(ChatTypes.CHAT,USAGE("/plot flag <flag> <0|1> [NomParcelle]: modifie la valeur d'un flag &6Oui = 1 Non = 0"));
                 return CommandResult.success();	
             }
