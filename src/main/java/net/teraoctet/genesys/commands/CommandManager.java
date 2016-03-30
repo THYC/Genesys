@@ -143,7 +143,9 @@ public class CommandManager {
                 .permission("genesys.plot.extand") 
                 .arguments(
                     GenericArguments.seq(
-                        GenericArguments.optional(GenericArguments.integer(Text.of("value")))))
+                        GenericArguments.optional(GenericArguments.integer(Text.of("value"))),
+                        GenericArguments.optional(GenericArguments.integer(Text.of("point"))),
+                        GenericArguments.optional(GenericArguments.string(Text.of("axe")))))
                 .executor(new CommandPlotExtand()) 
                 .build(); 
         
