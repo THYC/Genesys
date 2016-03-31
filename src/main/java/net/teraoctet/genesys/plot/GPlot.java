@@ -11,7 +11,6 @@ import net.teraoctet.genesys.utils.GData;
 import static net.teraoctet.genesys.utils.GData.datasource;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import net.teraoctet.genesys.utils.DeSerialize;
-import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static org.spongepowered.api.Sponge.getGame;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;

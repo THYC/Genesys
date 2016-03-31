@@ -145,7 +145,10 @@ public class CommandPlotExtand implements CommandExecutor {
             else { amount = nbBlock / 60;}
             
             player.sendMessage(MESSAGE("&7Le co\373t de cette transaction est de : &e" + amount + " \351meraudes"));
-            player.sendMessage(Text.builder("Clique ici pour confirmer l'ajout de " + nbBlock + " block sur ta parcelle\n").onClick(TextActions.runCommand("/p extand " + extand + " " + point + " " + axe)).color(TextColors.AQUA).build());   
+            player.sendMessage(Text.builder("Clique ici pour confirmer l'ajout de " + nbBlock + " block sur ta parcelle\n")
+                    .onClick(TextActions.runCommand("/p extand " + extand + " " + point + " " + axe))
+                    .color(TextColors.AQUA)
+                    .build());   
             return CommandResult.success();
         
         } else {

@@ -75,6 +75,7 @@ public class MessageManager {
     private static Text FLY_DISABLED;
     private static Text FLY_GIVEN;
     private static Text FLY_RETIRED;
+    private static Text TP_AT_COORDS;
     private static Text KILLED_BY;
     private static Text SUICIDE;
        
@@ -122,7 +123,7 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&1%var1% &9a chang\351 son nom en &1%var2%");
+                msg.add("&8%var1% &7a chang\351 son nom en &8%var2%");
                 message.getNode("NAME_CHANGE").setValue(msg);
                 manager.save(message);
                 
@@ -365,6 +366,11 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
+                msg.add("T\351l\351portation aux coordonn\351es");
+                message.getNode("TP_AT_COORDS").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
                 msg.add("&7%var1% a \351t\351 tu\351 par %var2%");
                 message.getNode("KILLED_BY").setValue(msg);
                 manager.save(message);
@@ -598,6 +604,8 @@ public class MessageManager {
     public static Text FLY_GIVEN(String player){return format(FLY_GIVEN, "FLY_GIVEN",player, "");}
     
     public static Text FLY_RETIRED(String player){return format(FLY_RETIRED, "FLY_RETIRED",player, "");}
+   
+    public static Text TP_AT_COORDS(){return format(TP_AT_COORDS, "TP_AT_COORDS");}
     
     public static Text KILLED_BY(String player, String killer){return format(KILLED_BY, "KILLED_BY",player,killer);}
     
