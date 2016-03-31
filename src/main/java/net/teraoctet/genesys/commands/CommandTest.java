@@ -3,6 +3,7 @@ package net.teraoctet.genesys.commands;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import static net.teraoctet.genesys.plot.PlotManager.playerPlots;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import net.teraoctet.genesys.utils.Permissions;
@@ -20,7 +21,6 @@ import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 import static org.spongepowered.api.entity.living.player.gamemode.GameModes.CREATIVE;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.service.permission.SubjectData;
-import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Tristate;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.WorldCreationSettings;
@@ -38,7 +38,11 @@ public class CommandTest implements CommandExecutor {
             return CommandResult.success(); 
         }*/
         
-        
+        player.sendMessage(MESSAGE(String.valueOf(playerPlots(player.getIdentifier()).size())));
+        player.sendMessage(MESSAGE(String.valueOf(playerPlots(player.getIdentifier()).get(0).getUuidOwner())));
+        //if (playerPlots(player.getIdentifier().length()){
+            
+        //}
         //WorldProperties properties = player.getLocation().getExtent().getProperties();
                     
         //String value = optValue.get();
@@ -92,10 +96,10 @@ public class CommandTest implements CommandExecutor {
         
         //player.getSubjectData().getPermissions(SubjectData.GLOBAL_CONTEXT).put("genesys.fly", Boolean.FALSE);
         //player.getSubjectData().getParents(SubjectData.GLOBAL_CONTEXT).
-        player.getSubjectData().setPermission(SubjectData.GLOBAL_CONTEXT, "genesys.fly", Tristate.FALSE); 
-        List<String> msg = new ArrayList<>();
-        msg = Permissions.getGroups(player);
-        src.sendMessage(MESSAGE(msg,player,""));
+        //player.getSubjectData().setPermission(SubjectData.GLOBAL_CONTEXT, "genesys.fly", Tristate.FALSE); 
+        //List<String> msg = new ArrayList<>();
+        //msg = Permissions.getGroups(player);
+        //src.sendMessage(MESSAGE(msg,player,""));
         
         
         return CommandResult.success();

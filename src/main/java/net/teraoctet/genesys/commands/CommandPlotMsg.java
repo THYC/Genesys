@@ -2,15 +2,12 @@ package net.teraoctet.genesys.commands;
 
 import java.util.Optional;
 import static net.teraoctet.genesys.Genesys.plotManager;
-import static net.teraoctet.genesys.Genesys.portalManager;
 import net.teraoctet.genesys.plot.GPlot;
-import net.teraoctet.genesys.portal.GPortal;
 import net.teraoctet.genesys.utils.GData;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PLOT;
-import static net.teraoctet.genesys.utils.MessageManager.USAGE;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -18,7 +15,6 @@ import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.chat.ChatTypes;
 
 public class CommandPlotMsg implements CommandExecutor {
         
@@ -29,8 +25,7 @@ public class CommandPlotMsg implements CommandExecutor {
             Optional<String> arguments = ctx.<String> getOne("arguments");
                         
             Player player = (Player)src;
-            String[] args = arguments.get().split(" ");
-            
+                        
             // on vérifie que le jouer se situe bien sur une parcelle sinon on sort
             GPlot gplot = plotManager.getPlot(player.getLocation());
             if(gplot == null){
@@ -42,14 +37,16 @@ public class CommandPlotMsg implements CommandExecutor {
             if(gplot.getUuidOwner().equals(player.getIdentifier())){
                 
                 // si le joueur n'a pas tapé d'arguments on affiche le message existant
-                if(args.length == 0){
+                if(!ctx.<String> getOne("arguments").isPresent()){
                     Text msg = MESSAGE(gplot.getMessage());
                     player.sendMessage(msg); 
                     return CommandResult.success();
+                    
                 // sinon on remplace le message par les arguments
-                } else if (args.length > 0) {
+                } else {
+                    String[] args = arguments.get().split(" ");
                     String smsg = "";
-                    for(int i = 2; i < args.length; i++){
+                    for(int i = 0; i < args.length; i++){
                         smsg = smsg + args[i] + " ";
                     }
                     Text msg = MESSAGE(smsg);

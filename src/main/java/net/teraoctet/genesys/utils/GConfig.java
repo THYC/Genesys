@@ -25,6 +25,8 @@ public class GConfig {
                 config.getNode("mysql", "database").setValue("minecraft");
                 config.getNode("limits", "MAX_TEMPBAN_TIME_IN_SECONDS").setValue(3600);
                 config.getNode("limits", "MAX_MUTE_TIME_IN_SECONDS").setValue(600);
+                config.getNode("plot", "DEL_SIGN_AFTER_SALE").setValue(true);
+                config.getNode("plot", "DISPLAY_PLOT_MSG_FOR_OWNER").setValue(true);
                 config.getNode("version").setValue(1);
                 manager.save(config);
             }
@@ -45,4 +47,7 @@ public class GConfig {
 
     public static int LIMITS_MAX_TEMPBAN_TIME_IN_SECONDS() { return config.getNode("limits", "MAX_TEMPBAN_TIME_IN_SECONDS").getInt(); }
     public static int LIMITS_MAX_MUTE_TIME_IN_SECONDS() { return config.getNode("limits", "MAX_MUTE_TIME_IN_SECONDS").getInt(); }
+    
+    public static boolean DEL_SIGN_AFTER_SALE() { return config.getNode("plot", "DEL_SIGN_AFTER_SALE").getBoolean(); }
+    public static boolean DISPLAY_PLOT_MSG_FOR_OWNER() { return config.getNode("plot", "DISPLAY_PLOT_MSG_FOR_OWNER").getBoolean(); }
 }

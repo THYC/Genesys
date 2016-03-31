@@ -9,6 +9,7 @@ import static net.teraoctet.genesys.utils.MessageManager.PLOT_PROTECTED;
 import static net.teraoctet.genesys.utils.MessageManager.PLOT_NO_ENTER;
 import static net.teraoctet.genesys.utils.MessageManager.PLOT_NO_FLY;
 import net.teraoctet.genesys.player.GPlayer;
+import static net.teraoctet.genesys.utils.GConfig.DISPLAY_PLOT_MSG_FOR_OWNER;
 import org.spongepowered.api.block.BlockSnapshot;
 import static org.spongepowered.api.block.BlockTypes.AIR;
 import static org.spongepowered.api.block.BlockTypes.FIRE;
@@ -107,25 +108,29 @@ public class PlotListener {
                         Text txt1 = offering.lines().get(0);
                         if (txt1.equals(MESSAGE("&1A VENDRE"))){
                             int cout = Integer.valueOf(Text.of(offering.getValue(Keys.SIGN_LINES).get().get(2)).toPlain());
-                            if (gplayer.getMoney()< cout){
+                            plot = plotManager.getPlot(Text.of(offering.getValue(Keys.SIGN_LINES).get().get(1)).toPlain());
+                            if (gplayer.getMoney()< cout && !plot.getUuidOwner().contains(player.getIdentifier())){
                                 player.sendMessage(ChatTypes.CHAT,MISSING_BALANCE());
                                 event.setCancelled(true);
                             }
-                            plot = plotManager.getPlot(Text.of(offering.getValue(Keys.SIGN_LINES).get().get(1)).toPlain());
-                            if (!plot.getUuidOwner().contains("ADMIN")){
+                            if (!plot.getUuidOwner().contains("ADMIN") && !plot.getUuidOwner().contains(player.getIdentifier())){
                                 GPlayer vendeur = getGPlayer(plot.getUuidOwner());
                                 vendeur.creditMoney(cout);
                                 vendeur.sendMessage(MESSAGE("&6" + player.getName() + " &7vient d'acheter votre parcelle"));
                                 vendeur.sendMessage(MESSAGE("&6" + cout + " emeraudes &7ont ete ajoute a votre compte"));
                                 vendeur.sendMessage(MESSAGE("&6/bank &7pour consulter votre compte"));  
                             }
-                            player.sendMessage(ChatTypes.CHAT,MESSAGE("&eVous etes maintenant le nouveau proprietaire de cette parcelle"));
                             plot.delSale();
-                            gplayer.debitMoney(cout);
-                            plot.setUuidOwner(gplayer.getUUID());
-                            plot.setUuidAllowed(gplayer.getUUID());
-                            plot.update();
-                            GData.commit();
+                            if(!plot.getUuidOwner().contains(player.getIdentifier())){
+                                gplayer.debitMoney(cout);
+                                plot.setUuidOwner(gplayer.getUUID());
+                                plot.setUuidAllowed(gplayer.getUUID());
+                                plot.update();
+                                GData.commit();
+                                player.sendMessage(MESSAGE("&eVous etes maintenant le nouveau proprietaire de cette parcelle"));
+                            } else {
+                                player.sendMessage(MESSAGE("&eVous avez annule la vente de votre parcelle"));
+                            }
                             return;
                         } 
                     }
@@ -151,6 +156,10 @@ public class PlotListener {
             GPlot gplot = plotManager.getPlot(locTo);
             GPlot jail = plotManager.getPlot(locFrom,true);
 
+            if (gplot != null && DISPLAY_PLOT_MSG_FOR_OWNER() && gplot.getUuidAllowed().contains(player.getUniqueId().toString())){ 
+                player.sendMessage(ChatTypes.CHAT,MESSAGE(gplot.getMessage(),player));
+            }
+            
             if (gplot != null && !gplot.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
                 if (player.get(Keys.CAN_FLY).isPresent()) { 
                     if(player.get(Keys.CAN_FLY).get() == true && gplot.getNoFly() == 1) {
@@ -213,6 +222,29 @@ public class PlotListener {
         if (gplot != null && gplot.getNoBreak() == 1 && !gplot.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
             player.sendMessage(ChatTypes.CHAT,PLOT_PROTECTED());
             event.setCancelled(true);
+        }
+    }
+    
+    @Listener
+    public void onBreakSignSale(ChangeBlockEvent.Break event) {
+        Transaction<BlockSnapshot> block = event.getTransactions().get(0);
+        Optional<Location<World>> optLoc = block.getOriginal().getLocation();
+        Location loc = optLoc.get();
+        
+        Optional<TileEntity> signBlock = loc.getTileEntity();
+        if (signBlock.isPresent()) {
+            TileEntity tile = signBlock.get();
+            if (tile instanceof Sign) {
+                Sign sign=(Sign)tile;
+                Optional<SignData> optional=sign.getOrCreate(SignData.class);
+                if (optional.isPresent()) {
+                    SignData offering = optional.get();
+                    Text txt1 = offering.lines().get(0);
+                    if (txt1.equals(MESSAGE("&1A VENDRE"))){
+                        event.setCancelled(true);
+                    }
+                } 
+            }
         }
     }
     

@@ -98,6 +98,8 @@ public class PlayerListener {
     @Listener
     public void onPlayerDisconnect(ClientConnectionEvent.Disconnect event) {
         Player player = (Player) event.getTargetEntity();
+        GPlayer gplayer = getGPlayer(player.getIdentifier());
+        gplayer.setLastonline(System.currentTimeMillis());
         event.setMessage(EVENT_DISCONNECT_MESSAGE(player));
     }
     
