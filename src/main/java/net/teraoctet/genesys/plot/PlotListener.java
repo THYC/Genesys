@@ -5,8 +5,6 @@ import static net.teraoctet.genesys.Genesys.plotManager;
 import net.teraoctet.genesys.utils.GData;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import static net.teraoctet.genesys.utils.MessageManager.PLOT_INFO;
-import static net.teraoctet.genesys.utils.MessageManager.MISSING_BALANCE;
-import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.PLOT_PROTECTED;
 import static net.teraoctet.genesys.utils.MessageManager.PLOT_NO_ENTER;
 import static net.teraoctet.genesys.utils.MessageManager.PLOT_NO_FLY;
@@ -37,18 +35,6 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.explosion.Explosion;
-import static net.teraoctet.genesys.utils.MessageManager.MISSING_BALANCE;
-import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
-import static net.teraoctet.genesys.utils.MessageManager.MISSING_BALANCE;
-import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
-import static net.teraoctet.genesys.utils.MessageManager.MISSING_BALANCE;
-import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
-import static net.teraoctet.genesys.utils.MessageManager.MISSING_BALANCE;
-import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
-import static net.teraoctet.genesys.utils.MessageManager.MISSING_BALANCE;
-import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
-import static net.teraoctet.genesys.utils.MessageManager.MISSING_BALANCE;
-import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.MISSING_BALANCE;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 
@@ -119,11 +105,11 @@ public class PlotListener {
                     if (optional.isPresent()) {
                         SignData offering = optional.get();
                         Text txt1 = offering.lines().get(0);
-                        //Text txt2 = offering.lines().get(1);
-                        if (txt1.equals(MESSAGE("&1PARCELLE A VENDRE"))){
+                        if (txt1.equals(MESSAGE("&1A VENDRE"))){
                             int cout = Integer.valueOf(Text.of(offering.getValue(Keys.SIGN_LINES).get().get(2)).toPlain());
                             if (gplayer.getMoney()< cout){
                                 player.sendMessage(ChatTypes.CHAT,MISSING_BALANCE());
+                                event.setCancelled(true);
                             }
                             plot = plotManager.getPlot(Text.of(offering.getValue(Keys.SIGN_LINES).get().get(1)).toPlain());
                             if (!plot.getUuidOwner().contains("ADMIN")){
@@ -173,14 +159,14 @@ public class PlotListener {
                         player.sendMessage(ChatTypes.CHAT,PLOT_NO_FLY());
                         event.setCancelled(true);
                     }
+                }
 
-                    if(plotManager.getPlot(locFrom) == null) {
-                        player.sendMessage(ChatTypes.CHAT,MESSAGE(gplot.getMessage(),player));
-                        if(gplot.getNoEnter() == 1 && !player.hasPermission("genesys.plot.enter")) {
-                            player.setLocation(locFrom);
-                            player.sendMessage(ChatTypes.CHAT,PLOT_NO_ENTER());
-                            event.setCancelled(true);
-                        }
+                if(plotManager.getPlot(locFrom) == null) {
+                    player.sendMessage(ChatTypes.CHAT,MESSAGE(gplot.getMessage(),player));
+                    if(gplot.getNoEnter() == 1 && !player.hasPermission("genesys.plot.enter")) {
+                        player.setLocation(locFrom);
+                        player.sendMessage(ChatTypes.CHAT,PLOT_NO_ENTER());
+                        event.setCancelled(true);
                     }
                 }
             }
@@ -298,7 +284,7 @@ public class PlotListener {
         Location loc = new Location(event.getTargetWorld(),explosion.getOrigin());
         GPlot gplot = plotManager.getPlot(loc);
         if (gplot != null){
-            if (gplot.getNoTNT() == 1){ event.setCancelled(true);;}
+            if (gplot.getNoTNT() == 1){ event.setCancelled(true);}
         }
     }
 }

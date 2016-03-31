@@ -6,7 +6,6 @@ import static net.teraoctet.genesys.utils.GData.setts;
 
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -139,7 +138,7 @@ public class PlotManager {
     }
     
     public Text getListPlot(String playerUUID){
-        String listplot = "&6";
+        String listplot = "&6Total : " + plots.size();
         for(GPlot plot : plots){
             if(plot.getUuidOwner().equalsIgnoreCase(playerUUID)){
                 listplot = listplot + System.getProperty("line.separator") + plot.getName();

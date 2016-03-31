@@ -20,6 +20,15 @@ public class GServer {
         
         return found;
     }
+        
+    public static boolean isOnline(String playerName){
+        
+        boolean online = false;
+        for (Player player : Sponge.getServer().getOnlinePlayers()) {
+            if(player.getName().toLowerCase().equals(playerName.toLowerCase())){ online = true;}
+        }
+        return online;
+    }
 
     public static void broadcast(Text text) {
         getGame().getServer().getBroadcastChannel().send(text);

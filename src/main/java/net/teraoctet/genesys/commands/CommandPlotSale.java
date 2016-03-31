@@ -100,7 +100,7 @@ public class CommandPlotSale implements CommandExecutor {
 
             SignData signData = opSign.get();
             List<Text> sale = new ArrayList<>();
-            sale.add(MESSAGE("&1PARCELLE A VENDRE"));
+            sale.add(MESSAGE("&1A VENDRE"));
             sale.add(MESSAGE("&1" + gplot.getName()));
             sale.add(MESSAGE("&4" + String.valueOf(price)));
             sale.add(MESSAGE("&1Emeraudes"));

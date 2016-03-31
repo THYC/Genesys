@@ -18,6 +18,7 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
+import static net.teraoctet.genesys.utils.MessageManager.NO_PLOT;
 import static net.teraoctet.genesys.utils.MessageManager.PROTECT_LOADED_PLOT;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
@@ -51,7 +52,7 @@ public class CommandPlotExtand implements CommandExecutor {
         // on vérifie que le jouer se situe bien sur une parcelle sinon on sort
         GPlot gplot = plotManager.getPlot(player.getLocation());
         if(gplot == null){
-            player.sendMessage(MESSAGE("&bVous devez être sur la parcelle"));
+            player.sendMessage(NO_PLOT());
             return CommandResult.empty();
         }
         

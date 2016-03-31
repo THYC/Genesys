@@ -149,6 +149,14 @@ public class CommandManager {
                 .executor(new CommandPlotExtand()) 
                 .build(); 
         
+        public CommandSpec CommandPlotMsg = CommandSpec.builder()
+                .description(Text.of("/plot msg [message]"))
+                .arguments(GenericArguments.seq(
+                    GenericArguments.remainingJoinedStrings(Text.of("arguments"))))
+                .permission("genesys.plot.msg")
+                .executor(new CommandPlotMsg())
+                .build();
+        
         public CommandSpec CommandPlot = CommandSpec.builder()
                 .description(Text.of("/plot")) 
                 .permission("genesys.plot") 
@@ -163,6 +171,7 @@ public class CommandManager {
                 .child(CommandPlotAddplayer, "addplayer")
                 .child(CommandPlotRemoveplayer, "removeplayer")
                 .child(CommandPlotOwnerset, "ownerset")
+                .child(CommandPlotMsg, "msg")
                 .arguments(GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.string(Text.of("arg")))))
                 .executor(new CommandPlot())
                 .build();
