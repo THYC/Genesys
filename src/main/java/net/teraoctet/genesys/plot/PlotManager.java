@@ -1,5 +1,9 @@
 package net.teraoctet.genesys.plot;
 
+import com.google.common.base.Predicates;
+import com.google.common.collect.Collections2;
+import java.util.ArrayList;
+import java.util.List;
 import static net.teraoctet.genesys.utils.GData.jails;
 import static net.teraoctet.genesys.utils.GData.plots;
 import static net.teraoctet.genesys.utils.GData.setts;
@@ -46,7 +50,7 @@ public class PlotManager {
         }
         return null;
     }
-            
+    
     private boolean foundPlot(Location location, GPlot plot){
         Location <World> world = location;
         
@@ -66,6 +70,11 @@ public class PlotManager {
     public Boolean hasPlot(String name){for(GPlot plot : plots){if(plot.getName().contains(name)){return true;}}return false;}
     public Boolean hasJail(String name){for(GPlot jail : jails){if(jail.getName().contains(name)){return true;}}return false;}
     
+    /**
+     * Retourne la valeur GPlot de la parcelle nommée
+     * @param plotName
+     * @return 
+     */
     public GPlot getPlot(String plotName){
         for(GPlot plot : plots){
             if(plot.getName().contains(plotName)){return plot;}
@@ -73,6 +82,11 @@ public class PlotManager {
         return null;
     }
     
+    /**
+     * Retourne le propriétaire de la parcelle nommée
+     * @param plotName
+     * @return 
+     */
     public String getPlotOwner(String plotName){
         for(GPlot plot : plots){
             if(plot.getName().contains(plotName)){return plot.getUuidOwner();}
@@ -103,7 +117,7 @@ public class PlotManager {
         }
         return this.border1;
     }
-  
+    
     public Location getBorder2()
     {
         if ((this.border1 != null) && (this.border2 != null))
@@ -121,7 +135,13 @@ public class PlotManager {
         }
         return this.border2;
     }
-            
+    
+    /**
+     * Si TRUE retourne la list des jails enregistré
+     * Si FALSE retourne la liste des parcelles enregistré
+     * @param flagJail
+     * @return 
+     */        
     public Text getListPlot(boolean flagJail){
         String listplot = "&6";
         if (flagJail == true){
@@ -137,6 +157,11 @@ public class PlotManager {
         return text;
     }
     
+    /**
+     * Retourne la liste des parcelles appartenant au joueur nommé
+     * @param playerUUID
+     * @return 
+     */
     public Text getListPlot(String playerUUID){
         String listplot = "&6Total : " + plots.size();
         for(GPlot plot : plots){
@@ -148,6 +173,24 @@ public class PlotManager {
         return text;
     }
     
+    /**
+     * Retourne un Array comprenant les parcelles du joueur
+     * @param playerUUID
+     * @return 
+     */
+    public static final ArrayList<GPlot> playerPlots (String playerUUID)
+    {
+        ArrayList<GPlot> playerPlots = new ArrayList<>();
+        plots.stream().filter((plot) -> (plot.getUuidOwner().equalsIgnoreCase(playerUUID))).forEach((plot) -> {playerPlots.add(plot);});
+        return playerPlots;        
+    }
+    
+    /**
+     * Retourne la validité des coodonnées pour la création d'une parcelle
+     * @param l1
+     * @param l2
+     * @return 
+     */
     public boolean plotAllow(Location l1, Location l2){                
         Location <World> w = l1;
         World world = w.getExtent();

@@ -146,8 +146,10 @@ public class GPlayer {
         
         public void sendMessage(Text text)
         {
-            Player player = GServer.getPlayer(name);
-            if (player != null)player.sendMessage(ChatTypes.CHAT,text);
+            if(GServer.isOnline(name)){
+                Player player = GServer.getPlayer(name);
+                if (player != null)player.sendMessage(ChatTypes.CHAT,text);
+            }
         }
 }
 

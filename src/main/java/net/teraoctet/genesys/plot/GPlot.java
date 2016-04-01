@@ -11,6 +11,7 @@ import net.teraoctet.genesys.utils.GData;
 import static net.teraoctet.genesys.utils.GData.datasource;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import net.teraoctet.genesys.utils.DeSerialize;
+import net.teraoctet.genesys.utils.GConfig;
 import static org.spongepowered.api.Sponge.getGame;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
@@ -21,6 +22,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
+import static org.spongepowered.api.block.BlockTypes.AIR;
 
 public class GPlot {
     
@@ -125,20 +127,23 @@ public class GPlot {
             while(rs.next()) {
                 Location loc = DeSerialize.getLocation(rs.getString("location"));
                 if (loc.getBlockType().equals(BlockTypes.STANDING_SIGN) || loc.getBlockType().equals(BlockTypes.WALL_SIGN)){
-                    //loc.setBlockType(AIR);
-                    Optional<TileEntity> signBlock = loc.getTileEntity();
-                    TileEntity tileSign = signBlock.get();
-                    Sign sign=(Sign)tileSign;
-                    Optional<SignData> opSign = sign.getOrCreate(SignData.class);
-                            
-                    SignData signData = opSign.get();
-                    List<Text> sale = new ArrayList<>();
-                    sale.add(MESSAGE("&1VENDU"));
-                    sale.add(MESSAGE(""));
-                    sale.add(MESSAGE(""));
-                    sale.add(MESSAGE(""));
-                    signData.set(Keys.SIGN_LINES,sale );
-                    sign.offer(signData);
+                    if(GConfig.DEL_SIGN_AFTER_SALE()){
+                        loc.setBlockType(AIR);
+                    } else {
+                        Optional<TileEntity> signBlock = loc.getTileEntity();
+                        TileEntity tileSign = signBlock.get();
+                        Sign sign=(Sign)tileSign;
+                        Optional<SignData> opSign = sign.getOrCreate(SignData.class);
+
+                        SignData signData = opSign.get();
+                        List<Text> sale = new ArrayList<>();
+                        sale.add(MESSAGE("&1VENDU"));
+                        sale.add(MESSAGE(""));
+                        sale.add(MESSAGE(""));
+                        sale.add(MESSAGE(""));
+                        signData.set(Keys.SIGN_LINES,sale );
+                        sign.offer(signData);
+                    }
                 } 
             }
             s.close();
