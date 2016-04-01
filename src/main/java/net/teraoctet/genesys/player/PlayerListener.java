@@ -74,7 +74,7 @@ public class PlayerListener {
         event.setMessageCancelled(true);
     	
         if(gplayer == null) {
-            gplayer = new GPlayer(uuid, 0, name, "", 0, "", 20, "", "", System.currentTimeMillis(), System.currentTimeMillis());
+            gplayer = new GPlayer(uuid, 0, name, "", 0, "", 20, "", "", System.currentTimeMillis(), System.currentTimeMillis(),"N",0,0,0);
             gplayer.insert();
             commit();
             player.sendMessage(FIRSTJOIN_MESSAGE(player)); 

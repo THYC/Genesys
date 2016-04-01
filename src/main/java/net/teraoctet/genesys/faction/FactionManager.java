@@ -1,10 +1,14 @@
 package net.teraoctet.genesys.faction;
 
 import net.teraoctet.genesys.player.GPlayer;
+import static net.teraoctet.genesys.utils.GData.getFactions;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import org.spongepowered.api.entity.living.player.Player;
 
 public class FactionManager {
+    
+    public FactionManager(){}
+    
     /**
      * Si TRUE le joueur est owner/chef de faction
      * @param player
@@ -37,5 +41,18 @@ public class FactionManager {
     public static Boolean hasAnyFaction(Player player) {
         GPlayer gplayer = getGPlayer(player.getIdentifier());
         return gplayer.getFactionRank() == 1;
+    }
+    
+    /**
+     * Calcul une nouvelle clé unique pour GFaction
+     * @return 
+     */
+    public Integer newKey(){
+        int size = getFactions().size();
+        int key = 1;
+        if(size > 0){
+            key = getFactions().get(size).getID() + 1;
+        }
+        return key;
     }
 }

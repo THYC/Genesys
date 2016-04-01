@@ -23,10 +23,11 @@ public class CommandFactionMemberslist implements CommandExecutor {
 
         if(src instanceof Player && src.hasPermission("genesys.faction.memberslist")) {
             GPlayer gplayer = getGPlayer(src.getIdentifier());
-            GFaction gfaction = getGFaction(src.getName());
+            
             
             //si le joueur est membre d'une faction
             if(FactionManager.hasAnyFaction(gplayer)) {
+                GFaction gfaction = getGFaction(gplayer.getID_faction());
                 src.sendMessage(MESSAGE("&2Listes des membres de " + gfaction.getName() + " : &a"));
                 return CommandResult.success();
             }

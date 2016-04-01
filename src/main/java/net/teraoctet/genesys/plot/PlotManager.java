@@ -1,9 +1,6 @@
 package net.teraoctet.genesys.plot;
 
-import com.google.common.base.Predicates;
-import com.google.common.collect.Collections2;
 import java.util.ArrayList;
-import java.util.List;
 import static net.teraoctet.genesys.utils.GData.jails;
 import static net.teraoctet.genesys.utils.GData.plots;
 import static net.teraoctet.genesys.utils.GData.setts;

@@ -5,7 +5,7 @@ import static net.teraoctet.genesys.utils.GData.queue;
 import static net.teraoctet.genesys.utils.GData.removeGFaction;
 
 public class GFaction {
-    private int id_faction;
+    private final int id_faction;
     private String name;
     private String world;
     private int X;
@@ -17,6 +17,7 @@ public class GFaction {
     private int dead;
     
     public GFaction(int id_faction, String name, String world, int X, int Y, int Z, double money, int point, int kill, int dead) { 
+        this.id_faction = id_faction;
         this.name = name;
         this.world = world;
         this.X = X;
@@ -27,40 +28,16 @@ public class GFaction {
         this.kill = kill;
         this.dead = dead;
     }
-    
-    public GFaction(String name, String world, int X, int Y, int Z) {
-        this.name = name;
-        this.world = world;
-        this.X = X;
-        this.Y = Y;
-        this.Z = Z;
-        this.money = 0;
-        this.point = 0;
-        this.kill = 0;
-        this.dead = 0;
-    }
-    
-    public GFaction(String name) {
-        this.name = name;
-        this.world = null;
-        this.X = 0;
-        this.Y = 0;
-        this.Z = 0;
-        this.money = 0;
-        this.point = 0;
-        this.kill = 0;
-        this.dead = 0;
-    }
-
+        
     public void insert() {
-        queue("INSERT INTO gfactions VALUES ('" + name + "', '" + world + "', " + X + ", " + Y + ", " + Z + ", " + money + ", " + point + ", " + kill + ", " + dead + ")");
-        addGFaction(name, this);
+        queue("INSERT INTO gfactions VALUES (" + id_faction + ",'" + name + "', '" + world + "', " + X + ", " + Y + ", " + Z + ", " + money + ", " + point + ", " + kill + ", " + dead + ")");
+        addGFaction(id_faction, this);
     }
 
     public void update() {
         queue("UPDATE gfactions SET name = '" + name + "', world = '" + world + "', X = " + X + ", Y = " + Y + ", Z = " + Z + ", money = " + money + ", point = " + point + ", kill = " + kill + ", dead = " + dead + " WHERE id_faction = " + id_faction);
         removeGFaction(id_faction);
-        addGFaction(name, this);
+        addGFaction(id_faction, this);
     }
 
     public void delete() {
@@ -79,7 +56,6 @@ public class GFaction {
     public Integer getKill() { return kill; }
     public Integer getDead() { return dead; }
     
-    //public void setID(Integer id_faction) { this.id_faction = id_faction; } --> a supprimer car on ne peut alimenter un chant auto car il est auto alimenteé
     public void setName(String name) { this.name = name; }
     public void setWorld(String world) { this.world = world; }
     public void setX(Integer X) { this.X = X; }

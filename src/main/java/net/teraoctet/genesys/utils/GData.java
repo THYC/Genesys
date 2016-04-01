@@ -92,7 +92,7 @@ public class GData {
                 
                 if(!tables.contains("gfactions")) {
                         execute("CREATE TABLE gfactions ("
-                                + "id_faction INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, " //MYSQL = INT NOT NULL AUTO_INCREMENT
+                                + "id_faction INT PRIMARY KEY, "
                                 + "name TEXT, "
                                 + "world TEXT, "
                                 + "X INT, "
@@ -233,7 +233,11 @@ public class GData {
                         rs.getString("lastposition"), 
                         rs.getString("lastdeath"),
                         rs.getDouble("onlinetime"), 
-                        rs.getDouble("lastonline"));
+                        rs.getDouble("lastonline"),
+                        rs.getString("jail"),
+                        rs.getDouble("timejail"),
+                        rs.getInt("id_faction"),
+                        rs.getInt("faction_rank"));
                     GData.addGPlayer(player.getUUID(), player);
                     GData.addUUID(player.getName(), player.getUUID());
                 }   
@@ -244,7 +248,6 @@ public class GData {
                 Statement s = c.createStatement();
                 ResultSet rs = s.executeQuery("SELECT * FROM gfactions");
                 
-                // ici il faut mettre tout les chants
                 while(rs.next()) {
                     GFaction faction = new GFaction(
                         rs.getInt("id_faction"),
@@ -257,7 +260,7 @@ public class GData {
                         rs.getInt("point"),
                         rs.getInt("kill"),
                         rs.getInt("int"));
-                    GData.addGFaction(faction.getName(), faction);
+                    GData.addGFaction(faction.getID(), faction);
                 }   
             } catch (SQLException e) {}
 		
@@ -439,12 +442,11 @@ public class GData {
 	public static void removeUUID(String name) { if(uuids.containsKey(name)) uuids.remove(name); }
 	public static String getUUID(String name) { return uuids.containsKey(name) ? uuids.get(name) : null; }
         
-        private static final HashMap<String, GFaction> factions = new HashMap<>();
-	public static void addGFaction(String name, GFaction gfaction) { if(!factions.containsKey(factions)) factions.put(name, gfaction); }
+        private static final HashMap<Integer, GFaction> factions = new HashMap<>();
+	public static void addGFaction(Integer ID, GFaction gfaction) { if(!factions.containsKey(factions)) factions.put(ID, gfaction); }
 	public static void removeGFaction(Integer id_faction) { if(factions.containsKey(id_faction)) factions.remove(id_faction); }
-	public static GFaction getGFaction(String name) { return factions.containsKey(name) ? factions.get(name) : null; }
 	public static GFaction getGFaction(Integer id_faction) { return factions.containsKey(id_faction) ? factions.get(id_faction) : null; }
-        public static HashMap<String, GFaction> getFactions() { return factions; }
+        public static HashMap<Integer, GFaction> getFactions() { return factions; }
         
         public static HashMap<String, PlotManager> setts = new HashMap();
         public static final ArrayList<GPlot> plots = new ArrayList<>();

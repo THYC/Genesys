@@ -1,5 +1,6 @@
 package net.teraoctet.genesys.commands;
 
+import static net.teraoctet.genesys.Genesys.factionManager;
 import net.teraoctet.genesys.faction.FactionManager;
 import net.teraoctet.genesys.faction.GFaction;
 import net.teraoctet.genesys.player.GPlayer;
@@ -25,35 +26,20 @@ public class CommandFactionCreate implements CommandExecutor {
             Player player = (Player) src;
             GPlayer gplayer = getGPlayer(player.getIdentifier());
             
-            if(FactionManager.hasAnyFaction(gplayer)) {
+            if(factionManager.hasAnyFaction(gplayer)) {
                 src.sendMessage(ALREADY_FACTION_MEMBER());
             } else {
                 String factionName = ctx.<String> getOne("name").get();
-                GFaction gfaction = new GFaction(factionName);
-                
-                //###############################################################
-                // important ici il faut aussi faire une modif dans GPlayer 
-                // pour dire qui est le owner de la faction !
-                // et après il faudra mettre un controle sur chaque commande de faction specifique au owner
-                
-                // je dit que gplayer est l'admin de la faction
-                // par contre du coup ca ne va pas ici l'utilisation de l'ID
-                //car on ne connaitra l'ID que quand il y aura eu un commit de Faction et un reload
-                // je te laisse modifier, il faut soit changer finalement sur le nom :
-                // soit dans gplayer mettre un chant : factionname
-                // ou soit creer soit même l'ID par du code
-                gplayer.setID_faction(0); 
+                int key = factionManager.newKey();
+                GFaction gfaction = new GFaction(key, factionName,"",0,0,0,0,0,0,0);
                 gplayer.setFactionRank(1);
-                
-                // je met à jour par update
+                gplayer.setID_faction(key);
                 gplayer.update();
-                
-                // le commit valide la modif des 2 tables
                 gfaction.insert();
                 GData.commit();
-                GData.addGFaction(factionName, gfaction); 
+                GData.addGFaction(key, gfaction); 
                 src.sendMessage(FACTION_CREATED_SUCCESS(factionName));
-                gplayer.setID_faction(gfaction.getID());
+                
                 return CommandResult.success();
             }
         } 
