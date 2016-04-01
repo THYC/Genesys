@@ -15,26 +15,51 @@ public class GFaction {
     private int point;
     private int kill;
     private int dead;
-
-    public GFaction(String name, double money, int point) {
+    
+    // tu peut ajouter plusieurs lanceur comme celui là qui alimente un certain nombre de chant, il faut en faire un qui alimente tout
+    public GFaction(int id_faction, String name, String world, int X, int Y, int Z, double money, int point, int kill, int dead) { 
+        this.name = name;
+        this.world = world;
+        this.X = X;
+        this.Y = Y;
+        this.Z = Z;
+        this.money = money;
+        this.point = point;
+        this.kill = kill;
+        this.dead = dead;
+    }
+    
+    public GFaction(String name, String world, int X, int Y, int Z) { // tu peut ajouter plusieurs lanceur comme celui là qui alimente un certain nombre de chant
+        this.name = name;
+        this.world = world;
+        this.X = X;
+        this.Y = Y;
+        this.Z = Z;
+        this.money = 0;
+        this.point = 0;
+        this.kill = 0;
+        this.dead = 0;
+    }
+    
+    public GFaction(String name) { // celui n'alimentera que le nom pour une creation simple
         this.name = name;
         this.world = null;
         this.X = 0;
         this.Y = 0;
         this.Z = 0;
-        this.money = money;
-        this.point = point;
+        this.money = 0;
+        this.point = 0;
         this.kill = 0;
         this.dead = 0;
     }
 
     public void insert() {
-        queue("INSERT INTO gfactions VALUES (" + id_faction + ", '" + name + "', '" + world + "', " + X + ", " + Y + ", " + Z + ", " + money + ", " + point + ", " + kill + ", " + dead + ")");
+        queue("INSERT INTO gfactions VALUES ('" + name + "', '" + world + "', " + X + ", " + Y + ", " + Z + ", " + money + ", " + point + ", " + kill + ", " + dead + ")");
         addGFaction(name, this);
     }
 
     public void update() {
-        queue("UPDATE gfactions SET id_faction = " + id_faction + ", name = '" + name + "', world = '" + world + "', X = " + X + ", Y = " + Y + ", Z = " + Z + ", money = " + money + ", point = " + point + ", kill = " + kill + ", dead = " + dead + " WHERE id_faction = " + id_faction);
+        queue("UPDATE gfactions SET name = '" + name + "', world = '" + world + "', X = " + X + ", Y = " + Y + ", Z = " + Z + ", money = " + money + ", point = " + point + ", kill = " + kill + ", dead = " + dead + " WHERE id_faction = " + id_faction);
         removeGFaction(id_faction);
         addGFaction(name, this);
     }
@@ -55,7 +80,7 @@ public class GFaction {
     public Integer getKill() { return kill; }
     public Integer getDead() { return dead; }
     
-    public void setID(Integer id_faction) { this.id_faction = id_faction; }
+    //public void setID(Integer id_faction) { this.id_faction = id_faction; } --> a supprimer car on ne peut alimenter un chant auto car il est auto alimenteé
     public void setName(String name) { this.name = name; }
     public void setWorld(String world) { this.world = world; }
     public void setX(Integer X) { this.X = X; }

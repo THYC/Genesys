@@ -243,12 +243,20 @@ public class GData {
                 Connection c = datasource.getConnection();
                 Statement s = c.createStatement();
                 ResultSet rs = s.executeQuery("SELECT * FROM gfactions");
-
+                
+                // ici il faut mettre tout les chants
                 while(rs.next()) {
                     GFaction faction = new GFaction(
-                        rs.getString("factionName"),    
+                        rs.getInt("id_faction"),
+                        rs.getString("factionName"), 
+                        rs.getString("world"),
+                        rs.getInt("X"),
+                        rs.getInt("Y"),
+                        rs.getInt("Z"),
                         rs.getDouble("money"),
-                        rs.getInt("point"));
+                        rs.getInt("point"),
+                        rs.getInt("kill"),
+                        rs.getInt("int"));
                     GData.addGFaction(faction.getName(), faction);
                 }   
             } catch (SQLException e) {}
