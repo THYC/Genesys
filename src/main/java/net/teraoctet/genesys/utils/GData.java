@@ -251,7 +251,7 @@ public class GData {
                 while(rs.next()) {
                     GFaction faction = new GFaction(
                         rs.getInt("id_faction"),
-                        rs.getString("factionName"), 
+                        rs.getString("name"), 
                         rs.getString("world"),
                         rs.getInt("X"),
                         rs.getInt("Y"),

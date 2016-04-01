@@ -1,6 +1,5 @@
 package net.teraoctet.genesys.faction;
 
-import java.util.ArrayList;
 import java.util.List;
 import net.teraoctet.genesys.player.GPlayer;
 import net.teraoctet.genesys.utils.GData;

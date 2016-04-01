@@ -31,7 +31,7 @@ public class CommandFactionCreate implements CommandExecutor {
             } else {
                 String factionName = ctx.<String> getOne("name").get();
                 int key = factionManager.newKey();
-                GFaction gfaction = new GFaction(key, factionName,"",0,0,0,0,0,0,0);
+                GFaction gfaction = new GFaction(key, factionName,"N",0,0,0,0,0,0,0);
                 gplayer.setFactionRank(1);
                 gplayer.setID_faction(key);
                 gplayer.update();
