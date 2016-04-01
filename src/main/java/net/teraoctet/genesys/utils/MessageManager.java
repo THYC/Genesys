@@ -31,6 +31,10 @@ public class MessageManager {
     private static Text DAY_MESSAGE;
     private static Text NIGHT_MESSAGE;
     private static Text STORM_MESSAGE;
+    private static Text NO_FACTION;
+    private static Text WRONG_RANK;
+    private static Text ALREADY_FACTION_MEMBER;
+    private static Text FACTION_CREATED_SUCCESS;
     private static Text BUYING_COST_PLOT;
     private static Text PROTECT_PLOT_SUCCESS;
     private static Text BEDROCK2SKY_PROTECT_PLOT_SUCCESS;
@@ -156,7 +160,27 @@ public class MessageManager {
                 msg.add("&e%name% &6a mis la nuit sur &e%world%");
                 message.getNode("NIGHT_MESSAGE").setValue(msg);
                 manager.save(message);
-
+                
+                msg = new ArrayList<>();
+                msg.add("&cVous \352tes dans aucune faction !");
+                message.getNode("NO_FACTION").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&cVous \352tes d\351j\340 dans une faction !");
+                message.getNode("ALREADY_FACTION_MEMBER").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&cVotre rang dans la faction ne vous permet pas d'utiliser \347a !");
+                message.getNode("WRONG_RANK").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&eVous venez de cr\351er la faction \"&6%var1%&e\"");
+                message.getNode("FACTION_CREATED_SUCCESS").setValue(msg);
+                manager.save(message);
+                
                 msg = new ArrayList<>();
                 msg.add("\n&6Le co\373t pour prot\351ger cette parcelle est de &e%var1% \351meraudes");
                 msg.add("&6Vous poss\351dez actuellement &e%var2% \351meraude(s) en banque\n");
@@ -208,7 +232,7 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&cL'acc\350s \340 cette parcelle est interdit");
+                msg.add("&5L'acc\350s \340 cette parcelle est interdit");
                 message.getNode("PLOT_NO_ENTER").setValue(msg);
                 manager.save(message);
                 
@@ -230,12 +254,12 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&eCette parcelle est prot\351g\351e par un sort magique !");
+                msg.add("&5Cette parcelle est prot\351g\351e par un sort magique !");
                 message.getNode("PLOT_PROTECTED").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&eVous ne poss\351dez pas assez d'assez d'\351meraudes sur votre compte, tapez /bank pour voir votre solde");
+                msg.add("&cVous ne poss\351dez pas assez d'assez d'\351meraudes sur votre compte, tapez &4/bank &cpour voir votre solde");
                 message.getNode("MISSING_BALANCE").setValue(msg);
                 manager.save(message);
                 
@@ -516,6 +540,14 @@ public class MessageManager {
     public static Text NIGHT_MESSAGE(Player player){return format(NIGHT_MESSAGE, "NIGHT_MESSAGE", player);}
     
     public static Text STORM_MESSAGE(Player player){return format(STORM_MESSAGE, "STORM_MESSAGE", player);}
+    
+    public static Text NO_FACTION(){return format(NO_FACTION, "NO_FACTION");}
+    
+    public static Text WRONG_RANK(){return format(WRONG_RANK, "WRONG_RANK");}
+    
+    public static Text ALREADY_FACTION_MEMBER(){return format(ALREADY_FACTION_MEMBER, "ALREADY_FACTION_MEMBER");}
+    
+    public static Text FACTION_CREATED_SUCCESS(String factionName){return format(FACTION_CREATED_SUCCESS, "FACTION_CREATED_SUCCESS", factionName, "");}
     
     public static Text BUYING_COST_PLOT(Player player, String var1, String var2){return format(BUYING_COST_PLOT, "BUYING_COST_PLOT", player, var1, var2);}
     

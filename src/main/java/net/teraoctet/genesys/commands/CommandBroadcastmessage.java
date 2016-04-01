@@ -1,5 +1,6 @@
 package net.teraoctet.genesys.commands;
 
+import java.util.Arrays;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource; 
@@ -15,29 +16,22 @@ public class CommandBroadcastmessage implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource src, CommandContext ctx) {
         if(ctx.hasAny("message") && src.hasPermission("genesys.broadcastmessage")){
-            boolean hided = ctx.<Boolean> getOne("hide").get();
-            String[] args = ctx.<String> getOne("message").get().split(" ");
-            String prefix = "&4[ADMIN] ";
-            String message = "";
+            String prefix = "&4[ADMIN]";
+            String message = ctx.<String> getOne("message").get();
             
-            //ajoute le nom de la source si elle n'est pas masquée (hide = 0)
-            if (hided == false) {
+            //ajoute le nom de la source si flag -h n'est pas présent
+            if (!ctx.hasAny("hide")) {
                 prefix = prefix + src.getName();
             }
+            
             prefix= prefix + " : ";
-            
-            for(int i = 0; i < args.length; i++){
-                message = message + args[i] + " ";
-            }    
-            
             message = prefix + message;
-
             getGame().getServer().getBroadcastChannel().send(MESSAGE(message));
             return CommandResult.success();
         }
 
         else if (src.hasPermission("genesys.broadcastmessage")) {
-            src.sendMessage(USAGE("/broadcast <hide = 0:1> <message..>"));
+            src.sendMessage(USAGE("/broadcast [-h] <message..>"));
         }       
         
         //si on arrive jusqu'ici c'est que la source n'a pas les permissions pour cette commande ou que quelque chose s'est mal passé

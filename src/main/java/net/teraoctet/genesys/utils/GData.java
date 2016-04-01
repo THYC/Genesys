@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.sql.DataSource;
+import net.teraoctet.genesys.faction.GFaction;
 import net.teraoctet.genesys.plot.GPlot;
 import net.teraoctet.genesys.plot.PlotManager;
 import net.teraoctet.genesys.portal.GPortal;
@@ -84,7 +85,23 @@ public class GData {
                                 + "onlinetime DOUBLE, "
                                 + "lastonline DOUBLE, "
                                 + "jail TEXT, "
-                                + "timejail DOUBLE)");
+                                + "timejail DOUBLE, "
+                                + "id_faction INT, "
+                                + "faction_rank INT)");
+                }
+                
+                if(!tables.contains("gfactions")) {
+                        execute("CREATE TABLE gfactions ("
+                                + "id_faction INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, " //MYSQL = INT NOT NULL AUTO_INCREMENT
+                                + "name TEXT, "
+                                + "world TEXT, "
+                                + "X INT, "
+                                + "Y INT, "
+                                + "Z INT, "
+                                + "money DOUBLE, "
+                                + "point INT, "
+                                + "kill INT, "
+                                + "dead INT)");
                 }
 
                 if(!tables.contains("gspawns")) {
@@ -219,6 +236,20 @@ public class GData {
                         rs.getDouble("lastonline"));
                     GData.addGPlayer(player.getUUID(), player);
                     GData.addUUID(player.getName(), player.getUUID());
+                }   
+            } catch (SQLException e) {}
+            
+            try {
+                Connection c = datasource.getConnection();
+                Statement s = c.createStatement();
+                ResultSet rs = s.executeQuery("SELECT * FROM gfactions");
+
+                while(rs.next()) {
+                    GFaction faction = new GFaction(
+                        rs.getString("factionName"),    
+                        rs.getDouble("money"),
+                        rs.getInt("point"));
+                    GData.addGFaction(faction.getName(), faction);
                 }   
             } catch (SQLException e) {}
 		
@@ -394,11 +425,18 @@ public class GData {
 	public static void removeGPlayer(String uuid) { if(players.containsKey(uuid)) players.remove(uuid); }
 	public static GPlayer getGPlayer(String uuid) { return players.containsKey(uuid) ? players.get(uuid) : null; }
 	public static HashMap<String, GPlayer> getPlayers() { return players; }
-	
+        
 	private static final HashMap<String, String> uuids = new HashMap<>();
 	public static void addUUID(String name, String uuid) { uuids.put(name, uuid); }
 	public static void removeUUID(String name) { if(uuids.containsKey(name)) uuids.remove(name); }
 	public static String getUUID(String name) { return uuids.containsKey(name) ? uuids.get(name) : null; }
+        
+        private static final HashMap<String, GFaction> factions = new HashMap<>();
+	public static void addGFaction(String name, GFaction gfaction) { if(!factions.containsKey(factions)) factions.put(name, gfaction); }
+	public static void removeGFaction(Integer id_faction) { if(factions.containsKey(id_faction)) factions.remove(id_faction); }
+	public static GFaction getGFaction(String name) { return factions.containsKey(name) ? factions.get(name) : null; }
+	public static GFaction getGFaction(Integer id_faction) { return factions.containsKey(id_faction) ? factions.get(id_faction) : null; }
+        public static HashMap<String, GFaction> getFactions() { return factions; }
         
         public static HashMap<String, PlotManager> setts = new HashMap();
         public static final ArrayList<GPlot> plots = new ArrayList<>();

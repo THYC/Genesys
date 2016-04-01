@@ -69,6 +69,7 @@ public class Genesys {
         getGame().getCommandManager().register(this, new CommandManager().CommandInvsee, "invsee", "is");
         getGame().getCommandManager().register(this, new CommandManager().CommandPlayerinfo, "playerinfo", "pi", "info");
         getGame().getCommandManager().register(this, new CommandManager().CommandBroadcastmessage, "broadcastmessage", "broadcast", "bm");
+        getGame().getCommandManager().register(this, new CommandManager().CommandFaction, "faction", "f", "guilde", "g", "horde");
 	getGame().getCommandManager().register(this, new CommandManager().CommandTest, "test");
         getGame().getCommandManager().register(this, new CommandManager().CommandRocket, "rocket");
 

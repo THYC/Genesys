@@ -132,9 +132,7 @@ public class CommandManager {
         public CommandSpec CommandPlotList = CommandSpec.builder()
                 .description(Text.of("/plot list [player]")) 
                 .permission("genesys.plot.list") 
-                .arguments(
-                    GenericArguments.seq(
-                        GenericArguments.optional(GenericArguments.string(Text.of("tplayer")))))
+                .arguments(GenericArguments.optional(GenericArguments.string(Text.of("tplayer"))))
                 .executor(new CommandPlotList()) 
                 .build(); 
         
@@ -151,9 +149,8 @@ public class CommandManager {
         
         public CommandSpec CommandPlotMsg = CommandSpec.builder()
                 .description(Text.of("/plot msg [message]"))
-                .arguments(GenericArguments.seq(
-                    GenericArguments.remainingJoinedStrings(Text.of("arguments"))))
                 .permission("genesys.plot.msg")
+                .arguments(GenericArguments.remainingJoinedStrings(Text.of("arguments")))
                 .executor(new CommandPlotMsg())
                 .build();
         
@@ -172,35 +169,34 @@ public class CommandManager {
                 .child(CommandPlotRemoveplayer, "removeplayer")
                 .child(CommandPlotOwnerset, "ownerset")
                 .child(CommandPlotMsg, "msg")
-                .arguments(GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.string(Text.of("arg")))))
                 .executor(new CommandPlot())
                 .build();
 
         public CommandSpec CommandFly = CommandSpec.builder()
                 .description(Text.of("/fly"))
-                .arguments(GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.player(Text.of("player")))))
                 .permission("genesys.fly")
+                .arguments(GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.player(Text.of("player")))))
                 .executor(new CommandFly())
                 .build();
         
         public CommandSpec CommandSetHome = CommandSpec.builder()
                 .description(Text.of("/sethome [home]"))
-                .arguments(GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.string(Text.of("home")))))
                 .permission("genesys.sethome")
+                .arguments(GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.string(Text.of("home")))))
                 .executor(new CommandSetHome())
                 .build();
         
         public CommandSpec CommandHome = CommandSpec.builder()
                 .description(Text.of("/home [home]"))
-                .arguments(GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.string(Text.of("home")))))
                 .permission("genesys.home")
+                .arguments(GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.string(Text.of("home")))))
                 .executor(new CommandHome())
                 .build();
         
         public CommandSpec CommandDelhome = CommandSpec.builder()
                 .description(Text.of("/delhome [home]"))
-                .arguments(GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.string(Text.of("home")))))
                 .permission("genesys.delhome")
+                .arguments(GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.string(Text.of("home")))))
                 .executor(new CommandDelhome())
                 .build();
         
@@ -212,10 +208,10 @@ public class CommandManager {
         
         public CommandSpec CommandLevel = CommandSpec.builder()
                 .description(Text.of("/level <level> [player]"))
+                .permission("genesys.admin.level")
                 .arguments(GenericArguments.seq(
                     GenericArguments.optional(GenericArguments.integer(Text.of("level"))),
                     GenericArguments.optional(GenericArguments.player(Text.of("player")))))
-                .permission("genesys.admin.level")
                 .executor(new CommandLevel())
                 .build();
         
@@ -233,52 +229,121 @@ public class CommandManager {
         
         public CommandSpec CommandWorldTP = CommandSpec.builder()
                 .description(Text.of("Commande worldtp"))
+                .permission("genesys.world.worldtp")
                 .arguments(GenericArguments.seq(
                     GenericArguments.onlyOne(GenericArguments.string(Text.of("worldName"))),
                     GenericArguments.optional(GenericArguments.player(Text.of("target")))))
-                .permission("genesys.world.worldtp")
                 .executor(new CommandWorldTP())
                 .build();
         
         public CommandSpec CommandClearinventory = CommandSpec.builder()
                 .description(Text.of("/clearinventory [player]"))
-                .arguments(GenericArguments.seq(
-                    GenericArguments.optional(GenericArguments.player(Text.of("player")))))
                 .permission("genesys.clearinventory")
+                .arguments(GenericArguments.optional(GenericArguments.player(Text.of("player"))))
                 .executor(new CommandClearinventory())
                 .build();
         
         public CommandSpec CommandInvsee = CommandSpec.builder()
                 .description(Text.of("/invsee <player>"))
-                .arguments(GenericArguments.seq(
-                    GenericArguments.onlyOne(GenericArguments.player(Text.of("target")))))
                 .permission("genesys.invsee")
+                .arguments(GenericArguments.onlyOne(GenericArguments.player(Text.of("target"))))
                 .executor(new CommandInvsee())
                 .build();
         
         public CommandSpec CommandPlayerinfo = CommandSpec.builder()
                 .description(Text.of("/playerinfo [player]"))
-                .arguments(GenericArguments.seq(
-                    GenericArguments.optional(GenericArguments.string(Text.of("tplayer")))))
                 .permission("genesys.playerinfo")
+                .arguments(GenericArguments.optional(GenericArguments.string(Text.of("tplayer"))))
                 .executor(new CommandPlayerinfo())
                 .build();
         
-         public CommandSpec CommandBroadcastmessage = CommandSpec.builder()
+        public CommandSpec CommandBroadcastmessage = CommandSpec.builder()
                 .description(Text.of("/broadcast [hide = 0:1] <message..>"))
-                .arguments(GenericArguments.seq(
-                    GenericArguments.onlyOne(GenericArguments.bool(Text.of("hide"))),
-                    GenericArguments.remainingJoinedStrings(Text.of("message"))))
                 .permission("genesys.broadcastmessage")
+                /*.arguments(GenericArguments.seq(
+                    GenericArguments.onlyOne(GenericArguments.bool(Text.of("hide"))),
+                    GenericArguments.remainingJoinedStrings(Text.of("message"))))*/
+                .arguments(GenericArguments.firstParsing( 
+                    GenericArguments.flags()
+                        .flag("-hide", "h")
+                        .buildWith(GenericArguments.remainingJoinedStrings(Text.of("message")))))
                 .executor(new CommandBroadcastmessage())
+                .build();
+         
+        public CommandSpec CommandFactionCreate = CommandSpec.builder()
+                .description(Text.of("/faction create <name>")) 
+                .permission("genesys.faction.create") 
+                .arguments(GenericArguments.remainingJoinedStrings(Text.of("name")))
+                .executor(new CommandFactionCreate()) 
+                .build();
+         
+        /*public CommandSpec CommandFactionDelete = CommandSpec.builder()
+                .description(Text.of("/faction delete <name>")) 
+                .permission("genesys.faction.delete") 
+                .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
+                .executor(new CommandFactionDelete()) 
+                .build();*/
+         
+        /*public CommandSpec CommandFactionList = CommandSpec.builder()
+                .description(Text.of("/faction list")) 
+                .permission("genesys.faction.list")
+                .executor(new CommandFactionList()) 
+                .build();*/
+         
+        public CommandSpec CommandFactionMemberslist = CommandSpec.builder()
+                .description(Text.of("/faction memberslist")) 
+                .permission("genesys.faction.memberslist")
+                .executor(new CommandFactionMemberslist()) 
+                .build();
+         
+        /*public CommandSpec CommandFactionAddplayer = CommandSpec.builder()
+                .description(Text.of("/faction addplayer <player>")) 
+                .permission("genesys.faction.addplayer") 
+                .arguments(
+                    GenericArguments.seq(
+                        GenericArguments.onlyOne(GenericArguments.player(Text.of("player")))))
+                .executor(new CommandFactionAddplayer()) 
+                .build();*/
+         
+        /*public CommandSpec CommandFactionRemoveplayer = CommandSpec.builder()
+                .description(Text.of("/faction removeplayer <player>")) 
+                .permission("genesys.faction.removeplayer") 
+                .arguments(
+                    GenericArguments.seq(
+                        GenericArguments.onlyOne(GenericArguments.player(Text.of("player")))))
+                .executor(new CommandFactionRemoveplayer()) 
+                .build();*/
+         
+        /*public CommandSpec CommandFactionSetplayergrade = CommandSpec.builder()
+                .description(Text.of("/faction setplayergrade <player> <grade>")) 
+                .permission("genesys.faction.removeplayer") 
+                .arguments(
+                    GenericArguments.seq(
+                        GenericArguments.onlyOne(GenericArguments.player(Text.of("player"))),
+                        GenericArguments.onlyOne(GenericArguments.string(Text.of("grade")))))
+                .executor(new CommandFactionRemoveplayer()) 
+                .build();*/
+         
+        public CommandSpec CommandFaction = CommandSpec.builder()
+                .description(Text.of("Affiche des informations sur votre faction"))
+                .permission("genesys.faction")
+                .child(CommandFactionCreate, "create")
+                //.child(CommandFactionDelete, "delete")
+                .child(CommandFactionMemberslist, "memberslist")
+                //.child(CommandFactionList, "list")
+                //.child(CommandFactionAddplayer, "addplayer")
+                //.child(CommandFactionRemoveplayer, "removeplayer")
+                //.child(CommandFactionSetplayergrade, "setplayergrade")
+                .arguments(GenericArguments.flags().flag("-actionmenu", "a").buildWith(GenericArguments.none()))
+                .executor(new CommandFaction())
                 .build();
         
         public CommandSpec CommandTest = CommandSpec.builder()
                 .description(Text.of("/test [arg0] [args1]"))
+                .permission("genesys.admin.test")
                 .arguments(GenericArguments.seq(
                     GenericArguments.optional(GenericArguments.string(Text.of("arg0"))),
                     GenericArguments.optional(GenericArguments.string(Text.of("arg1")))))
-                .permission("genesys.admin.test")
                 .executor(new CommandTest())
                 .build();
 

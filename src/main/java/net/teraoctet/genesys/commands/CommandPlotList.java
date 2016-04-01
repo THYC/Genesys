@@ -12,7 +12,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
-import static net.teraoctet.genesys.utils.MessageManager.PLAYER_NOT_FOUND;
+import static net.teraoctet.genesys.utils.MessageManager.PLAYER_DATA_NOT_FOUND;
 import static net.teraoctet.genesys.utils.MessageManager.PLOT_LIST;
 import static net.teraoctet.genesys.utils.MessageManager.TARGET_PLOT_LIST;
 import org.spongepowered.api.command.source.ConsoleSource;
@@ -29,7 +29,7 @@ public class CommandPlotList implements CommandExecutor {
                 GPlayer gplayer = getGPlayer(getPlayer(targetName).getUniqueId().toString());
                 // si <tplayer> n'est pas dans la base de donnée
                 if(gplayer == null){
-                    player.sendMessage(PLAYER_NOT_FOUND(getPlayer(targetName)));
+                    player.sendMessage(PLAYER_DATA_NOT_FOUND(targetName));
                     return CommandResult.empty();
                 } else {    //lorsque <tplayer> est dans la base de donnée
                     String targetUUID = getPlayer(targetName).getIdentifier();

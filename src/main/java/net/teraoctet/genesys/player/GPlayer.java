@@ -29,6 +29,8 @@ public class GPlayer {
 	private double lastonline;
         private String jail;
         private double timejail;
+        private int id_faction;
+        private int faction_rank;
 	
 	private HashMap<String, GHome> homes;
 	private String reply;
@@ -52,23 +54,24 @@ public class GPlayer {
             this.lastonline = lastonline;
             this.jail = "N";
             this.timejail = 0;
+            this.id_faction = 0;
+            this.faction_rank = 0;
 
             homes = new HashMap<>();
             reply = "";
             tpa = new HashMap<>();
             tpahere = new HashMap<>();
-            pages = new HashMap<>();
-		
+            pages = new HashMap<>();	
 	}
 	
 	public void insert() {
-            queue("INSERT INTO gplayers VALUES ('" + uuid + "', " + level + ", '" + name + "', '" + godmode + "', " + flymode + ", '" + mails + "', " + money + ", '" + lastposition + "', '" + lastdeath + "', " + onlinetime + ", " + lastonline + ", '" + jail + "', " + timejail + ")");
+            queue("INSERT INTO gplayers VALUES ('" + uuid + "', " + level + ", '" + name + "', '" + godmode + "', " + flymode + ", '" + mails + "', " + money + ", '" + lastposition + "', '" + lastdeath + "', " + onlinetime + ", " + lastonline + ", '" + jail + "', " + timejail + ", " + id_faction + ", " + faction_rank + ")");
             addGPlayer(uuid, this);
             addUUID(name, uuid);
 	}
 
 	public void update() {
-            queue("UPDATE gplayers SET name = '" + name + "', level = " + level + ", godmode = '" + godmode + "', flymode = " + flymode + ", mails = '" + mails + "', money = " + money + ", lastposition = '" + lastposition + "', lastdeath = '" + lastdeath + "', onlinetime = " + onlinetime + ", lastonline = " + lastonline + ", jail = '" + jail + "', timejail = " + timejail + " WHERE uuid = '" + uuid + "'");
+            queue("UPDATE gplayers SET name = '" + name + "', level = " + level + ", godmode = '" + godmode + "', flymode = " + flymode + ", mails = '" + mails + "', money = " + money + ", lastposition = '" + lastposition + "', lastdeath = '" + lastdeath + "', onlinetime = " + onlinetime + ", lastonline = " + lastonline + ", jail = '" + jail + "', timejail = " + timejail + ", id_faction = " + id_faction + ", faction_rank = " + faction_rank + " WHERE uuid = '" + uuid + "'");
             removeGPlayer(uuid);
             removeUUID(name);
             addGPlayer(uuid, this);
@@ -94,6 +97,8 @@ public class GPlayer {
 	public void setLastonline(double lastonline) { this.lastonline = lastonline; }
         public void setJail(String jail) { this.jail = jail; }
         public void setTimejail(double timejail) { this.timejail = timejail; }
+        public void setID_faction(int id_faction) { this.id_faction = id_faction; }
+        public void setFactionRank(int faction_rank) { this.faction_rank = faction_rank; }
 	
 	public void setHome(String name, GHome home) { if(homes == null) homes = new HashMap<>(); homes.put(name, home); }
 	public void setHomes(HashMap<String, GHome> homes) { if(homes == null) homes = new HashMap<>(); this.homes = homes; }
@@ -117,6 +122,8 @@ public class GPlayer {
 	public double getLastonline() { return lastonline; }
         public String getJail() { return jail; }
         public double getTimejail() { return timejail; }
+        public int getID_faction() { return id_faction; }
+        public int getFactionRank() { return faction_rank; }
 	
 	public GHome getHome(String name) { if(homes == null) homes = new HashMap<>(); return homes.containsKey(name) ? homes.get(name) : null; }
         public void removeGHome(String name) { if(homes.containsKey(name)) homes.remove(name); }

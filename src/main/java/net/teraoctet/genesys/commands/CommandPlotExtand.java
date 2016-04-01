@@ -10,7 +10,6 @@ import net.teraoctet.genesys.player.GPlayer;
 import net.teraoctet.genesys.utils.GData;
 import static net.teraoctet.genesys.utils.MessageManager.BUYING_COST_PLOT;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -27,7 +26,7 @@ import org.spongepowered.api.text.format.TextColors;
 public class CommandPlotExtand implements CommandExecutor {
            
     @Override
-    public CommandResult execute(CommandSource sender, CommandContext ctx) throws CommandException {
+    public CommandResult execute(CommandSource sender, CommandContext ctx) {
         
         if(sender instanceof Player == false) { 
             sender.sendMessage(NO_CONSOLE()); 

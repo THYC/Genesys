@@ -18,11 +18,6 @@ public class CommandPlot implements CommandExecutor {
            
     @Override
     public CommandResult execute(CommandSource src, CommandContext ctx) {
-        
-        if(ctx.getOne("arg").isPresent()){
-            return CommandResult.success();
-        }
-        
         if(src instanceof Player && src.hasPermission("genesys.plot")) {
             PaginationService paginationService = getGame().getServiceManager().provide(PaginationService.class).get();
             Builder builder = paginationService.builder();  

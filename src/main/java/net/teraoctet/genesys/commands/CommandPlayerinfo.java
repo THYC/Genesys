@@ -43,13 +43,10 @@ public class CommandPlayerinfo implements CommandExecutor {
             }
             
             GPlayer gplayer = getGPlayer(targetUUID);
-            
-            src.sendMessage(MESSAGE("&8--------------------"));
-            src.sendMessage(Text.builder(targetName)
+            src.sendMessage(Text.builder("----" + targetName + "----")
                         .onHover(TextActions.showText(Text.builder("UUID: " + targetUUID).build()))
                         .color(TextColors.DARK_GRAY)
                         .build());
-            src.sendMessage(MESSAGE("&8--------------------"));
             
             if(isOnline){
                 Player tPlayer = getPlayer(targetName);
@@ -93,14 +90,13 @@ public class CommandPlayerinfo implements CommandExecutor {
                         .color(TextColors.DARK_GRAY)
                         .build());
             src.sendMessage(MESSAGE("&8--------------------"));
-
             return CommandResult.success();
         } 
         
         //si la source est un joueur qui n'a pas rempli l'argument <player>, affiche les infos de la source
         else if (src instanceof Player && src.hasPermission("genesys.playerinfo")) {
             Player player = (Player) src;
-            GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
+            GPlayer gplayer = getGPlayer(player.getIdentifier());
             src.sendMessage(MESSAGE("&8--------------------"));
             src.sendMessage(MESSAGE("&7Mes infos : " + player.getName()));
             src.sendMessage(MESSAGE("&8--------------------"));
@@ -108,11 +104,10 @@ public class CommandPlayerinfo implements CommandExecutor {
             src.sendMessage(MESSAGE("&8Nombre de points accumulés : "));
             src.sendMessage(MESSAGE("&8Droits suppl\351mentaires accordés : "));
             src.sendMessage(MESSAGE("&8--------------------"));
-            
+            //playerPlots(player.getIdentifier());
             return CommandResult.success();
         }
         
-        //si on arrive jusqu'ici et que la source est la console c'est qu'elle a pas rempli l'argument <player>
         else if (src instanceof ConsoleSource) {
             src.sendMessage(NO_CONSOLE());
         }
