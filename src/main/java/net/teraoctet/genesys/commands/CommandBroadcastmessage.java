@@ -1,6 +1,5 @@
 package net.teraoctet.genesys.commands;
 
-import java.util.Arrays;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource; 

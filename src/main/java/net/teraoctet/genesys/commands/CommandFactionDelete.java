@@ -3,12 +3,16 @@ package net.teraoctet.genesys.commands;
 import net.teraoctet.genesys.faction.FactionManager;
 import net.teraoctet.genesys.faction.GFaction;
 import net.teraoctet.genesys.player.GPlayer;
+import net.teraoctet.genesys.utils.GData;
 import static net.teraoctet.genesys.utils.GData.getGFaction;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
-import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
+import static net.teraoctet.genesys.utils.GData.removeGFaction;
+import static net.teraoctet.genesys.utils.MessageManager.FACTION_DELETED_SUCCESS;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_FACTION;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
+import static net.teraoctet.genesys.utils.MessageManager.WRONG_NAME;
+import static net.teraoctet.genesys.utils.MessageManager.WRONG_RANK;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -16,23 +20,32 @@ import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 
-public class CommandFactionMemberslist implements CommandExecutor {
+public class CommandFactionDelete implements CommandExecutor {
         
     @Override
     public CommandResult execute(CommandSource src, CommandContext ctx) {
 
-        if(src instanceof Player && src.hasPermission("genesys.faction.memberslist")) {
+        if(src instanceof Player && src.hasPermission("genesys.faction.delete")) {
             GPlayer gplayer = getGPlayer(src.getIdentifier());
-            GFaction gfaction = getGFaction(src.getName());
             
-            //si le joueur est membre d'une faction
             if(FactionManager.hasAnyFaction(gplayer)) {
-                src.sendMessage(MESSAGE("&2Listes des membres de " + gfaction.getName() + " : &a"));
-                return CommandResult.success();
-            }
-            
-            //si le joueur n'est dans aucune faction
-            else {
+                if(FactionManager.isOwner(gplayer)){
+                    String name = ctx.<String> getOne("name").get();
+                    GFaction gfaction = getGFaction(gplayer.getID_faction());
+                    String factionName = gfaction.getName();
+                    
+                    if(name.equals(factionName)) {
+                        //removeGFaction(gplayer.getID_faction());
+                        GData.commit();
+                        src.sendMessage(FACTION_DELETED_SUCCESS(factionName));
+                        return CommandResult.success();
+                    } else {
+                        src.sendMessage(WRONG_NAME());
+                    }
+                } else {
+                    src.sendMessage(WRONG_RANK());
+                }
+            } else {
                 src.sendMessage(NO_FACTION());
             }
         } 

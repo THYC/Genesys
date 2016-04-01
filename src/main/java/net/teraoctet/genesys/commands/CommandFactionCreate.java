@@ -1,5 +1,6 @@
 package net.teraoctet.genesys.commands;
 
+import net.teraoctet.genesys.faction.FactionManager;
 import net.teraoctet.genesys.faction.GFaction;
 import net.teraoctet.genesys.player.GPlayer;
 import net.teraoctet.genesys.utils.GData;
@@ -20,11 +21,11 @@ public class CommandFactionCreate implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource src, CommandContext ctx) {
 
-        if(src instanceof Player && src.hasPermission("genesys.")) {
+        if(src instanceof Player && src.hasPermission("genesys.faction.create")) {
             Player player = (Player) src;
             GPlayer gplayer = getGPlayer(player.getIdentifier());
             
-            if(gplayer.getID_faction() != 0) {
+            if(FactionManager.hasAnyFaction(gplayer)) {
                 src.sendMessage(ALREADY_FACTION_MEMBER());
             } else {
                 String factionName = ctx.<String> getOne("name").get();

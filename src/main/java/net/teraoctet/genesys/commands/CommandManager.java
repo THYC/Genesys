@@ -260,9 +260,6 @@ public class CommandManager {
         public CommandSpec CommandBroadcastmessage = CommandSpec.builder()
                 .description(Text.of("/broadcast [hide = 0:1] <message..>"))
                 .permission("genesys.broadcastmessage")
-                /*.arguments(GenericArguments.seq(
-                    GenericArguments.onlyOne(GenericArguments.bool(Text.of("hide"))),
-                    GenericArguments.remainingJoinedStrings(Text.of("message"))))*/
                 .arguments(GenericArguments.firstParsing( 
                     GenericArguments.flags()
                         .flag("-hide", "h")
@@ -277,18 +274,18 @@ public class CommandManager {
                 .executor(new CommandFactionCreate()) 
                 .build();
          
-        /*public CommandSpec CommandFactionDelete = CommandSpec.builder()
+        public CommandSpec CommandFactionDelete = CommandSpec.builder()
                 .description(Text.of("/faction delete <name>")) 
                 .permission("genesys.faction.delete") 
                 .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
                 .executor(new CommandFactionDelete()) 
-                .build();*/
+                .build();
          
-        /*public CommandSpec CommandFactionList = CommandSpec.builder()
+        public CommandSpec CommandFactionList = CommandSpec.builder()
                 .description(Text.of("/faction list")) 
                 .permission("genesys.faction.list")
                 .executor(new CommandFactionList()) 
-                .build();*/
+                .build();
          
         public CommandSpec CommandFactionMemberslist = CommandSpec.builder()
                 .description(Text.of("/faction memberslist")) 
@@ -296,45 +293,70 @@ public class CommandManager {
                 .executor(new CommandFactionMemberslist()) 
                 .build();
          
-        /*public CommandSpec CommandFactionAddplayer = CommandSpec.builder()
+        public CommandSpec CommandFactionAddplayer = CommandSpec.builder()
                 .description(Text.of("/faction addplayer <player>")) 
                 .permission("genesys.faction.addplayer") 
                 .arguments(
                     GenericArguments.seq(
                         GenericArguments.onlyOne(GenericArguments.player(Text.of("player")))))
                 .executor(new CommandFactionAddplayer()) 
-                .build();*/
+                .build();
          
-        /*public CommandSpec CommandFactionRemoveplayer = CommandSpec.builder()
+        public CommandSpec CommandFactionRemoveplayer = CommandSpec.builder()
                 .description(Text.of("/faction removeplayer <player>")) 
                 .permission("genesys.faction.removeplayer") 
                 .arguments(
                     GenericArguments.seq(
                         GenericArguments.onlyOne(GenericArguments.player(Text.of("player")))))
                 .executor(new CommandFactionRemoveplayer()) 
-                .build();*/
+                .build();
          
-        /*public CommandSpec CommandFactionSetplayergrade = CommandSpec.builder()
+        public CommandSpec CommandFactionSetplayergrade = CommandSpec.builder()
                 .description(Text.of("/faction setplayergrade <player> <grade>")) 
-                .permission("genesys.faction.removeplayer") 
+                .permission("genesys.faction.setplayergrade") 
                 .arguments(
                     GenericArguments.seq(
                         GenericArguments.onlyOne(GenericArguments.player(Text.of("player"))),
                         GenericArguments.onlyOne(GenericArguments.string(Text.of("grade")))))
                 .executor(new CommandFactionRemoveplayer()) 
-                .build();*/
+                .build();
+        
+        public CommandSpec CommandFactionSetowner = CommandSpec.builder()
+                .description(Text.of("/faction setowner <player>")) 
+                .permission("genesys.faction.setowner") 
+                .arguments(GenericArguments.onlyOne(GenericArguments.player(Text.of("player"))))
+                .executor(new CommandFactionSetowner()) 
+                .build();
+        
+        public CommandSpec CommandFactionDeposit = CommandSpec.builder()
+                .description(Text.of("/faction depot <montant>")) 
+                .permission("genesys.faction.deposit") 
+                .arguments(GenericArguments.onlyOne(GenericArguments.integer(Text.of("amount"))))
+                .executor(new CommandFactionDeposit()) 
+                .build();
+        
+        public CommandSpec CommandFactionWithdrawal = CommandSpec.builder()
+                .description(Text.of("/faction retrait <montant>")) 
+                .permission("genesys.faction.withdrawal") 
+                .arguments(
+                    GenericArguments.onlyOne(GenericArguments.integer(Text.of("amount"))))
+                .executor(new CommandFactionWithdrawal()) 
+                .build();
          
         public CommandSpec CommandFaction = CommandSpec.builder()
                 .description(Text.of("Affiche des informations sur votre faction"))
                 .permission("genesys.faction")
                 .child(CommandFactionCreate, "create")
-                //.child(CommandFactionDelete, "delete")
+                .child(CommandFactionDelete, "delete")
                 .child(CommandFactionMemberslist, "memberslist")
-                //.child(CommandFactionList, "list")
-                //.child(CommandFactionAddplayer, "addplayer")
-                //.child(CommandFactionRemoveplayer, "removeplayer")
-                //.child(CommandFactionSetplayergrade, "setplayergrade")
-                .arguments(GenericArguments.flags().flag("-actionmenu", "a").buildWith(GenericArguments.none()))
+                .child(CommandFactionList, "list")
+                .child(CommandFactionAddplayer, "addplayer")
+                .child(CommandFactionRemoveplayer, "removeplayer")
+                .child(CommandFactionSetplayergrade, "setplayergrade")
+                .child(CommandFactionSetowner, "setowner")
+                .child(CommandFactionDeposit, "deposit", "depot")
+                .child(CommandFactionDeposit, "withdrawal", "retrait")
+                .arguments(GenericArguments.flags().flag("-displayaction", "a").buildWith(GenericArguments.none()))
                 .executor(new CommandFaction())
                 .build();
         

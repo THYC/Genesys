@@ -1,9 +1,11 @@
 package net.teraoctet.genesys.commands;
 
+import static net.teraoctet.genesys.faction.FactionManager.hasAnyFaction;
 import net.teraoctet.genesys.faction.GFaction;
 import net.teraoctet.genesys.player.GPlayer;
 import static net.teraoctet.genesys.utils.GData.getGFaction;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
+import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_FACTION;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
@@ -26,26 +28,18 @@ public class CommandFaction implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource src, CommandContext ctx) {
         if(src instanceof Player && src.hasPermission("genesys.faction")) {
-            Player player = (Player) src;
-            GPlayer gplayer = getGPlayer(player.getIdentifier());
+            GPlayer gplayer = getGPlayer(src.getIdentifier());
             
-            //si le joueur n'est dans aucune faction
-            if(gplayer.getID_faction() == 0) {
-                src.sendMessage(NO_FACTION());
-                src.sendMessage(Text.builder().append(TextSerializers.formattingCode('&').deserialize("&bCliquez ici pour en cr\351er une !"))
-                        .onClick(TextActions.suggestCommand("/faction create "))    
-                        .onHover(TextActions.showText(TextSerializers.formattingCode('&').deserialize("&eCr\351er une nouvelle faction\n&f/faction create <name>").toText()))
-                        .toText());
-            }
+            src.sendMessage(MESSAGE("player id_faction = " + Integer.toString(gplayer.getID_faction())));
             
             //si le joueur est membre d'une faction
-            else {
+            if(hasAnyFaction(gplayer)) {
                 GFaction gfaction = getGFaction(gplayer.getID_faction());
                 PaginationService paginationService = getGame().getServiceManager().provide(PaginationService.class).get();
                 PaginationList.Builder builder = paginationService.builder();  
-                
+
                 //Menu des actions, affiché lorsque showActionsMenu
-                if(ctx.hasAny("actionmenu")){
+                if(ctx.hasAny("displayaction")){
                     //Si le joueur a un grade suffisant dans la faction pour accéder à ce menu
                     if(gplayer.getFactionRank() >= 3) {
                         builder.header(Text.builder().append(TextSerializers.formattingCode('&').deserialize("&2Actions:")).toText())
@@ -55,11 +49,15 @@ public class CommandFaction implements CommandExecutor {
                                     .toText(),
                                 Text.builder().append(TextSerializers.formattingCode('&').deserialize("&2+ &aChanger le grade d'un membre"))
                                     .onClick(TextActions.suggestCommand("/faction setplayergrade "))    
-                                    .onHover(TextActions.showText(TextSerializers.formattingCode('&').deserialize("&eChanger le grade d'un membre\n&f/faction setplayergrade <player> <grade>").toText()))
+                                    .onHover(TextActions.showText(TextSerializers.formattingCode('&').deserialize("&eChanger le grade d'un membre\n&f/faction setplayergrade <player> <grade>\nGrade : 2 = Sous-chef | 3 = Officer | 4 = Membre | 5 = Recrue").toText()))
                                     .toText(),
                                 Text.builder().append(TextSerializers.formattingCode('&').deserialize("&2+ &aSupprimer un membre"))
                                     .onClick(TextActions.suggestCommand("/faction removeplayer "))    
                                     .onHover(TextActions.showText(TextSerializers.formattingCode('&').deserialize("&eSupprimer un membre\n&f/faction removeplayer <player>").toText()))
+                                    .toText(),
+                                Text.builder().append(TextSerializers.formattingCode('&').deserialize("&2+ &aRetrait bancaire"))
+                                    .onClick(TextActions.suggestCommand("/faction retrait "))    
+                                    .onHover(TextActions.showText(TextSerializers.formattingCode('&').deserialize("&eRetirer des \351meraudes de la banque de faction\n&f/faction retrait <montant>").toText()))
                                     .toText(),
                                 Text.builder().append(TextSerializers.formattingCode('&').deserialize("&2+ &aSupprimer la faction"))
                                     .onClick(TextActions.suggestCommand("/faction delete "))    
@@ -73,7 +71,7 @@ public class CommandFaction implements CommandExecutor {
                     }
                 //Menu affiché par défaut   
                 } else {
-                    builder.title(Text.builder().append(TextSerializers.formattingCode('&').deserialize(gfaction.getName())).toText())
+                    builder.title(Text.builder().append(TextSerializers.formattingCode('&').deserialize("&2Faction : &f" + gfaction.getName())).toText())
                          .header(Text.builder().append(TextSerializers.formattingCode('&').deserialize("&2Membres: " + "x" + " / " + "x")).build())
                          .contents(Text.builder().append(TextSerializers.formattingCode('&').deserialize("&aChef :")).toText(),
                              Text.builder().append(TextSerializers.formattingCode('&').deserialize("&a- Sous-chef (" + ")"))
@@ -89,10 +87,13 @@ public class CommandFaction implements CommandExecutor {
                                      .onHover(TextActions.showText(Text.builder("Membre(s): ").build()))      //mettre la liste des MEMBRES en hover
                                      .toText(),
                              Text.builder().append(TextSerializers.formattingCode('&').deserialize("&a- Recrue (" + ")"))
-                                     .onClick(TextActions.runCommand("/faction 1"))
+                                     .onClick(TextActions.runCommand("/faction memberslist"))
                                      .onHover(TextActions.showText(Text.builder("Recrue(s): ").build()))      //mettre la liste des RECRUES en hover
                                      .toText(),
-                             Text.builder().append(TextSerializers.formattingCode('&').deserialize("&2Bank de Faction : &a" + gfaction.getMoney() + " \351meraudes")).toText(),
+                             Text.builder().append(TextSerializers.formattingCode('&').deserialize("&2Bank de Faction : &a" + gfaction.getMoney() + " \351meraudes"))
+                                     .onClick(TextActions.suggestCommand("/faction depot "))
+                                     .onHover(TextActions.showText(TextSerializers.formattingCode('&').deserialize("&eD\351poser des \351meraudes dans la banque de faction\n&f/faction depot <montant>").toText()))
+                                     .toText(),
                              Text.builder().append(TextSerializers.formattingCode('&').deserialize("&2+ Afficher les Actions"))
                                      .onClick(TextActions.runCommand("/faction -a"))
                                      .onHover(TextActions.showText(Text.builder("Affiche un menu pour g\351rer la faction").build()))      //mettre la liste des RECRUES en hover
@@ -101,6 +102,15 @@ public class CommandFaction implements CommandExecutor {
                          .sendTo(src); 
                     return CommandResult.success();
                 }
+            }
+            
+            //si le joueur n'est dans aucune faction
+            else {
+                src.sendMessage(NO_FACTION());
+                src.sendMessage(Text.builder().append(TextSerializers.formattingCode('&').deserialize("&bCliquez ici pour en cr\351er une !"))
+                        .onClick(TextActions.suggestCommand("/faction create "))    
+                        .onHover(TextActions.showText(TextSerializers.formattingCode('&').deserialize("&eCr\351er une nouvelle faction\n&f/faction create <name>").toText()))
+                        .toText()); 
             }
         }
         

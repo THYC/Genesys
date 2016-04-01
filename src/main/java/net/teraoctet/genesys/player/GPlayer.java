@@ -10,9 +10,7 @@ import static net.teraoctet.genesys.utils.GData.removeGPlayer;
 import static net.teraoctet.genesys.utils.GData.removeUUID;
 import net.teraoctet.genesys.utils.GServer;
 import org.spongepowered.api.entity.living.player.Player;
-
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.chat.ChatTypes;
 
 public class GPlayer {
 	
@@ -148,7 +146,7 @@ public class GPlayer {
         {
             if(GServer.isOnline(name)){
                 Player player = GServer.getPlayer(name);
-                if (player != null)player.sendMessage(ChatTypes.CHAT,text);
+                if (player != null)player.sendMessage(text);
             }
         }
 }

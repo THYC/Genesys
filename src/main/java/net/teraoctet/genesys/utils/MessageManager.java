@@ -26,6 +26,7 @@ public class MessageManager {
     private static Text FIRSTJOIN_BROADCAST_MESSAGE;
     private static Text EVENT_DISCONNECT_MESSAGE;
     private static Text NAME_CHANGE;
+    private static Text WRONG_NAME;
     private static Text SUN_MESSAGE;
     private static Text RAIN_MESSAGE;
     private static Text DAY_MESSAGE;
@@ -35,6 +36,8 @@ public class MessageManager {
     private static Text WRONG_RANK;
     private static Text ALREADY_FACTION_MEMBER;
     private static Text FACTION_CREATED_SUCCESS;
+    private static Text FACTION_RENAMED_SUCCESS;
+    private static Text FACTION_DELETED_SUCCESS;
     private static Text BUYING_COST_PLOT;
     private static Text PROTECT_PLOT_SUCCESS;
     private static Text BEDROCK2SKY_PROTECT_PLOT_SUCCESS;
@@ -54,6 +57,7 @@ public class MessageManager {
     private static Text PLOT_NO_FIRE;
     private static Text PLOT_NO_EXIT;
     private static Text MISSING_BALANCE;
+    private static Text TRANSFER_SUCCESS;
     private static Text HOME_ALREADY_EXIST;
     private static Text HOME_SET_SUCCESS;
     private static Text HOME_DEL_SUCCESS;
@@ -137,6 +141,11 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
+                msg.add("&cCe nom est incorrect !");
+                message.getNode("WRONG_NAME").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
                 msg.add("&e%name% &6a programm\351 le beau temps sur &e%world%");
                 message.getNode("SUN_MESSAGE").setValue(msg);
                 manager.save(message);
@@ -179,6 +188,16 @@ public class MessageManager {
                 msg = new ArrayList<>();
                 msg.add("&eVous venez de cr\351er la faction \"&6%var1%&e\"");
                 message.getNode("FACTION_CREATED_SUCCESS").setValue(msg);
+                manager.save(message);
+                        
+                msg = new ArrayList<>();
+                msg.add("&eVous de supprimer votre faction \"&6%var1%&e\"");
+                message.getNode("FACTION_DELETED_SUCCESS").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&eLa faction \"&6%var1%&e\" a \351t\351 renomm\351e en \"&6%var2%&e\"");
+                message.getNode("FACTION_RENAMED_SUCCESS").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
@@ -260,6 +279,11 @@ public class MessageManager {
                 
                 msg = new ArrayList<>();
                 msg.add("&cVous ne poss\351dez pas assez d'assez d'\351meraudes sur votre compte, tapez &4/bank &cpour voir votre solde");
+                message.getNode("MISSING_BALANCE").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&eVirement effectu\351 de &6%var1% \351mraudes &eavec succès !");
                 message.getNode("MISSING_BALANCE").setValue(msg);
                 manager.save(message);
                 
@@ -531,6 +555,8 @@ public class MessageManager {
     
     public static Text NAME_CHANGE(String oldName, String newName){return format(NAME_CHANGE, "NAME_CHANGE", oldName, newName);}
     
+    public static Text WRONG_NAME(){return format(WRONG_NAME, "WRONG_NAME");}
+    
     public static Text SUN_MESSAGE(Player player){return format(SUN_MESSAGE, "SUN_MESSAGE", player);}
     
     public static Text RAIN_MESSAGE(Player player){return format(RAIN_MESSAGE, "RAIN_MESSAGE", player);}
@@ -548,6 +574,10 @@ public class MessageManager {
     public static Text ALREADY_FACTION_MEMBER(){return format(ALREADY_FACTION_MEMBER, "ALREADY_FACTION_MEMBER");}
     
     public static Text FACTION_CREATED_SUCCESS(String factionName){return format(FACTION_CREATED_SUCCESS, "FACTION_CREATED_SUCCESS", factionName, "");}
+    
+    public static Text FACTION_RENAMED_SUCCESS(String oldName, String newName){return format(FACTION_RENAMED_SUCCESS, "FACTION_RENAMED_SUCCESS", oldName, newName);}
+    
+    public static Text FACTION_DELETED_SUCCESS(String factionName){return format(FACTION_DELETED_SUCCESS, "FACTION_DELETED_SUCCESS", factionName, "");}
     
     public static Text BUYING_COST_PLOT(Player player, String var1, String var2){return format(BUYING_COST_PLOT, "BUYING_COST_PLOT", player, var1, var2);}
     
@@ -586,6 +616,8 @@ public class MessageManager {
     public static Text PLOT_NO_EXIT(){return format(PLOT_NO_EXIT, "PLOT_NO_EXIT");}
     
     public static Text MISSING_BALANCE(){return format(MISSING_BALANCE, "MISSING_BALANCE");}
+    
+    public static Text TRANSFER_SUCCESS(String amount){return format(TRANSFER_SUCCESS, "TRANSFER_SUCCESS",amount, "");}
     
     public static Text HOME_ALREADY_EXIST(){return format(HOME_ALREADY_EXIST, "HOME_ALREADY_EXIST");}
     

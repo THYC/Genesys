@@ -16,7 +16,6 @@ public class GFaction {
     private int kill;
     private int dead;
     
-    // tu peut ajouter plusieurs lanceur comme celui là qui alimente un certain nombre de chant, il faut en faire un qui alimente tout
     public GFaction(int id_faction, String name, String world, int X, int Y, int Z, double money, int point, int kill, int dead) { 
         this.name = name;
         this.world = world;
@@ -29,7 +28,7 @@ public class GFaction {
         this.dead = dead;
     }
     
-    public GFaction(String name, String world, int X, int Y, int Z) { // tu peut ajouter plusieurs lanceur comme celui là qui alimente un certain nombre de chant
+    public GFaction(String name, String world, int X, int Y, int Z) {
         this.name = name;
         this.world = world;
         this.X = X;
@@ -41,7 +40,7 @@ public class GFaction {
         this.dead = 0;
     }
     
-    public GFaction(String name) { // celui n'alimentera que le nom pour une creation simple
+    public GFaction(String name) {
         this.name = name;
         this.world = null;
         this.X = 0;
