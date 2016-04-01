@@ -3,9 +3,12 @@ package net.teraoctet.genesys.faction;
 import java.util.List;
 import net.teraoctet.genesys.player.GPlayer;
 import net.teraoctet.genesys.utils.GData;
+import static net.teraoctet.genesys.utils.GData.commit;
 import static net.teraoctet.genesys.utils.GData.getFactions;
+import static net.teraoctet.genesys.utils.GData.getGFaction;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import static net.teraoctet.genesys.utils.GData.getPlayers;
+import static net.teraoctet.genesys.utils.GData.removeGFaction;
 import org.spongepowered.api.entity.living.player.Player;
 
 public class FactionManager {
@@ -61,13 +64,18 @@ public class FactionManager {
     
     /**
      * Expulse tous les joueurs d'une faction associé à son ID
+     * et supprime la faction
      * @param id_faction 
      */
-    public void removePlayersToFaction(int id_faction){
+    public void removePFaction(int id_faction){
         for (String uuid : getPlayers().keySet()) {
             if(getPlayers().get(uuid).getID_faction() == id_faction){
                 getPlayers().get(uuid).setID_faction(0);
                 getPlayers().get(uuid).update();
+                GFaction gfaction = getGFaction(id_faction);
+                gfaction.delete();
+                removeGFaction(id_faction);
+                commit();
             }
         }
         GData.commit();
