@@ -175,7 +175,7 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&4%name% &cest introuvable");
+                msg.add("&4%var1% &cest introuvable");
                 message.getNode("EXCEPTION","NOT_FOUND").setValue(msg);
                 manager.save(message);
                 
