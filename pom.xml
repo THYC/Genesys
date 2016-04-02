@@ -20,13 +20,6 @@
     </repositories>
     <dependencies>
         <dependency>
-            <groupId>org.spongepowered</groupId>
-            <artifactId>spongeapi</artifactId>
-            <version>4.1.0-20160327.044552-13</version>
-            <scope>provided</scope>
-            <type>jar</type>
-        </dependency>
-        <dependency>
             <groupId>com.typesafe</groupId>
             <artifactId>config</artifactId>
             <version>1.2.1</version>
@@ -61,6 +54,11 @@
             <artifactId>configurate-hocon</artifactId>
             <version>3.1</version>
             <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.spongepowered</groupId>
+            <artifactId>spongeapi</artifactId>
+            <version>4.1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

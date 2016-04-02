@@ -2,6 +2,7 @@ package net.teraoctet.genesys.world;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import static net.teraoctet.genesys.Genesys.thisGame;
 //import static net.teraoctet.genesys.Genesys.getPlugin;
 import static org.spongepowered.api.Sponge.getGame;
 import org.spongepowered.api.scheduler.Task;
@@ -32,7 +33,7 @@ public class Restore {
                 /*.async()*/.delay(100, TimeUnit.MILLISECONDS)
                 .interval(50, TimeUnit.MILLISECONDS)
                 .name("Restore")
-                .submit(getGame());
+                .submit(thisGame());
 
     }
 }

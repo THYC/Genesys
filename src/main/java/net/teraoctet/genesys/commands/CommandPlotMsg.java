@@ -2,6 +2,7 @@ package net.teraoctet.genesys.commands;
 
 import java.util.Optional;
 import static net.teraoctet.genesys.Genesys.plotManager;
+import static net.teraoctet.genesys.Genesys.serverManager;
 import net.teraoctet.genesys.plot.GPlot;
 import net.teraoctet.genesys.utils.GData;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
@@ -46,11 +47,11 @@ public class CommandPlotMsg implements CommandExecutor {
                 } else {
                     String[] args = arguments.get().split(" ");
                     String smsg = "";
-                    for(int i = 0; i < args.length; i++){
-                        smsg = smsg + args[i] + " ";
+                    for (String arg : args) {
+                        smsg = smsg + arg + " ";
                     }
                     Text msg = MESSAGE(smsg);
-                    gplot.setMessage(smsg);
+                    gplot.setMessage(serverManager.quoteToSQL(smsg));
                     gplot.update();
                     GData.commit();
                     player.sendMessage(MESSAGE("&cVotre nouveau message :"));

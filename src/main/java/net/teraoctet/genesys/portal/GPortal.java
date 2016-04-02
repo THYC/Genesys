@@ -54,7 +54,7 @@ public class GPortal {
         this.x2 = x2;
         this.y2 = y2;
         this.z2 = z2;
-        this.toworld = "";
+        this.toworld = "DESABLED";
         this.tox = 0;
         this.toy = 0;
         this.toz = 0;

@@ -37,8 +37,12 @@ public class CommandPlotCreate implements CommandExecutor {
                 player.sendMessage(MESSAGE("&7option [strict] : protection sur les points d\351clar\351s"));
                 return CommandResult.empty();
             }
-
+            
             String name = ctx.<String> getOne("name").get();
+            if(name.length() > 10){
+                player.sendMessage(MESSAGE("&7autoris\351 10 caract\350re maxi, recommencez"));
+                return CommandResult.empty();
+            }
             Boolean strict = false;
 
             if (plotManager.hasPlot(name) == false){

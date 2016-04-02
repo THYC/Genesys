@@ -43,5 +43,12 @@ public class ServerManager {
         Date itemDate = new Date(itemLong);
         return itemDate;
     }
+    
+    public String quoteToSQL(String message){
+        if(message.contains("'") && !message.contains("''")){
+            message = message.replace("'", "''");
+        }
+        return message;
+    }
 
 }
