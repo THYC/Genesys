@@ -1,7 +1,8 @@
-package net.teraoctet.genesys.commands;
+package net.teraoctet.genesys.commands.plot;
 
 import static net.teraoctet.genesys.Genesys.plotManager;
 import net.teraoctet.genesys.plot.GPlot;
+import net.teraoctet.genesys.utils.GData;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import static net.teraoctet.genesys.utils.MessageManager.USAGE;
 import net.teraoctet.genesys.player.GPlayer;
@@ -17,12 +18,12 @@ import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static net.teraoctet.genesys.utils.MessageManager.ALREADY_OWNED_PLOT;
 import org.spongepowered.api.command.source.ConsoleSource;
 
-public class CommandPlotRemoveplayer implements CommandExecutor {
-       
+public class CommandPlotRemove implements CommandExecutor {
+           
     @Override
     public CommandResult execute(CommandSource src, CommandContext ctx) {
-
-        if(src instanceof Player && src.hasPermission("genesys.plot.removeplayer")) { 
+        
+        if(src instanceof Player && src.hasPermission("genesys.plot.remove")) { 
             Player player = (Player) src;
             GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
             GPlot gplot = null;
@@ -36,34 +37,23 @@ public class CommandPlotRemoveplayer implements CommandExecutor {
 
             if (gplot == null){
                 player.sendMessage(NO_PLOT());
-                player.sendMessage(USAGE("/plot removeplayer : retire un habitant - vous devez \352tre sur la parcelle"));
-                player.sendMessage(USAGE("/plot removeplayer <NomParcelle> : retire un habitant sur la parcelle nomm\351e"));
-                return CommandResult.empty();
+                player.sendMessage(USAGE("/plot remove : supprime une parcelle - vous devez \352tre sur la parcelle"));
+                player.sendMessage(USAGE("/plot remove <NomParcelle> : supprime la parcelle nomm\351e"));
+                return CommandResult.empty(); 
             } else if (!gplot.getUuidOwner().equalsIgnoreCase(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
                 player.sendMessage(ALREADY_OWNED_PLOT());
-                return CommandResult.empty(); 
+                return CommandResult.empty();  
             }
 
-            if(ctx.getOne("player").isPresent()){
-                Player target = ctx.<Player> getOne("player").get();  
-                if (target == null){
-                    player.sendMessage(MESSAGE("&e" + target + " &7 doit \352tre connecté pour le retirer"));
-                    return CommandResult.empty();
-                }
-
-                String uuidAllowed = gplot.getUuidAllowed();
-                uuidAllowed = uuidAllowed.replace(target.getUniqueId().toString(), "");
-                gplot.setUuidAllowed(uuidAllowed);
-                player.sendMessage(MESSAGE("&e" + target.getName() + " &7a \351t\351 retir\351 de la liste des habitants"));
-                target.sendMessage(MESSAGE("&e" + player.getName() + " &7vous a retir\351 des habitants de &e" + gplot.getName()));
-                return CommandResult.success();
-            } else {
-                player.sendMessage(USAGE("/plot removeplayer <playerName> [NomParcelle]"));
-            }
+            gplot.delete();
+            GData.commit();
+            GData.removePlot(gplot);
+            player.sendMessage(MESSAGE("&eLa parcelle " + gplot.getName() + " &7a \351t\351 supprim\351e"));  
+            return CommandResult.success();
         } 
         
-        else if (src instanceof ConsoleSource) {
-            src.sendMessage(NO_CONSOLE()); 
+        else if (src instanceof ConsoleSource){
+            src.sendMessage(NO_CONSOLE());
         }
         
         else {
@@ -71,5 +61,5 @@ public class CommandPlotRemoveplayer implements CommandExecutor {
         }
         
         return CommandResult.empty();	
-    }
+    }  
 }

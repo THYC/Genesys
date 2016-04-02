@@ -1,4 +1,4 @@
-package net.teraoctet.genesys.commands;
+package net.teraoctet.genesys.commands.faction;
 
 import net.teraoctet.genesys.faction.FactionManager;
 import net.teraoctet.genesys.player.GPlayer;
@@ -12,13 +12,16 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
+import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
+import static net.teraoctet.genesys.utils.MessageManager.NO_FACTION;
+import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 
-public class CommandFactionRemoveplayer implements CommandExecutor {
+public class CommandFactionInvit implements CommandExecutor {
         
     @Override
     public CommandResult execute(CommandSource src, CommandContext ctx) {
 
-        if(src instanceof Player && src.hasPermission("genesys.faction.removeplayer")) {
+        if(src instanceof Player && src.hasPermission("genesys.faction.addplayer")) {
             GPlayer gplayer = getGPlayer(src.getIdentifier());
             
             if(FactionManager.hasAnyFaction(gplayer)) {

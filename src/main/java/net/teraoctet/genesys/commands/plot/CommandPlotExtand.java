@@ -1,4 +1,4 @@
-package net.teraoctet.genesys.commands;
+package net.teraoctet.genesys.commands.plot;
 
 import com.flowpowered.math.vector.Vector3d;
 import static java.lang.Math.abs;

@@ -1,4 +1,4 @@
-package net.teraoctet.genesys.commands;
+package net.teraoctet.genesys.commands.plot;
 
 import net.teraoctet.genesys.plot.PlotManager;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;

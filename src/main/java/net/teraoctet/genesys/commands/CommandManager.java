@@ -1,5 +1,29 @@
 package net.teraoctet.genesys.commands;
 
+import net.teraoctet.genesys.commands.plot.CommandPlotRemove;
+import net.teraoctet.genesys.commands.plot.CommandPlotCreate;
+import net.teraoctet.genesys.commands.plot.CommandPlotOwnerset;
+import net.teraoctet.genesys.commands.plot.CommandPlot;
+import net.teraoctet.genesys.commands.plot.CommandPlotRemoveplayer;
+import net.teraoctet.genesys.commands.plot.CommandPlotMsg;
+import net.teraoctet.genesys.commands.plot.CommandPlotCreateOK;
+import net.teraoctet.genesys.commands.plot.CommandPlotFlag;
+import net.teraoctet.genesys.commands.plot.CommandPlotExtand;
+import net.teraoctet.genesys.commands.plot.CommandPlotAddplayer;
+import net.teraoctet.genesys.commands.plot.CommandPlotList;
+import net.teraoctet.genesys.commands.plot.CommandPlotFlaglist;
+import net.teraoctet.genesys.commands.plot.CommandPlotSale;
+import net.teraoctet.genesys.commands.faction.CommandFactionWithdrawal;
+import net.teraoctet.genesys.commands.faction.CommandFactionDelete;
+import net.teraoctet.genesys.commands.faction.CommandFactionSetowner;
+import net.teraoctet.genesys.commands.faction.CommandFactionDeposit;
+import net.teraoctet.genesys.commands.faction.CommandFactionCreate;
+import net.teraoctet.genesys.commands.faction.CommandFactionRename;
+import net.teraoctet.genesys.commands.faction.CommandFactionInvit;
+import net.teraoctet.genesys.commands.faction.CommandFactionRemoveplayer;
+import net.teraoctet.genesys.commands.faction.CommandFactionList;
+import net.teraoctet.genesys.commands.faction.CommandFactionMemberslist;
+import net.teraoctet.genesys.commands.faction.CommandFaction;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.text.Text;
@@ -300,13 +324,11 @@ public class CommandManager {
                 .executor(new CommandFactionMemberslist()) 
                 .build();
          
-        public CommandSpec CommandFactionAddplayer = CommandSpec.builder()
-                .description(Text.of("/faction addplayer <player>")) 
-                .permission("genesys.faction.addplayer") 
-                .arguments(
-                    GenericArguments.seq(
-                        GenericArguments.onlyOne(GenericArguments.player(Text.of("player")))))
-                .executor(new CommandFactionAddplayer()) 
+        public CommandSpec CommandFactionInvit = CommandSpec.builder()
+                .description(Text.of("/faction invit <player>")) 
+                .permission("genesys.faction.invit") 
+                .arguments(GenericArguments.onlyOne(GenericArguments.player(Text.of("player"))))
+                .executor(new CommandFactionInvit()) 
                 .build();
          
         public CommandSpec CommandFactionRemoveplayer = CommandSpec.builder()
@@ -358,12 +380,12 @@ public class CommandManager {
                 .child(CommandFactionRename, "rename")
                 .child(CommandFactionMemberslist, "memberslist")
                 .child(CommandFactionList, "list")
-                .child(CommandFactionAddplayer, "addplayer")
+                .child(CommandFactionInvit, "invit", "inviter", "add")
                 .child(CommandFactionRemoveplayer, "removeplayer")
                 .child(CommandFactionSetplayergrade, "setplayergrade")
                 .child(CommandFactionSetowner, "setowner")
                 .child(CommandFactionDeposit, "deposit", "depot")
-                .child(CommandFactionDeposit, "withdrawal", "retrait")
+                .child(CommandFactionDeposit, "withdraw", "withdrawal", "retrait")
                 .arguments(GenericArguments.flags().flag("-displayaction", "a").buildWith(GenericArguments.none()))
                 .executor(new CommandFaction())
                 .build();

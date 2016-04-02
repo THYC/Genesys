@@ -1,15 +1,16 @@
-package net.teraoctet.genesys.commands;
+package net.teraoctet.genesys.commands.faction;
 
 import static net.teraoctet.genesys.Genesys.factionManager;
 import net.teraoctet.genesys.faction.GFaction;
 import net.teraoctet.genesys.player.GPlayer;
 import static net.teraoctet.genesys.utils.GData.getGFaction;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
-import static net.teraoctet.genesys.utils.MessageManager.MISSING_BALANCE;
+import static net.teraoctet.genesys.utils.MessageManager.FACTION_DELETED_SUCCESS;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_FACTION;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
-import static net.teraoctet.genesys.utils.MessageManager.TRANSFER_SUCCESS;
+import static net.teraoctet.genesys.utils.MessageManager.WRONG_NAME;
+import static net.teraoctet.genesys.utils.MessageManager.WRONG_RANK;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -17,29 +18,30 @@ import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 
-public class CommandFactionDeposit implements CommandExecutor {
+public class CommandFactionDelete implements CommandExecutor {
         
     @Override
     public CommandResult execute(CommandSource src, CommandContext ctx) {
 
-        if(src instanceof Player && src.hasPermission("genesys.faction.deposit")) {
+        if(src instanceof Player && src.hasPermission("genesys.faction.delete")) {
             GPlayer gplayer = getGPlayer(src.getIdentifier());
             
             if(factionManager.hasAnyFaction(gplayer)) {
-                double amount = ctx.<Double> getOne("amount").get();
-                double playerMoney = gplayer.getMoney();
-                
-                if(playerMoney >= amount){
+                if(factionManager.isOwner(gplayer)){
+                    String name = ctx.<String> getOne("name").get();
                     GFaction gfaction = getGFaction(gplayer.getID_faction());
-                    playerMoney = playerMoney - amount;
-                    gplayer.setMoney(playerMoney);
-                    gfaction.setMoney(gfaction.getMoney() + amount);
-                    gplayer.update();
-                    gfaction.update();
-                    src.sendMessage(TRANSFER_SUCCESS(Double.toString(amount)));
-                    return CommandResult.success();
+                    String factionName = gfaction.getName();
+                    
+                    if(factionName.toLowerCase().contains(name.toLowerCase())) {
+                        int id_faction = gplayer.getID_faction();
+                        factionManager.removeFaction(id_faction);
+                        src.sendMessage(FACTION_DELETED_SUCCESS(factionName));
+                        return CommandResult.success();
+                    } else {
+                        src.sendMessage(WRONG_NAME());
+                    }
                 } else {
-                    src.sendMessage(MISSING_BALANCE());
+                    src.sendMessage(WRONG_RANK());
                 }
             } else {
                 src.sendMessage(NO_FACTION());

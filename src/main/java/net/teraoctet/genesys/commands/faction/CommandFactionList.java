@@ -1,4 +1,4 @@
-package net.teraoctet.genesys.commands;
+package net.teraoctet.genesys.commands.faction;
 
 import java.util.ArrayList;
 import net.teraoctet.genesys.faction.GFaction;

@@ -1,4 +1,4 @@
-package net.teraoctet.genesys.commands;
+package net.teraoctet.genesys.commands.faction;
 
 import net.teraoctet.genesys.faction.FactionManager;
 import net.teraoctet.genesys.player.GPlayer;
