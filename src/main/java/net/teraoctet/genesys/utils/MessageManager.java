@@ -87,6 +87,7 @@ public class MessageManager {
     private static Text WRONG_CHARACTERS_NUMBER;
     private static Text KILLED_BY;
     private static Text SUICIDE;
+    private static Text ONHOVER_ACTION_MENU;
        
     public static File file = new File("config/genesys/message.conf");
     public static final ConfigurationLoader<?> manager = HoconConfigurationLoader.builder().setFile(file).build();
@@ -279,6 +280,12 @@ public class MessageManager {
                 msg = new ArrayList<>();
                 msg.add("&eLa faction \"&6%var1%&e\" a \351t\351 renomm\351e en \"&6%var2%&e\"");
                 message.getNode("FACTION","FACTION_RENAMED_SUCCESS").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&l&6Affiche un menu pour g\351rer la faction");
+                msg.add("&n&eAccessible par :&r Chef, Sous-chef, Officier");
+                message.getNode("FACTION","ONHOVER_ACTION_MENU").setValue(msg);
                 manager.save(message);
                 
                 //-------------------------
@@ -665,6 +672,8 @@ public class MessageManager {
     public static Text FACTION_RENAMED_SUCCESS(String oldName, String newName){return format(FACTION_RENAMED_SUCCESS, "FACTION", "FACTION_RENAMED_SUCCESS", oldName, newName);}
     
     public static Text FACTION_DELETED_SUCCESS(String factionName){return format(FACTION_DELETED_SUCCESS, "FACTION", "FACTION_DELETED_SUCCESS", factionName, "");}
+    
+    public static Text ONHOVER_ACTION_MENU(){return format(ONHOVER_ACTION_MENU, "FACTION", "ONHOVER_ACTION_MENU");}
     
     //-------------------------
     // Message PLOT / PARCELLE

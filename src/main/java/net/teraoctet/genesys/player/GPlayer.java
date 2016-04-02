@@ -8,9 +8,10 @@ import static net.teraoctet.genesys.utils.GData.addUUID;
 import static net.teraoctet.genesys.utils.GData.queue;
 import static net.teraoctet.genesys.utils.GData.removeGPlayer;
 import static net.teraoctet.genesys.utils.GData.removeUUID;
-import net.teraoctet.genesys.utils.GServer;
+import net.teraoctet.genesys.utils.ServerManager;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import static net.teraoctet.genesys.utils.GData.queue;
 
 public class GPlayer {
 	
@@ -144,8 +145,8 @@ public class GPlayer {
 
     public void sendMessage(Text text)
     {
-        if(GServer.isOnline(name)){
-            Player player = GServer.getPlayer(name);
+        if(ServerManager.isOnline(name)){
+            Player player = ServerManager.getPlayer(name);
             if (player != null)player.sendMessage(text);
         }
     }
