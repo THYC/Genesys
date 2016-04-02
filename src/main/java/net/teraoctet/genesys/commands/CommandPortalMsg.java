@@ -5,7 +5,6 @@ import static net.teraoctet.genesys.Genesys.portalManager;
 import net.teraoctet.genesys.portal.GPortal;
 import net.teraoctet.genesys.utils.GData;
 import static net.teraoctet.genesys.utils.MessageManager.USAGE;
-import org.spongepowered.api.Game;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -13,6 +12,7 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
+import static net.teraoctet.genesys.utils.MessageManager.NOT_FOUND;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import org.spongepowered.api.command.source.ConsoleSource;
@@ -56,7 +56,7 @@ public class CommandPortalMsg implements CommandExecutor {
                         return CommandResult.success();
                     }  
                 } else {
-                    player.sendMessage(MESSAGE("&cCe portail est introuvable"));
+                    player.sendMessage(NOT_FOUND(name));
                     return CommandResult.empty();
                 }
             } else {

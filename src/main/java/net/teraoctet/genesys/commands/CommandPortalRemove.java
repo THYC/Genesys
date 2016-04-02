@@ -10,9 +10,9 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
+import static net.teraoctet.genesys.utils.MessageManager.NOT_FOUND;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
-import static net.teraoctet.genesys.utils.MessageManager.PLOT_NAME_ALREADY_USED;
 import org.spongepowered.api.command.source.ConsoleSource;
 
 public class CommandPortalRemove implements CommandExecutor {
@@ -36,7 +36,7 @@ public class CommandPortalRemove implements CommandExecutor {
                 GData.removePortal(gportal);
                 player.sendMessage(MESSAGE("&e" + gportal.getName() + " &aa \351t\351 supprim\351"));
             } else {
-                player.sendMessage(PLOT_NAME_ALREADY_USED());
+                player.sendMessage(NOT_FOUND(name));
                 return CommandResult.empty();
             }
         } else if (src instanceof ConsoleSource) {

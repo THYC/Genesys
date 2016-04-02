@@ -392,7 +392,9 @@ public class CommandManager {
         public CommandSpec CommandPortalMsg = CommandSpec.builder()
                 .description(Text.of("/portal msg [message]"))
                 .permission("genesys.admin.portal")
-                .arguments(GenericArguments.remainingJoinedStrings(Text.of("arguments")))
+                .arguments(GenericArguments.seq(
+                        GenericArguments.optional(GenericArguments.string(Text.of("name"))),
+                        GenericArguments.remainingJoinedStrings(Text.of("arguments"))))
                 .executor(new CommandPortalMsg())
                 .build();
         
