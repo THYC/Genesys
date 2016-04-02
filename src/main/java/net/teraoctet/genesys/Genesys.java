@@ -74,6 +74,7 @@ public class Genesys {
         getGame().getCommandManager().register(this, new CommandManager().CommandFaction, "faction", "f", "guilde", "g", "horde");
 	getGame().getCommandManager().register(this, new CommandManager().CommandTest, "test");
         getGame().getCommandManager().register(this, new CommandManager().CommandRocket, "rocket");
+        getGame().getCommandManager().register(this, new CommandManager().CommandPortal, "portal", "portail", "pl", "po");
 
         getLogger().info("-----------------------------"); 
 	getLogger().info("...........Genesys..........."); 

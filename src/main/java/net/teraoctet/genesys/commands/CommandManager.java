@@ -380,5 +380,62 @@ public class CommandManager {
                     GenericArguments.optional(GenericArguments.string(Text.of("targets"))))))) 
                 .executor(new CommandRocket()) 
                 .build();
+        
+        public CommandSpec CommandPortalMsg = CommandSpec.builder()
+                .description(Text.of("/portal msg [message]"))
+                .permission("genesys.admin.portal")
+                .arguments(GenericArguments.remainingJoinedStrings(Text.of("arguments")))
+                .executor(new CommandPortalMsg())
+                .build();
+        
+        public CommandSpec CommandPortalTPFrom = CommandSpec.builder() 
+                .description(Text.of("/portal TPFrom <name>")) 
+                .permission("genesys.admin.portal") 
+                .arguments(GenericArguments.seq(
+                    GenericArguments.optional(GenericArguments.string(Text.of("name")))))
+                .executor(new CommandPortalTPFrom()) 
+                .build(); 
+        
+        public CommandSpec CommandPortalList = CommandSpec.builder() 
+                .description(Text.of("/portal list")) 
+                .permission("genesys.admin.portal") 
+                .executor(new CommandPortalList()) 
+                .build(); 
+        
+        public CommandSpec CommandPortalRemove = CommandSpec.builder() 
+                .description(Text.of("/portal remove <name>")) 
+                .permission("genesys.admin.portal") 
+                .arguments(GenericArguments.seq(
+                    GenericArguments.optional(GenericArguments.string(Text.of("name")))))
+                .executor(new CommandPortalRemove()) 
+                .build(); 
+        
+        public CommandSpec CommandPortalCreateOK = CommandSpec.builder() 
+                .description(Text.of("/portal create <name>")) 
+                .permission("genesys.admin.portal") 
+                .arguments(GenericArguments.seq(
+                    GenericArguments.optional(GenericArguments.string(Text.of("name")))))
+                .executor(new CommandPortalCreateOK()) 
+                .build(); 
+        
+        public CommandSpec CommandPortalCreate = CommandSpec.builder()
+                .description(Text.of("/portal create [name]"))
+                .permission("genesys.admin.portal")
+                .arguments(GenericArguments.seq(
+                    GenericArguments.optional(GenericArguments.string(Text.of("name")))))
+                .executor(new CommandPortalCreate())
+                .build();
+        
+        public CommandSpec CommandPortal = CommandSpec.builder()
+                .description(Text.of("/plot")) 
+                .permission("genesys.plot") 
+                .child(CommandPortalCreate, "create", "add")
+                .child(CommandPortalCreateOK, "createok")
+                .child(CommandPortalRemove, "remove", "rem", "del")
+                .child(CommandPortalList, "list")
+                .child(CommandPortalTPFrom, "tpfrom", "tpf")
+                .child(CommandPortalMsg, "msg")
+                .executor(new CommandPlot())
+                .build();
        
 }

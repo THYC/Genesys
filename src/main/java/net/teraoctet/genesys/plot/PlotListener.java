@@ -39,9 +39,8 @@ import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.explosion.Explosion;
 import static net.teraoctet.genesys.utils.MessageManager.MISSING_BALANCE;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
-import static org.spongepowered.api.Sponge.getGame;
-import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.data.manipulator.immutable.tileentity.ImmutableSignData;
+import static org.spongepowered.api.block.BlockTypes.STANDING_SIGN;
+import static org.spongepowered.api.block.BlockTypes.WALL_SIGN;
 
 public class PlotListener {
         
@@ -233,24 +232,10 @@ public class PlotListener {
     
     @Listener
     public void onBreakSignSale(ChangeBlockEvent.Break event) {
-        /*Transaction<BlockSnapshot> block = event.getTransactions().get(0);
-              
-        
-        Optional<TileEntity> signBlock = loc.getTileEntity();
-        if (signBlock.isPresent()) {
-            TileEntity tile = signBlock.get();
-            if (tile instanceof Sign) {
-                Sign sign=(Sign)tile;
-                Optional<SignData> optional=sign.getOrCreate(SignData.class);
-                if (optional.isPresent()) {
-                    SignData offering = optional.get();
-                    Text txt1 = offering.lines().get(0);
-                    if (txt1.equals(MESSAGE("&1A VENDRE"))){
-                        event.setCancelled(true);
-                    }
-                } 
-            }
-        }*/
+        Transaction<BlockSnapshot> block = event.getTransactions().get(0);
+        if (block.getOriginal().getState().equals(STANDING_SIGN) || block.getOriginal().getState().equals(WALL_SIGN)){
+            event.setCancelled(true);
+        }
     }
     
     @Listener

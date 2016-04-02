@@ -33,7 +33,7 @@ public class CommandPlotMsg implements CommandExecutor {
                 return CommandResult.empty();
             }
             
-            // on vérifie que le joueuer est bien le owner de la parcelle
+            // on vérifie que le joueur est bien le owner de la parcelle
             if(gplot.getUuidOwner().equals(player.getIdentifier())){
                 
                 // si le joueur n'a pas tapé d'arguments on affiche le message existant
