@@ -367,11 +367,6 @@ public class MessageManager {
                 //-------------------------
                 
                 msg = new ArrayList<>();
-                msg.add("&cVous ne poss\351dez pas assez d'assez d'\351meraudes sur votre compte, tapez &4/bank &cpour voir votre solde");
-                message.getNode("ECONOMY","MISSING_BALANCE").setValue(msg);
-                manager.save(message);
-                
-                msg = new ArrayList<>();
                 msg.add("&eVirement effectu\351 de &6%var1% \351meraudes &eavec succès !");
                 message.getNode("ECONOMY", "TRANSFER_SUCCESS").setValue(msg);
                 
