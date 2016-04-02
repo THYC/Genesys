@@ -10,6 +10,7 @@ import static net.teraoctet.genesys.utils.MessageManager.GUIDE_FACTION;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_FACTION;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
+import static net.teraoctet.genesys.utils.MessageManager.ONHOVER_ACTION_MENU;
 import static net.teraoctet.genesys.utils.MessageManager.WRONG_RANK;
 import static org.spongepowered.api.Sponge.getGame;
 import org.spongepowered.api.command.CommandResult;
@@ -113,7 +114,7 @@ public class CommandFaction implements CommandExecutor {
                                      .toText(),
                              Text.builder().append(TextSerializers.formattingCode('&').deserialize("&2+ Afficher les Actions"))
                                      .onClick(TextActions.runCommand("/faction -a"))
-                                     .onHover(TextActions.showText(Text.builder("&l&6Affiche un menu pour g\351rer la faction\n&r&n&eAccessible par :&r Chef, Sous-chef, Officier").build()))
+                                     .onHover(TextActions.showText(ONHOVER_ACTION_MENU()))
                                      .toText())
                          .padding(Text.of("-"))
                          .sendTo(src); 

@@ -1,14 +1,11 @@
 package net.teraoctet.genesys.commands;
 
+import java.util.Date;
+import static net.teraoctet.genesys.Genesys.serverManager;
 import net.teraoctet.genesys.player.GPlayer;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import static net.teraoctet.genesys.utils.GData.getUUID;
-import static net.teraoctet.genesys.utils.GServer.getPlayer;
-import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
-import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
-import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
-import static net.teraoctet.genesys.utils.MessageManager.DATA_NOT_FOUND;
-import static net.teraoctet.genesys.utils.MessageManager.TP_AT_COORDS;
+import static net.teraoctet.genesys.utils.ServerManager.getPlayer;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -19,6 +16,12 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
+import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
+import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
+import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
+import static net.teraoctet.genesys.utils.MessageManager.DATA_NOT_FOUND;
+import static net.teraoctet.genesys.utils.MessageManager.TP_AT_COORDS;
+import org.spongepowered.api.text.serializer.TextSerializers;
 
 public class CommandPlayerinfo implements CommandExecutor {
         
@@ -43,6 +46,19 @@ public class CommandPlayerinfo implements CommandExecutor {
             }
             
             GPlayer gplayer = getGPlayer(targetUUID);
+            
+            /*builder.title(Text.builder().append(TextSerializers.formattingCode('&').deserialize("&8 : " + targetName).toText()))
+                         .header(Text.builder().append(TextSerializers.formattingCode('&')
+                                 .deserialize("&2Membres: "))
+                                 .build())
+                         .contents(Text.builder().append(TextSerializers.formattingCode('&').deserialize("&aChef :")).toText(),
+                             Text.builder().append(TextSerializers.formattingCode('&').deserialize("&a- Sous-chef (" + ")"))
+                                     .onClick(TextActions.runCommand("/faction memberslist"))
+                                     .onHover(TextActions.showText(Text.builder("Sous-chef(s): ").build()))      //mettre la liste des SOUS-CHEFS en hover
+                                     .toText())
+                         .padding(Text.of("-"))
+                         .sendTo(src); */
+            
             src.sendMessage(Text.builder("----" + targetName + "----")
                         .onHover(TextActions.showText(Text.builder("UUID: " + targetUUID).build()))
                         .color(TextColors.DARK_GRAY)
@@ -60,8 +76,9 @@ public class CommandPlayerinfo implements CommandExecutor {
                         .color(TextColors.DARK_GRAY)
                         .build());
             } else {
+                Date lastConnection = serverManager.doubleToDate(gplayer.getLastonline());
                 src.sendMessage(Text.builder(targetName + " est d\351connect\351")
-                        .onHover(TextActions.showText(Text.builder("Derni\350re connexion: " + gplayer.getLastonline()).build()))
+                        .onHover(TextActions.showText(Text.builder("Derni\350re connexion: " + lastConnection.toString()).build()))
                         .color(TextColors.DARK_GRAY)
                         .build());
                 src.sendMessage(Text.builder("Derni\350re position : " + gplayer.getLastposition())

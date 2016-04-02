@@ -15,6 +15,7 @@ import net.teraoctet.genesys.world.WorldListener;
 import net.teraoctet.genesys.world.WorldManager;
 import net.teraoctet.genesys.commands.CommandManager;
 import net.teraoctet.genesys.faction.FactionManager;
+import net.teraoctet.genesys.utils.ServerManager;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
@@ -31,6 +32,7 @@ import org.spongepowered.api.plugin.Plugin;
 public class Genesys {
     
     @Inject private Logger logger;
+    public static ServerManager serverManager = new ServerManager();
     public static PlotManager plotManager = new PlotManager();
     public static PortalManager portalManager = new PortalManager();
     public static FactionManager factionManager = new FactionManager();

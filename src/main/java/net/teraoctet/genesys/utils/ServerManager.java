@@ -1,5 +1,6 @@
 package net.teraoctet.genesys.utils;
 
+import java.util.Date;
 import java.util.Optional;
 import org.spongepowered.api.Sponge;
 import static org.spongepowered.api.Sponge.getGame;
@@ -8,7 +9,9 @@ import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
 
-public class GServer {
+public class ServerManager {
+    
+    public ServerManager(){}
 
     public static Player getPlayer(String player) {
 
@@ -32,6 +35,13 @@ public class GServer {
 
     public static void broadcast(Text text) {
         getGame().getServer().getBroadcastChannel().send(text);
+    }
+    
+    public Date doubleToDate(double date){
+        double itemDouble = date;
+        long itemLong = (long) (itemDouble * 1000);
+        Date itemDate = new Date(itemLong);
+        return itemDate;
     }
 
 }

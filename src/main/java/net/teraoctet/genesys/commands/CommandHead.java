@@ -1,7 +1,7 @@
 package net.teraoctet.genesys.commands;
 
 import java.util.Optional;
-import net.teraoctet.genesys.utils.GServer;
+import net.teraoctet.genesys.utils.ServerManager;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static org.spongepowered.api.Sponge.getGame;
@@ -19,6 +19,8 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.text.format.TextColors;
+import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
+import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 
 public class CommandHead implements CommandExecutor {
     
@@ -30,7 +32,7 @@ public class CommandHead implements CommandExecutor {
             Optional<String> head = ctx.<String> getOne("head");
             
             if (head.isPresent()){
-                Player Target = GServer.getPlayer(head.get());
+                Player Target = ServerManager.getPlayer(head.get());
 
                 if (Target != null){
                     ItemStack.Builder builder = getGame().getRegistry().createBuilder(ItemStack.Builder.class);

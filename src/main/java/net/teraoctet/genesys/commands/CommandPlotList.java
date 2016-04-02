@@ -3,7 +3,7 @@ package net.teraoctet.genesys.commands;
 import static net.teraoctet.genesys.Genesys.plotManager;
 import net.teraoctet.genesys.player.GPlayer;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
-import static net.teraoctet.genesys.utils.GServer.getPlayer;
+import static net.teraoctet.genesys.utils.ServerManager.getPlayer;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -16,6 +16,11 @@ import static net.teraoctet.genesys.utils.MessageManager.DATA_NOT_FOUND;
 import static net.teraoctet.genesys.utils.MessageManager.PLOT_LIST;
 import static net.teraoctet.genesys.utils.MessageManager.TARGET_PLOT_LIST;
 import org.spongepowered.api.command.source.ConsoleSource;
+import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
+import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
+import static net.teraoctet.genesys.utils.MessageManager.DATA_NOT_FOUND;
+import static net.teraoctet.genesys.utils.MessageManager.PLOT_LIST;
+import static net.teraoctet.genesys.utils.MessageManager.TARGET_PLOT_LIST;
 
 public class CommandPlotList implements CommandExecutor {
     
