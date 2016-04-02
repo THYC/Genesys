@@ -1,5 +1,6 @@
 package net.teraoctet.genesys.plot;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import static net.teraoctet.genesys.Genesys.plotManager;
 import net.teraoctet.genesys.utils.GData;
@@ -38,6 +39,9 @@ import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.explosion.Explosion;
 import static net.teraoctet.genesys.utils.MessageManager.MISSING_BALANCE;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
+import static org.spongepowered.api.Sponge.getGame;
+import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.data.manipulator.immutable.tileentity.ImmutableSignData;
 
 public class PlotListener {
         
@@ -155,9 +159,11 @@ public class PlotListener {
             Location locFrom = event.getFromTransform().getLocation();
             GPlot gplot = plotManager.getPlot(locTo);
             GPlot jail = plotManager.getPlot(locFrom,true);
-
-            if (gplot != null && DISPLAY_PLOT_MSG_FOR_OWNER() && gplot.getUuidAllowed().contains(player.getUniqueId().toString())){ 
-                player.sendMessage(ChatTypes.CHAT,MESSAGE(gplot.getMessage(),player));
+            
+            if(plotManager.getPlot(locFrom) == null) {
+                if (gplot != null && DISPLAY_PLOT_MSG_FOR_OWNER() && gplot.getUuidAllowed().contains(player.getUniqueId().toString())){ 
+                    player.sendMessage(ChatTypes.CHAT,MESSAGE(gplot.getMessage(),player));
+                }
             }
             
             if (gplot != null && !gplot.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
@@ -217,19 +223,18 @@ public class PlotListener {
         Transaction<BlockSnapshot> block = event.getTransactions().get(0);
         Optional<Location<World>> optLoc = block.getOriginal().getLocation();
         Location loc = optLoc.get();
-    
+                       
         GPlot gplot = plotManager.getPlot(loc);
         if (gplot != null && gplot.getNoBreak() == 1 && !gplot.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
-            player.sendMessage(ChatTypes.CHAT,PLOT_PROTECTED());
+            player.sendMessage(PLOT_PROTECTED());
             event.setCancelled(true);
         }
     }
     
     @Listener
     public void onBreakSignSale(ChangeBlockEvent.Break event) {
-        Transaction<BlockSnapshot> block = event.getTransactions().get(0);
-        Optional<Location<World>> optLoc = block.getOriginal().getLocation();
-        Location loc = optLoc.get();
+        /*Transaction<BlockSnapshot> block = event.getTransactions().get(0);
+              
         
         Optional<TileEntity> signBlock = loc.getTileEntity();
         if (signBlock.isPresent()) {
@@ -245,7 +250,7 @@ public class PlotListener {
                     }
                 } 
             }
-        }
+        }*/
     }
     
     @Listener
@@ -263,7 +268,7 @@ public class PlotListener {
         
         GPlot gplot = plotManager.getPlot(loc);
         if (gplot != null && gplot.getNoBuild() == 1 && !gplot.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
-            player.sendMessage(ChatTypes.CHAT,PLOT_PROTECTED());
+            player.sendMessage(PLOT_PROTECTED());
             event.setCancelled(true);
         }
     }
@@ -283,7 +288,7 @@ public class PlotListener {
         
         GPlot gplot = plotManager.getPlot(loc);
         if (gplot != null && !gplot.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
-            player.sendMessage(ChatTypes.CHAT,PLOT_PROTECTED());
+            player.sendMessage(PLOT_PROTECTED());
             event.setCancelled(true);
         }
     }

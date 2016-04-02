@@ -5,7 +5,7 @@ import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import net.teraoctet.genesys.player.GPlayer;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
-import static net.teraoctet.genesys.utils.MessageManager.PLAYER_NOT_FOUND;
+import static net.teraoctet.genesys.utils.MessageManager.NOT_FOUND;
 import static net.teraoctet.genesys.utils.MessageManager.USAGE;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -36,7 +36,7 @@ public class CommandLevel implements CommandExecutor {
             if(ctx.getOne("player").isPresent()) {
                 player = ctx.<Player> getOne("player").get();
                 if(!player.isOnline()) {
-                    src.sendMessage(PLAYER_NOT_FOUND(player));
+                    src.sendMessage(NOT_FOUND(player.getName()));
                     return CommandResult.empty();
                 }
             } else {

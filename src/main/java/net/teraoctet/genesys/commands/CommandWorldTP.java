@@ -3,10 +3,10 @@ package net.teraoctet.genesys.commands;
 import net.teraoctet.genesys.utils.GData;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static net.teraoctet.genesys.utils.MessageManager.OTHER_TELEPORTED_TO_WORLD;
-import static net.teraoctet.genesys.utils.MessageManager.PLAYER_NOT_FOUND;
+import static net.teraoctet.genesys.utils.MessageManager.NOT_FOUND;
 import static net.teraoctet.genesys.utils.MessageManager.TELEPORTED_TO_WORLD;
 import static net.teraoctet.genesys.utils.MessageManager.USAGE;
-import static net.teraoctet.genesys.utils.MessageManager.WORLD_NOT_FOUND;
+import static net.teraoctet.genesys.utils.MessageManager.NOT_FOUND;
 import net.teraoctet.genesys.world.GWorld;
 
 import static org.spongepowered.api.Sponge.getGame;
@@ -41,9 +41,9 @@ public class CommandWorldTP implements CommandExecutor {
             
                 //monde introuvable
                 if(!getGame().getServer().getWorld(worldName).isPresent()) { 
-                    src.sendMessage(WORLD_NOT_FOUND(worldName));
+                    src.sendMessage(NOT_FOUND(worldName));
                 } else if(gworld == null) {
-                    src.sendMessage(WORLD_NOT_FOUND(worldName));
+                    src.sendMessage(NOT_FOUND(worldName));
                 }
                 //le monde est correctement trouvé
                 else {
@@ -69,7 +69,7 @@ public class CommandWorldTP implements CommandExecutor {
                                 target.sendMessage(TELEPORTED_TO_WORLD(target,worldName));
                                 return CommandResult.success();
                             } else {
-                                src.sendMessage(PLAYER_NOT_FOUND(target));
+                                src.sendMessage(NOT_FOUND(target.getName()));
                             }
                         } else {
                             src.sendMessage(NO_PERMISSIONS());
