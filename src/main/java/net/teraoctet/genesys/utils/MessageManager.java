@@ -32,6 +32,7 @@ public class MessageManager {
     private static Text DAY_MESSAGE;
     private static Text NIGHT_MESSAGE;
     private static Text STORM_MESSAGE;
+    private static Text GUIDE_FACTION;
     private static Text NO_FACTION;
     private static Text WRONG_RANK;
     private static Text ALREADY_FACTION_MEMBER;
@@ -66,11 +67,10 @@ public class MessageManager {
     private static Text HOME_NOT_FOUND;
     private static Text HOME_ERROR;
     private static Text HOME_TP_SUCCESS;
-    private static Text PLAYER_NOT_FOUND;
-    private static Text PLAYER_DATA_NOT_FOUND;
+    private static Text NOT_FOUND;
+    private static Text DATA_NOT_FOUND;
     private static Text WORLD_ALREADY_EXIST;
     private static Text WORLD_CREATED;
-    private static Text WORLD_NOT_FOUND;
     private static Text WORLD_CREATION_ERROR;
     private static Text WORLD_PROPERTIES_ERROR;
     private static Text TELEPORTED_TO_WORLD;
@@ -84,6 +84,7 @@ public class MessageManager {
     private static Text FLY_GIVEN;
     private static Text FLY_RETIRED;
     private static Text TP_AT_COORDS;
+    private static Text WRONG_CHARACTERS_NUMBER;
     private static Text KILLED_BY;
     private static Text SUICIDE;
        
@@ -99,18 +100,8 @@ public class MessageManager {
                 //-------------------------
                 // Message général serveur
                 //-------------------------
-                
-                List<String> msg = new ArrayList<>();
-                msg.add("&cVous n'avez pas la permission pour utiliser cette commande !");
-                message.getNode("SERVER","NO_PERMISSIONS").setValue(msg);
-                manager.save(message);
-                
-                msg = new ArrayList<>();
-                msg.add("&cCette commande ne peut pas s'ex\351cuter sur la console");
-                message.getNode("SERVER","NO_CONSOLE").setValue(msg);
-                manager.save(message);
                                 
-                msg = new ArrayList<>();
+                List<String> msg = new ArrayList<>();
                 msg.add("&6Bienvenue, &e%name%!");
                 msg.add("&6Tu es sur la map &e%world%!\n");
                 message.getNode("SERVER","JOIN_MESSAGE").setValue(msg);
@@ -130,6 +121,11 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
+                msg.add("&7%name% s'est d\351connect\351");
+                message.getNode("SERVER","EVENT_DISCONNECT_MESSAGE").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
                 msg.add("&9%name% est nouveau sur le serveur !");
                 message.getNode("SERVER","FIRSTJOIN_BROADCAST_MESSAGE").setValue(msg);
                 manager.save(message);
@@ -137,31 +133,6 @@ public class MessageManager {
                 msg = new ArrayList<>();
                 msg.add("&8%var1% &7a chang\351 son nom en &8%var2%");
                 message.getNode("SERVER","NAME_CHANGE").setValue(msg);
-                manager.save(message);
-                
-                msg = new ArrayList<>();
-                msg.add("&7%name% s'est d\351connect\351");
-                message.getNode("SERVER","EVENT_DISCONNECT_MESSAGE").setValue(msg);
-                manager.save(message);
-                
-                msg = new ArrayList<>();
-                msg.add("&cCe nom est incorrect !");
-                message.getNode("SERVER","WRONG_NAME").setValue(msg);
-                manager.save(message);
-                
-                msg = new ArrayList<>();
-                msg.add("&4%name% &cest introuvable");
-                message.getNode("SERVER","PLAYER_NOT_FOUND").setValue(msg);
-                manager.save(message);
-                        
-                msg = new ArrayList<>();
-                msg.add("&4%var1% &cn'est pas enregistr\351 dans la base de donn\351e");
-                message.getNode("SERVER","PLAYER_DATA_NOT_FOUND").setValue(msg);
-                manager.save(message);
-                
-                msg = new ArrayList<>();
-                msg.add("&6Woshhhh ..!");
-                message.getNode("SERVER","TP_BACK").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
@@ -194,19 +165,51 @@ public class MessageManager {
                 message.getNode("SERVER","FLY_RETIRED").setValue(msg);
                 manager.save(message);
                 
+                //-------------------------
+                // Message Exception/Error
+                //-------------------------
+                
                 msg = new ArrayList<>();
-                msg.add("T\351l\351portation aux coordonn\351es");
-                message.getNode("SERVER","TP_AT_COORDS").setValue(msg);
+                msg.add("&cCe nom est incorrect !");
+                message.getNode("EXCEPTION","WRONG_NAME").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
+                msg.add("&4%name% &cest introuvable");
+                message.getNode("EXCEPTION","NOT_FOUND").setValue(msg);
+                manager.save(message);
+                
+                msg.add("&cVous n'avez pas la permission pour utiliser cette commande !");
+                message.getNode("EXCEPTION","NO_PERMISSIONS").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&cCette commande ne peut pas s'ex\351cuter sur la console");
+                message.getNode("EXCEPTION","NO_CONSOLE").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&4%var1% &cn'est pas enregistr\351 dans la base de donn\351e");
+                message.getNode("EXCEPTION","DATA_NOT_FOUND").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&cLe nombre de caract\350res doit \352tre entre %var1% et %var2%");
+                message.getNode("EXCEPTION","WRONG_CHARACTERS_NUMBER").setValue(msg);
+                manager.save(message);    
+                
+                //-------------------------
+                // Message DeadMsg
+                //-------------------------
+                
+                msg = new ArrayList<>();
                 msg.add("&7%var1% a \351t\351 tu\351 par %var2%");
-                message.getNode("SERVER","KILLED_BY").setValue(msg);
+                message.getNode("DEAD_MSG","KILLED_BY").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
                 msg.add("&7%var1% s'est suicid\351");
-                message.getNode("SERVER","SUICIDE").setValue(msg);
+                message.getNode("DEAD_MSG","SUICIDE").setValue(msg);
                 manager.save(message);
                 
                 //-------------------------
@@ -243,7 +246,7 @@ public class MessageManager {
                 //-------------------------
                 
                 msg = new ArrayList<>();
-                msg.add("&cVous \352tes dans aucune faction !");
+                msg.add("&cVous n'\352tes dans aucune faction !");
                 message.getNode("FACTION","NO_FACTION").setValue(msg);
                 manager.save(message);
                 
@@ -258,12 +261,18 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&eVous venez de cr\351er la faction \"&6%var1%&e\"");
+                msg.add("&n&eQu'est-ce que \347a apporte d'\350tre dans une faction ?");
+                msg.add("&eComing soon ..!");
+                msg.add("&ePlus d'infos sur &bhttp://craft.teraoctet.net\n");
+                message.getNode("FACTION","GUIDE_FACTION").setValue(msg);
+                
+                msg = new ArrayList<>();
+                msg.add("&eVous venez de cr\351er la faction \"&r%var1%&e\"");
                 message.getNode("FACTION","FACTION_CREATED_SUCCESS").setValue(msg);
                 manager.save(message);
                         
                 msg = new ArrayList<>();
-                msg.add("&eVous de supprimer votre faction \"&6%var1%&e\"");
+                msg.add("&eVous venez de supprimer votre faction \"&r%var1%&e\"");
                 message.getNode("FACTION","FACTION_DELETED_SUCCESS").setValue(msg);
                 manager.save(message);
                 
@@ -358,58 +367,66 @@ public class MessageManager {
                 //-------------------------
                 
                 msg = new ArrayList<>();
-                msg.add("&cVous ne poss\351dez pas assez d'assez d'\351meraudes sur votre compte, tapez &4/bank &cpour voir votre solde");
+                msg.add("&eVirement effectu\351 de &6%var1% \351meraudes &eavec succès !");
+                message.getNode("ECONOMY", "TRANSFER_SUCCESS").setValue(msg);
+                
+                msg.add("&cVous ne poss\351dez pas assez d'assez d'\351meraudes sur votre compte, tapez /bank pour voir votre solde");
                 message.getNode("ECONOMY","MISSING_BALANCE").setValue(msg);
+                manager.save(message);
+                
+                //-------------------------
+                // Message TELEPORTATION
+                //-------------------------
+                
+                msg = new ArrayList<>();
+                msg.add("T\351l\351portation aux coordonn\351es");
+                message.getNode("TELEPORTATION","TP_AT_COORDS").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&eVirement effectu\351 de &6%var1% \351mraudes &eavec succès !");
-                message.getNode("ECONOMY","MISSING_BALANCE").setValue(msg);
+                msg.add("&6Woshhhh ..!");
+                message.getNode("TELEPORTATION","TP_BACK").setValue(msg);
                 manager.save(message);
-                
-                //-------------------------
-                // Message HOME / WARP
-                //-------------------------
                 
                 msg = new ArrayList<>();
                 msg.add("&cHome d\351j\340 d\351fini, veuillez le supprimer avant de pouvoir le red\351finir");
-                message.getNode("HOME-WARP","HOME_ALREADY_EXIST").setValue(msg);
+                message.getNode("TELEPORTATION","HOME_ALREADY_EXIST").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
                 msg.add("&eLe home &6%var1% &ea \351t\351 cr\351\351 avec succ\350s");
-                message.getNode("HOME-WARP","HOME_SET_SUCCESS").setValue(msg);
+                message.getNode("TELEPORTATION","HOME_SET_SUCCESS").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
                 msg.add("&eLe home &6%var1% &ea \351t\351 supprim\351 avec succ\350s");
-                message.getNode("HOME-WARP","HOME_DEL_SUCCESS").setValue(msg);
+                message.getNode("TELEPORTATION","HOME_DEL_SUCCESS").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
                 msg.add("&eVous poss\351dez actuellement &6%var1% &esur &6%var2% &ehome possible");
-                message.getNode("HOME-WARP","NB_HOME").setValue(msg);
+                message.getNode("TELEPORTATION","NB_HOME").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
                 msg.add("&eVous \352tes seulement autoris\351 \340 poss\351der %var1% home");
-                message.getNode("HOME-WARP","NB_ALLOWED_HOME").setValue(msg);
+                message.getNode("TELEPORTATION","NB_ALLOWED_HOME").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
                 msg.add("&cHome introuvable !");
                 msg.add("&cVeuillez utiliser la commande /sethome pour le d\351finir");
-                message.getNode("HOME-WARP","HOME_NOT_FOUND").setValue(msg);
+                message.getNode("TELEPORTATION","HOME_NOT_FOUND").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
                 msg.add("&cUne erreur est survenue avec votre Home, t\351l\351portation impossible !");
-                message.getNode("HOME-WARP","HOME_ERROR").setValue(msg);
+                message.getNode("TELEPORTATION","HOME_ERROR").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
                 msg.add("&eT\351l\351portation sur votre home : &6%var1%");
-                message.getNode("HOME-WARP","HOME_TP_SUCCESS").setValue(msg);
+                message.getNode("TELEPORTATION","HOME_TP_SUCCESS").setValue(msg);
                 manager.save(message);
                 
                 //-------------------------
@@ -424,11 +441,6 @@ public class MessageManager {
                 msg = new ArrayList<>();
                 msg.add("&c%var1% a \351t\351 cr\351\351 avec succ\350s");
                 message.getNode("WORLD","WORLD_CREATED").setValue(msg);
-                manager.save(message);
-                
-                msg = new ArrayList<>();
-                msg.add("&4%var1% &cest introuvable");
-                message.getNode("WORLD","WORLD_NOT_FOUND").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
@@ -458,7 +470,7 @@ public class MessageManager {
                 msg = new ArrayList<>();
                 msg.add("&cPortail prot\351g\351");
                 message.getNode("PORTAL","PROTECT_PORTAL").setValue(msg);
-                manager.save(message);                
+                manager.save(message);        
             }
             message = manager.load();
 
@@ -574,10 +586,6 @@ public class MessageManager {
     // Message général serveur
     //-------------------------
     
-    public static Text NO_PERMISSIONS(){return format(NO_PERMISSIONS, "SERVER","NO_PERMISSIONS");}
-    
-    public static Text NO_CONSOLE(){return format(NO_CONSOLE, "SERVER", "NO_CONSOLE");}
-    
     public static Text JOIN_MESSAGE(Player player){return format(JOIN_MESSAGE, "SERVER", "JOIN_MESSAGE", player);}
     
     public static Text EVENT_LOGIN_MESSAGE(Player player){return format(EVENT_LOGIN_MESSAGE, "SERVER", "EVENT_LOGIN_MESSAGE", player);}
@@ -590,14 +598,6 @@ public class MessageManager {
     
     public static Text NAME_CHANGE(String oldName, String newName){return format(NAME_CHANGE, "SERVER", "NAME_CHANGE", oldName, newName);}
     
-    public static Text WRONG_NAME(){return format(WRONG_NAME, "SERVER", "WRONG_NAME");}
-    
-    public static Text PLAYER_NOT_FOUND(Player player){return format(PLAYER_NOT_FOUND, "SERVER", "PLAYER_NOT_FOUND",player);}
-    
-    public static Text PLAYER_DATA_NOT_FOUND(String player){return format(PLAYER_DATA_NOT_FOUND, "SERVER", "PLAYER_DATA_NOT_FOUND",player, "");}
-    
-    public static Text TP_BACK(Player player){return format(TP_BACK, "SERVER", "TP_BACK",player);}
-    
     public static Text INVENTORY_CLEARED(){return format(INVENTORY_CLEARED, "SERVER", "INVENTORY_CLEARED");}
     
     public static Text CLEARINVENTORY_SUCCESS(String target){return format(CLEARINVENTORY_SUCCESS, "SERVER", "CLEARINVENTORY_SUCCESS",target, "");}
@@ -609,12 +609,30 @@ public class MessageManager {
     public static Text FLY_GIVEN(String player){return format(FLY_GIVEN, "SERVER", "FLY_GIVEN",player, "");}
     
     public static Text FLY_RETIRED(String player){return format(FLY_RETIRED, "SERVER", "FLY_RETIRED",player, "");}
-   
-    public static Text TP_AT_COORDS(){return format(TP_AT_COORDS, "SERVER", "TP_AT_COORDS");}
     
-    public static Text KILLED_BY(String player, String killer){return format(KILLED_BY, "SERVER", "KILLED_BY",player,killer);}
+    //-------------------------
+    // Message EXCEPTION / ERROR
+    //-------------------------
     
-    public static Text SUICIDE(String player){return format(SUICIDE, "SERVER", "SUICIDE",player, "");}
+    public static Text NO_PERMISSIONS(){return format(NO_PERMISSIONS, "EXCEPTION","NO_PERMISSIONS");}
+    
+    public static Text NO_CONSOLE(){return format(NO_CONSOLE, "EXCEPTION", "NO_CONSOLE");}
+    
+    public static Text WRONG_CHARACTERS_NUMBER(String minLength, String maxLength){return format(WRONG_CHARACTERS_NUMBER, "EXCEPTION", "WRONG_CHARACTERS_NUMBER", minLength, maxLength);}
+    
+    public static Text WRONG_NAME(){return format(WRONG_NAME, "EXCEPTION", "WRONG_NAME");}
+    
+    public static Text NOT_FOUND(String name){return format(NOT_FOUND, "EXCEPTION", "NOT_FOUND",name, "");}
+    
+    public static Text DATA_NOT_FOUND(String player){return format(DATA_NOT_FOUND, "EXCEPTION", "DATA_NOT_FOUND",player, "");}
+    
+    //-------------------------
+    // Message DEAD_MSG
+    //-------------------------
+    
+    public static Text KILLED_BY(String player, String killer){return format(KILLED_BY, "DEAD_MSG", "KILLED_BY",player,killer);}
+    
+    public static Text SUICIDE(String player){return format(SUICIDE, "DEAD_MSG", "SUICIDE",player, "");}
     
     //-------------------------
     // Message weather / time
@@ -639,6 +657,8 @@ public class MessageManager {
     public static Text WRONG_RANK(){return format(WRONG_RANK, "FACTION", "WRONG_RANK");}
     
     public static Text ALREADY_FACTION_MEMBER(){return format(ALREADY_FACTION_MEMBER, "FACTION", "ALREADY_FACTION_MEMBER");}
+    
+    public static Text GUIDE_FACTION(){return format(GUIDE_FACTION, "FACTION", "GUIDE_FACTION");}
     
     public static Text FACTION_CREATED_SUCCESS(String factionName){return format(FACTION_CREATED_SUCCESS, "FACTION", "FACTION_CREATED_SUCCESS", factionName, "");}
     
@@ -695,24 +715,28 @@ public class MessageManager {
     public static Text TRANSFER_SUCCESS(String amount){return format(TRANSFER_SUCCESS, "ECONOMY", "TRANSFER_SUCCESS",amount, "");}
     
     //-------------------------
-    // Message HOME / WARP
+    // Message TELEPORATION
     //-------------------------
     
-    public static Text HOME_ALREADY_EXIST(){return format(HOME_ALREADY_EXIST, "HOME-WARP","HOME_ALREADY_EXIST");}
+    public static Text TP_AT_COORDS(){return format(TP_AT_COORDS, "TELEPORTATION", "TP_AT_COORDS");}
     
-    public static Text HOME_SET_SUCCESS(Player player, String var1){return format(HOME_SET_SUCCESS, "HOME-WARP","HOME_SET_SUCCESS",player,var1,"");}
+    public static Text TP_BACK(Player player){return format(TP_BACK, "TELEPORATION", "TP_BACK",player);}
     
-    public static Text HOME_DEL_SUCCESS(Player player, String var1){return format(HOME_DEL_SUCCESS, "HOME-WARP","HOME_DEL_SUCCESS",player,var1,"");}
+    public static Text HOME_ALREADY_EXIST(){return format(HOME_ALREADY_EXIST, "TELEPORTATION","HOME_ALREADY_EXIST");}
     
-    public static Text NB_HOME(Player player, String var1, String var2){return format(NB_HOME, "HOME-WARP","NB_HOME",player,var1,var2);}
+    public static Text HOME_SET_SUCCESS(Player player, String var1){return format(HOME_SET_SUCCESS, "TELEPORTATION","HOME_SET_SUCCESS",player,var1,"");}
     
-    public static Text NB_ALLOWED_HOME(Player player, String var1){return format(NB_ALLOWED_HOME, "HOME-WARP","NB_ALLOWED_HOME", player, var1, "");}
+    public static Text HOME_DEL_SUCCESS(Player player, String var1){return format(HOME_DEL_SUCCESS, "TELEPORTATION","HOME_DEL_SUCCESS",player,var1,"");}
     
-    public static Text HOME_NOT_FOUND(){return format(HOME_NOT_FOUND, "HOME-WARP","HOME_NOT_FOUND");}
+    public static Text NB_HOME(Player player, String var1, String var2){return format(NB_HOME, "TELEPORTATION","NB_HOME",player,var1,var2);}
     
-    public static Text HOME_ERROR(){return format(HOME_ERROR, "HOME-WARP","HOME_ERROR");}
+    public static Text NB_ALLOWED_HOME(Player player, String var1){return format(NB_ALLOWED_HOME, "TELEPORTATION","NB_ALLOWED_HOME", player, var1, "");}
     
-    public static Text HOME_TP_SUCCESS(Player player, String var1){return format(HOME_TP_SUCCESS, "HOME-WARP","HOME_TP_SUCCESS", player, var1, "");}
+    public static Text HOME_NOT_FOUND(){return format(HOME_NOT_FOUND, "TELEPORTATION","HOME_NOT_FOUND");}
+    
+    public static Text HOME_ERROR(){return format(HOME_ERROR, "TELEPORTATION","HOME_ERROR");}
+    
+    public static Text HOME_TP_SUCCESS(Player player, String var1){return format(HOME_TP_SUCCESS, "TELEPORTATION","HOME_TP_SUCCESS", player, var1, "");}
     
     //-------------------------
     // Message WORLD
@@ -725,9 +749,7 @@ public class MessageManager {
     public static Text TELEPORTED_TO_WORLD(Player player, String var1){return format(TELEPORTED_TO_WORLD, "WORLD","TELEPORTED_TO_WORLD",player,var1,"");}
     
     public static Text OTHER_TELEPORTED_TO_WORLD(Player player, String var1){return format(OTHER_TELEPORTED_TO_WORLD, "WORLD","OTHER_TELEPORTED_TO_WORLD",player,var1,"");}
-    
-    public static Text WORLD_NOT_FOUND(String worldname){return format(WORLD_NOT_FOUND, "WORLD","WORLD_NOT_FOUND",worldname,"");}
-    
+
     public static Text WORLD_PROPERTIES_ERROR(){return format(WORLD_PROPERTIES_ERROR, "WORLD","WORLD_PROPERTIES_ERROR");}
     
     public static Text WORLD_CREATION_ERROR(){return format(WORLD_CREATION_ERROR, "WORLD","WORLD_CREATION_ERROR");}
@@ -737,7 +759,8 @@ public class MessageManager {
     //-------------------------
     
     public static Text PROTECT_PORTAL(){return format(PROTECT_PORTAL, "PORTAL","PROTECT_PORTAL");}
-                  
+              
+    
     public static Text USAGE(String usage){
         Text USAGE = (Text.of(TextColors.DARK_RED, "Usage: ", TextColors.RED, usage)); 
         return USAGE;

@@ -1,5 +1,6 @@
 package net.teraoctet.genesys.commands;
 
+import static net.teraoctet.genesys.Genesys.factionManager;
 import net.teraoctet.genesys.faction.FactionManager;
 import net.teraoctet.genesys.faction.GFaction;
 import net.teraoctet.genesys.player.GPlayer;
@@ -24,11 +25,11 @@ public class CommandFactionMemberslist implements CommandExecutor {
         if(src instanceof Player && src.hasPermission("genesys.faction.memberslist")) {
             GPlayer gplayer = getGPlayer(src.getIdentifier());
             
-            
             //si le joueur est membre d'une faction
             if(FactionManager.hasAnyFaction(gplayer)) {
                 GFaction gfaction = getGFaction(gplayer.getID_faction());
-                src.sendMessage(MESSAGE("&2Listes des membres de " + gfaction.getName() + " : &a"));
+                //factionManager.getListPlayerFaction(gfaction.getID());
+                src.sendMessage(MESSAGE("&2Listes des membres de " + gfaction.getName() + " : &a" + String.valueOf(factionManager.getListPlayerFaction(gfaction.getID()).size())));
                 return CommandResult.success();
             }
             

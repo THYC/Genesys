@@ -27,7 +27,7 @@ import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 
-@Plugin(id = "net.teraoctet.genesys", name = "genesys", version = "1.0", description = "manage your server", authors = {"THYC"})
+@Plugin(id = "net.teraoctet.genesys", name = "genesys", version = "1.0", description = "manage your server", authors = {"THYC", "Votop"})
 public class Genesys {
     
     @Inject private Logger logger;

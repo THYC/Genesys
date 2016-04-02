@@ -67,10 +67,11 @@ public class FactionManager {
      * et supprime la faction
      * @param id_faction 
      */
-    public void removePFaction(int id_faction){
+    public void removeFaction(int id_faction){
         for (String uuid : getPlayers().keySet()) {
             if(getPlayers().get(uuid).getID_faction() == id_faction){
                 getPlayers().get(uuid).setID_faction(0);
+                getPlayers().get(uuid).setFactionRank(0);
                 getPlayers().get(uuid).update();
                 GFaction gfaction = getGFaction(id_faction);
                 gfaction.delete();
@@ -86,8 +87,8 @@ public class FactionManager {
      * @param id_faction
      * @return 
      */
-    public List getListPlayerFaction(int id_faction){
-        List listPlayer = null;
+    public List<String> getListPlayerFaction(int id_faction){
+        List<String> listPlayer = null;
         for (String uuid : getPlayers().keySet()) {
             if(getPlayers().get(uuid).getID_faction() == id_faction){
                 listPlayer.add(getPlayers().get(uuid).getName());
@@ -102,13 +103,22 @@ public class FactionManager {
      * @param rank
      * @return 
      */
-    public List getListPlayerFaction(int id_faction, int rank){
-        List listPlayer = null;
+    public List<String> getListPlayerFaction(int id_faction, int rank){
+        List<String> listPlayer = null;
         for (String uuid : getPlayers().keySet()) {
             if(getPlayers().get(uuid).getID_faction() == id_faction && getPlayers().get(uuid).getFactionRank() == rank){
                 listPlayer.add(getPlayers().get(uuid).getName());
             }
         }
         return listPlayer;
+        
+        /*public boolean getListPlayerFaction(int id_faction, int rank){
+        List listPlayer = null;
+        for (String uuid : getPlayers().keySet()) {
+            if(getPlayers().get(uuid).getID_faction() == id_faction && getPlayers().get(uuid).getFactionRank() == rank){
+                listPlayer.add(getPlayers().get(uuid).getName());
+            }
+        }
+        return listPlayer;*/
     }
 }

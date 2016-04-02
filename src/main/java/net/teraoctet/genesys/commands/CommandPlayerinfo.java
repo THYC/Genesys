@@ -7,7 +7,7 @@ import static net.teraoctet.genesys.utils.GServer.getPlayer;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
-import static net.teraoctet.genesys.utils.MessageManager.PLAYER_DATA_NOT_FOUND;
+import static net.teraoctet.genesys.utils.MessageManager.DATA_NOT_FOUND;
 import static net.teraoctet.genesys.utils.MessageManager.TP_AT_COORDS;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandResult;
@@ -38,7 +38,7 @@ public class CommandPlayerinfo implements CommandExecutor {
             String targetUUID = getUUID(targetName);
             
             if(targetUUID == null){
-                src.sendMessage(PLAYER_DATA_NOT_FOUND(targetName));
+                src.sendMessage(DATA_NOT_FOUND(targetName));
                 return CommandResult.empty();
             }
             

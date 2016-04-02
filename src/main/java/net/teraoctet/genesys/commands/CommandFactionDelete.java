@@ -1,12 +1,10 @@
 package net.teraoctet.genesys.commands;
 
-import net.teraoctet.genesys.faction.FactionManager;
+import static net.teraoctet.genesys.Genesys.factionManager;
 import net.teraoctet.genesys.faction.GFaction;
 import net.teraoctet.genesys.player.GPlayer;
-import net.teraoctet.genesys.utils.GData;
 import static net.teraoctet.genesys.utils.GData.getGFaction;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
-import static net.teraoctet.genesys.utils.GData.removeGFaction;
 import static net.teraoctet.genesys.utils.MessageManager.FACTION_DELETED_SUCCESS;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_FACTION;
@@ -28,15 +26,15 @@ public class CommandFactionDelete implements CommandExecutor {
         if(src instanceof Player && src.hasPermission("genesys.faction.delete")) {
             GPlayer gplayer = getGPlayer(src.getIdentifier());
             
-            if(FactionManager.hasAnyFaction(gplayer)) {
-                if(FactionManager.isOwner(gplayer)){
+            if(factionManager.hasAnyFaction(gplayer)) {
+                if(factionManager.isOwner(gplayer)){
                     String name = ctx.<String> getOne("name").get();
                     GFaction gfaction = getGFaction(gplayer.getID_faction());
                     String factionName = gfaction.getName();
                     
-                    if(name.equals(factionName)) {
-                        //removeGFaction(gplayer.getID_faction());
-                        GData.commit();
+                    if(factionName.toLowerCase().contains(name.toLowerCase())) {
+                        int id_faction = gplayer.getID_faction();
+                        factionManager.removeFaction(id_faction);
                         src.sendMessage(FACTION_DELETED_SUCCESS(factionName));
                         return CommandResult.success();
                     } else {

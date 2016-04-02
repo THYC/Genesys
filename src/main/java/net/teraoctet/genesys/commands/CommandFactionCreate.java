@@ -4,12 +4,15 @@ import static net.teraoctet.genesys.Genesys.factionManager;
 import net.teraoctet.genesys.faction.FactionManager;
 import net.teraoctet.genesys.faction.GFaction;
 import net.teraoctet.genesys.player.GPlayer;
+import static net.teraoctet.genesys.utils.GConfig.FACTION_NAME_MAX_SIZE;
+import static net.teraoctet.genesys.utils.GConfig.FACTION_NAME_MIN_SIZE;
 import net.teraoctet.genesys.utils.GData;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import static net.teraoctet.genesys.utils.MessageManager.ALREADY_FACTION_MEMBER;
 import static net.teraoctet.genesys.utils.MessageManager.FACTION_CREATED_SUCCESS;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
+import static net.teraoctet.genesys.utils.MessageManager.WRONG_CHARACTERS_NUMBER;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -30,17 +33,20 @@ public class CommandFactionCreate implements CommandExecutor {
                 src.sendMessage(ALREADY_FACTION_MEMBER());
             } else {
                 String factionName = ctx.<String> getOne("name").get();
-                int key = factionManager.newKey();
-                GFaction gfaction = new GFaction(key, factionName,"N",0,0,0,0,0,0,0);
-                gplayer.setFactionRank(1);
-                gplayer.setID_faction(key);
-                gplayer.update();
-                gfaction.insert();
-                GData.commit();
-                GData.addGFaction(key, gfaction); 
-                src.sendMessage(FACTION_CREATED_SUCCESS(factionName));
-                
-                return CommandResult.success();
+                if(factionName.length() >= FACTION_NAME_MIN_SIZE() && factionName.length() <= FACTION_NAME_MAX_SIZE()) {
+                    int key = factionManager.newKey();
+                    GFaction gfaction = new GFaction(key, factionName,"N",0,0,0,0,0,0,0);
+                    gplayer.setFactionRank(1);
+                    gplayer.setID_faction(key);
+                    gplayer.update();
+                    gfaction.insert();
+                    GData.commit();
+                    GData.addGFaction(key, gfaction); 
+                    src.sendMessage(FACTION_CREATED_SUCCESS(factionName));
+                    return CommandResult.success();
+                } else {
+                    src.sendMessage(WRONG_CHARACTERS_NUMBER(Integer.toString(FACTION_NAME_MIN_SIZE()), Integer.toString(FACTION_NAME_MAX_SIZE())));
+                }
             }
         } 
         
