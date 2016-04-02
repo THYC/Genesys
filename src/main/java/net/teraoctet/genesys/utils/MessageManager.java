@@ -87,7 +87,15 @@ public class MessageManager {
     private static Text WRONG_CHARACTERS_NUMBER;
     private static Text KILLED_BY;
     private static Text SUICIDE;
-    private static Text ONHOVER_ACTION_MENU;
+    private static Text ONHOVER_FACTION_MOREACTIONS;
+    private static Text ONHOVER_FACTION_SETGRADE;
+    private static Text ONHOVER_FACTION_RENAME;
+    private static Text ONHOVER_FACTION_INVIT;
+    private static Text ONHOVER_FACTION_DELETE;
+    private static Text ONHOVER_FACTION_REMOVEMEMBER;
+    private static Text ONHOVER_FACTION_WITHDRAWAL;
+    private static Text ONHOVER_FACTION_DEPOSIT;
+    private static Text ONHOVER_PI_NAME;
        
     public static File file = new File("config/genesys/message.conf");
     public static final ConfigurationLoader<?> manager = HoconConfigurationLoader.builder().setFile(file).build();
@@ -285,7 +293,56 @@ public class MessageManager {
                 msg = new ArrayList<>();
                 msg.add("&l&6Affiche un menu pour g\351rer la faction");
                 msg.add("&n&eAccessible par :&r Chef, Sous-chef, Officier");
-                message.getNode("FACTION","ONHOVER_ACTION_MENU").setValue(msg);
+                message.getNode("FACTION","ONHOVER_FACTION_MOREACTIONS").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&l&6Inviter un joueur \340 rejoindre la faction");
+                msg.add("&e&nUtilisable par :&r Chef, Sous-chef, Officier");
+                msg.add("\n&7/faction addplayer <player>");
+                message.getNode("FACTION","ONHOVER_FACTION_INVIT").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&l&6Changer le grade d'un membre");
+                msg.add("&e&nUtilisable par :&r Chef, Sous-chef, Officier");
+                msg.add("\n&7/faction setplayergrade <player> <grade>");
+                msg.add("&o&n&7Grade :&r&o&7 2 -> Sous-chef | 3 -> Officer | 4 -> Membre | 5 -> Recrue");
+                message.getNode("FACTION","ONHOVER_FACTION_SETGRADE").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&l&6Renvoyer un joueur de la faction");
+                msg.add("&e&nUtilisable par :&r Chef, Sous-chef");
+                msg.add("\n&7/faction removeplayer <player>");
+                message.getNode("FACTION","ONHOVER_FACTION_REMOVEMEMBER").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&l&6Retirer des \351meraudes de la banque de faction");
+                msg.add("&e&nUtilisable par :&r Chef, Sous-chef");
+                msg.add("\n&7/faction withdraw <montant>");
+                message.getNode("FACTION","ONHOVER_FACTION_WITHDRAWAL").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&l&6Renommer la faction");
+                msg.add("&e&nUtilisable par :&r Chef, Sous-chef");
+                msg.add("\n&7/faction rename <nom>");
+                message.getNode("FACTION","ONHOVER_FACTION_RENAME").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&l&6Supprimer la faction");
+                msg.add("&e&nUtilisable par :&r Chef");
+                msg.add("\n&7/faction delete <nom>");
+                message.getNode("FACTION","ONHOVER_FACTION_DELETE").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&l&6D\351poser des \351meraudes dans la banque de la faction");
+                msg.add("\n&7/faction depot <montant>");
+                message.getNode("FACTION","ONHOVER_FACTION_DEPOSIT").setValue(msg);
                 manager.save(message);
                 
                 //-------------------------
@@ -434,6 +491,17 @@ public class MessageManager {
                 msg = new ArrayList<>();
                 msg.add("&eT\351l\351portation sur votre home : &6%var1%");
                 message.getNode("TELEPORTATION","HOME_TP_SUCCESS").setValue(msg);
+                manager.save(message);
+                
+                //-------------------------
+                // Message Commande PlayerInfo
+                //-------------------------
+                
+                msg = new ArrayList<>();
+                msg.add("&nUUID:&r %var1%\n");
+                msg.add("&8&n&oClick :&r &8&o/kick <player> <raison>");
+                msg.add("&8&n&oShift+Click :&r &8&o/ban <player> <raison>");
+                message.getNode("CMD_PLAYERINFO","ONHOVER_PI_NAME").setValue(msg);
                 manager.save(message);
                 
                 //-------------------------
@@ -673,7 +741,21 @@ public class MessageManager {
     
     public static Text FACTION_DELETED_SUCCESS(String factionName){return format(FACTION_DELETED_SUCCESS, "FACTION", "FACTION_DELETED_SUCCESS", factionName, "");}
     
-    public static Text ONHOVER_ACTION_MENU(){return format(ONHOVER_ACTION_MENU, "FACTION", "ONHOVER_ACTION_MENU");}
+    public static Text ONHOVER_FACTION_MOREACTIONS(){return format(ONHOVER_FACTION_MOREACTIONS, "FACTION", "ONHOVER_FACTION_MOREACTIONS");}
+    
+    public static Text ONHOVER_FACTION_DEPOSIT(){return format(ONHOVER_FACTION_DEPOSIT, "FACTION", "ONHOVER_FACTION_DEPOSIT");}
+    
+    public static Text ONHOVER_FACTION_INVIT(){return format(ONHOVER_FACTION_INVIT, "FACTION", "ONHOVER_FACTION_INVIT");}
+    
+    public static Text ONHOVER_FACTION_SETGRADE(){return format(ONHOVER_FACTION_SETGRADE, "FACTION", "ONHOVER_FACTION_SETGRADE");}
+    
+    public static Text ONHOVER_FACTION_REMOVEMEMBER(){return format(ONHOVER_FACTION_REMOVEMEMBER, "FACTION", "ONHOVER_FACTION_REMOVEMEMBER");}
+    
+    public static Text ONHOVER_FACTION_WITHDRAWAL(){return format(ONHOVER_FACTION_WITHDRAWAL, "FACTION", "ONHOVER_FACTION_WITHDRAWAL");}
+    
+    public static Text ONHOVER_FACTION_RENAME(){return format(ONHOVER_FACTION_RENAME, "FACTION", "ONHOVER_FACTION_RENAME");}
+    
+    public static Text ONHOVER_FACTION_DELETE(){return format(ONHOVER_FACTION_DELETE, "FACTION", "ONHOVER_FACTION_DELETE");}
     
     //-------------------------
     // Message PLOT / PARCELLE
@@ -747,6 +829,12 @@ public class MessageManager {
     
     public static Text HOME_TP_SUCCESS(Player player, String var1){return format(HOME_TP_SUCCESS, "TELEPORTATION","HOME_TP_SUCCESS", player, var1, "");}
     
+    //-------------------------
+    // Message Commande PlayerInfo
+    //-------------------------
+
+    public static Text ONHOVER_PI_NAME(String UUID){return format(ONHOVER_PI_NAME, "CMD_PLAYERINFO","ONHOVER_PI_NAME",UUID, "");}
+                
     //-------------------------
     // Message WORLD
     //-------------------------

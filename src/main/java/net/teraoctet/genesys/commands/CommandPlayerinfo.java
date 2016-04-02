@@ -6,7 +6,6 @@ import net.teraoctet.genesys.player.GPlayer;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import static net.teraoctet.genesys.utils.GData.getUUID;
 import static net.teraoctet.genesys.utils.ServerManager.getPlayer;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -20,8 +19,11 @@ import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static net.teraoctet.genesys.utils.MessageManager.DATA_NOT_FOUND;
+import static net.teraoctet.genesys.utils.MessageManager.ONHOVER_PI_NAME;
 import static net.teraoctet.genesys.utils.MessageManager.TP_AT_COORDS;
-import org.spongepowered.api.text.serializer.TextSerializers;
+import static org.spongepowered.api.Sponge.getGame;
+import org.spongepowered.api.service.pagination.PaginationList;
+import org.spongepowered.api.service.pagination.PaginationService;
 
 public class CommandPlayerinfo implements CommandExecutor {
         
@@ -30,84 +32,75 @@ public class CommandPlayerinfo implements CommandExecutor {
         //partie de la commande qui cible un <player>, exécuté que si la source a la permission et qu'elle a rempli l'argument <player>
         if(src instanceof Player && ctx.getOne("tplayer").isPresent() && src.hasPermission("genesys.playerinfo.others")) {
             String targetName = ctx.<String> getOne("tplayer").get();
-            boolean isOnline = false;
-            
-            for (Player player : Sponge.getServer().getOnlinePlayers()) {
-                if(player.getName().equals(targetName)){
-                    isOnline = true;
-                }
-            }
-
             String targetUUID = getUUID(targetName);
             
             if(targetUUID == null){
                 src.sendMessage(DATA_NOT_FOUND(targetName));
-                return CommandResult.empty();
+            } else { 
+                GPlayer gplayer = getGPlayer(targetUUID);
+                PaginationService paginationService = getGame().getServiceManager().provide(PaginationService.class).get();
+                PaginationList.Builder builder = paginationService.builder(); 
+
+                builder.title(MESSAGE("&8PlayerInfo"))
+                        .contents(Text.builder().append(MESSAGE("&8Player: " + targetName))
+                                .onHover(TextActions.showText(ONHOVER_PI_NAME(targetUUID)))
+                                .onClick(TextActions.suggestCommand("/kick " + targetName))
+                                .onShiftClick(TextActions.insertText("/ban " + targetName))
+                                .toText(),
+                            Text.builder().append(MESSAGE("AAAAAAA")).toText())
+                        .padding(Text.of("-"))
+                        .sendTo(src);
+
+                /*src.sendMessage(Text.builder("----" + targetName + "----")
+                            .onHover(TextActions.showText(Text.builder("UUID: " + targetUUID).build()))
+                            .color(TextColors.DARK_GRAY)
+                            .build());*/
+
+                if(serverManager.isOnline(targetName)){
+                    Player tPlayer = getPlayer(targetName);
+                    src.sendMessage(Text.builder(targetName + " est connect\351")
+                            .onHover(TextActions.showText(Text.builder("IP: " + tPlayer.getConnection().getAddress().toString()).build()))
+                            .color(TextColors.DARK_GRAY)
+                            .build());
+                    src.sendMessage(Text.builder("Position : World=" + tPlayer.getLocation().getExtent().getName() + " X=" + tPlayer.getLocation().getBlockX() + " Y=" + tPlayer.getLocation().getBlockY() + " Z=" + tPlayer.getLocation().getBlockZ())
+                            //.onClick(TextActions.runCommand("/"))
+                            .onHover(TextActions.showText(TP_AT_COORDS()))
+                            .color(TextColors.DARK_GRAY)
+                            .build());
+                } else {
+                    Date lastConnection = serverManager.doubleToDate(gplayer.getLastonline());
+                    src.sendMessage(Text.builder(targetName + " est d\351connect\351")
+                            .onHover(TextActions.showText(Text.builder("Derni\350re connexion: " + lastConnection.toString()).build()))
+                            .color(TextColors.DARK_GRAY)
+                            .build());
+                    src.sendMessage(Text.builder("Derni\350re position : " + gplayer.getLastposition())
+                            //.onClick(TextActions.runCommand("/"))
+                            .onHover(TextActions.showText(TP_AT_COORDS()))
+                            .color(TextColors.DARK_GRAY)
+                            .build());
+                }
+
+                src.sendMessage(MESSAGE("&8--------------------"));
+                /*src.sendMessage(Text.builder("Home (default): World= " + gplayer.getHome("default").getWorld() + " X=" + gplayer.getHome("default").getX() + " Y=" + gplayer.getHome("default").getY() + " Z=" + gplayer.getHome("default").getZ())
+                            //.onClick(TextActions.runCommand("/"))
+                            .onHover(TextActions.showText(TP_AT_COORDS()))
+                            .color(TextColors.DARK_GRAY)
+                            .build());*/
+                src.sendMessage(MESSAGE("&8Nb de Home(s) : " + gplayer.getHomes().size()));
+                src.sendMessage(MESSAGE("&8Bank: " + gplayer.getMoney() + " \351meraudes"));
+                src.sendMessage(Text.builder("Droits suppl\351mentaires accordés : ")
+                            .onHover(TextActions.showText(Text.builder("Points accumul\351s : ").build()))
+                            .color(TextColors.DARK_GRAY)
+                            .build());
+                src.sendMessage(MESSAGE("&8--------------------"));
+                src.sendMessage(Text.builder("> Statistiques minage <")
+                            //.onClick(TextActions.runCommand("/"))
+                            .onHover(TextActions.showText(Text.builder("Affiche les statistiques des blocs min\351s").build()))
+                            .color(TextColors.DARK_GRAY)
+                            .build());
+                src.sendMessage(MESSAGE("&8--------------------"));
+                return CommandResult.success();
             }
-            
-            GPlayer gplayer = getGPlayer(targetUUID);
-            
-            /*builder.title(Text.builder().append(TextSerializers.formattingCode('&').deserialize("&8 : " + targetName).toText()))
-                         .header(Text.builder().append(TextSerializers.formattingCode('&')
-                                 .deserialize("&2Membres: "))
-                                 .build())
-                         .contents(Text.builder().append(TextSerializers.formattingCode('&').deserialize("&aChef :")).toText(),
-                             Text.builder().append(TextSerializers.formattingCode('&').deserialize("&a- Sous-chef (" + ")"))
-                                     .onClick(TextActions.runCommand("/faction memberslist"))
-                                     .onHover(TextActions.showText(Text.builder("Sous-chef(s): ").build()))      //mettre la liste des SOUS-CHEFS en hover
-                                     .toText())
-                         .padding(Text.of("-"))
-                         .sendTo(src); */
-            
-            src.sendMessage(Text.builder("----" + targetName + "----")
-                        .onHover(TextActions.showText(Text.builder("UUID: " + targetUUID).build()))
-                        .color(TextColors.DARK_GRAY)
-                        .build());
-            
-            if(isOnline){
-                Player tPlayer = getPlayer(targetName);
-                src.sendMessage(Text.builder(targetName + " est connect\351")
-                        .onHover(TextActions.showText(Text.builder("IP: " + tPlayer.getConnection().getAddress().toString()).build()))
-                        .color(TextColors.DARK_GRAY)
-                        .build());
-                src.sendMessage(Text.builder("Position : World=" + tPlayer.getLocation().getExtent().getName() + " X=" + tPlayer.getLocation().getBlockX() + " Y=" + tPlayer.getLocation().getBlockY() + " Z=" + tPlayer.getLocation().getBlockZ())
-                        //.onClick(TextActions.runCommand("/"))
-                        .onHover(TextActions.showText(TP_AT_COORDS()))
-                        .color(TextColors.DARK_GRAY)
-                        .build());
-            } else {
-                Date lastConnection = serverManager.doubleToDate(gplayer.getLastonline());
-                src.sendMessage(Text.builder(targetName + " est d\351connect\351")
-                        .onHover(TextActions.showText(Text.builder("Derni\350re connexion: " + lastConnection.toString()).build()))
-                        .color(TextColors.DARK_GRAY)
-                        .build());
-                src.sendMessage(Text.builder("Derni\350re position : " + gplayer.getLastposition())
-                        //.onClick(TextActions.runCommand("/"))
-                        .onHover(TextActions.showText(TP_AT_COORDS()))
-                        .color(TextColors.DARK_GRAY)
-                        .build());
-            }
-            
-            src.sendMessage(MESSAGE("&8--------------------"));
-            /*src.sendMessage(Text.builder("Home (default): World= " + gplayer.getHome("default").getWorld() + " X=" + gplayer.getHome("default").getX() + " Y=" + gplayer.getHome("default").getY() + " Z=" + gplayer.getHome("default").getZ())
-                        //.onClick(TextActions.runCommand("/"))
-                        .onHover(TextActions.showText(TP_AT_COORDS()))
-                        .color(TextColors.DARK_GRAY)
-                        .build());*/
-            src.sendMessage(MESSAGE("&8Nb de Home(s) : " + gplayer.getHomes().size()));
-            src.sendMessage(MESSAGE("&8Bank: " + gplayer.getMoney() + " \351meraudes"));
-            src.sendMessage(Text.builder("Droits suppl\351mentaires accordés : ")
-                        .onHover(TextActions.showText(Text.builder("Points accumul\351s : ").build()))
-                        .color(TextColors.DARK_GRAY)
-                        .build());
-            src.sendMessage(MESSAGE("&8--------------------"));
-            src.sendMessage(Text.builder("> Statistiques minage <")
-                        //.onClick(TextActions.runCommand("/"))
-                        .onHover(TextActions.showText(Text.builder("Affiche les statistiques des blocs min\351s").build()))
-                        .color(TextColors.DARK_GRAY)
-                        .build());
-            src.sendMessage(MESSAGE("&8--------------------"));
-            return CommandResult.success();
         } 
         
         //si la source est un joueur qui n'a pas rempli l'argument <player>, affiche les infos de la source

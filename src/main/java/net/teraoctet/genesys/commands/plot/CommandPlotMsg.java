@@ -1,4 +1,4 @@
-package net.teraoctet.genesys.commands;
+package net.teraoctet.genesys.commands.plot;
 
 import java.util.Optional;
 import static net.teraoctet.genesys.Genesys.plotManager;

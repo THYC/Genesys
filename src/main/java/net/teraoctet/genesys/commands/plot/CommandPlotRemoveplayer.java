@@ -1,4 +1,4 @@
-package net.teraoctet.genesys.commands;
+package net.teraoctet.genesys.commands.plot;
 
 import static net.teraoctet.genesys.Genesys.plotManager;
 import net.teraoctet.genesys.plot.GPlot;
@@ -17,12 +17,12 @@ import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static net.teraoctet.genesys.utils.MessageManager.ALREADY_OWNED_PLOT;
 import org.spongepowered.api.command.source.ConsoleSource;
 
-public class CommandPlotAddplayer implements CommandExecutor {
+public class CommandPlotRemoveplayer implements CommandExecutor {
        
     @Override
     public CommandResult execute(CommandSource src, CommandContext ctx) {
 
-        if(src instanceof Player && src.hasPermission("genesys.plot.addplayer")) { 
+        if(src instanceof Player && src.hasPermission("genesys.plot.removeplayer")) { 
             Player player = (Player) src;
             GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
             GPlot gplot = null;
@@ -36,37 +36,40 @@ public class CommandPlotAddplayer implements CommandExecutor {
 
             if (gplot == null){
                 player.sendMessage(NO_PLOT());
-                player.sendMessage(USAGE("/plot addplayer : ajoute un habitant - vous devez \352tre sur la parcelle"));
-                player.sendMessage(USAGE("/plot addplayer <nomParcelle> : ajoute un habitant sur la parcelle nomm\351e"));
+                player.sendMessage(USAGE("/plot removeplayer : retire un habitant - vous devez \352tre sur la parcelle"));
+                player.sendMessage(USAGE("/plot removeplayer <NomParcelle> : retire un habitant sur la parcelle nomm\351e"));
                 return CommandResult.empty();
-            } else if (!gplot.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
+            } else if (!gplot.getUuidOwner().equalsIgnoreCase(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
                 player.sendMessage(ALREADY_OWNED_PLOT());
-                return CommandResult.empty();   
+                return CommandResult.empty(); 
             }
 
             if(ctx.getOne("player").isPresent()){
                 Player target = ctx.<Player> getOne("player").get();  
                 if (target == null){
-                    player.sendMessage(MESSAGE("&e" + target + " &7 doit \352tre connect\351 pour l'ajouter"));
+                    player.sendMessage(MESSAGE("&e" + target + " &7 doit \352tre connecté pour le retirer"));
                     return CommandResult.empty();
                 }
-                gplot.setUuidAllowed(gplot.getUuidAllowed() + " " + target.getUniqueId().toString());
-                player.sendMessage(MESSAGE("&e" + target.getName() + " &7 a \351t\351 ajout\351 à la liste des habitants"));
-                target.sendMessage(MESSAGE("&7Vous \352tes maintenant habitant de &e" + gplot.getName()));
+
+                String uuidAllowed = gplot.getUuidAllowed();
+                uuidAllowed = uuidAllowed.replace(target.getUniqueId().toString(), "");
+                gplot.setUuidAllowed(uuidAllowed);
+                player.sendMessage(MESSAGE("&e" + target.getName() + " &7a \351t\351 retir\351 de la liste des habitants"));
+                target.sendMessage(MESSAGE("&e" + player.getName() + " &7vous a retir\351 des habitants de &e" + gplot.getName()));
                 return CommandResult.success();
             } else {
-                player.sendMessage(USAGE("/plot addplayer <playerName> [nomParcelle]"));
+                player.sendMessage(USAGE("/plot removeplayer <playerName> [NomParcelle]"));
             }
         } 
         
         else if (src instanceof ConsoleSource) {
-            src.sendMessage(NO_CONSOLE());
+            src.sendMessage(NO_CONSOLE()); 
         }
         
         else {
             src.sendMessage(NO_PERMISSIONS());
         }
-
+        
         return CommandResult.empty();	
     }
 }

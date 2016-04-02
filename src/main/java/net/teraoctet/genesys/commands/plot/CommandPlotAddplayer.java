@@ -1,4 +1,4 @@
-package net.teraoctet.genesys.commands;
+package net.teraoctet.genesys.commands.plot;
 
 import static net.teraoctet.genesys.Genesys.plotManager;
 import net.teraoctet.genesys.plot.GPlot;
@@ -17,12 +17,12 @@ import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static net.teraoctet.genesys.utils.MessageManager.ALREADY_OWNED_PLOT;
 import org.spongepowered.api.command.source.ConsoleSource;
 
-public class CommandPlotOwnerset implements CommandExecutor {
-         
+public class CommandPlotAddplayer implements CommandExecutor {
+       
     @Override
     public CommandResult execute(CommandSource src, CommandContext ctx) {
 
-        if(src instanceof Player && src.hasPermission("genesys.plot.ownerset")) {
+        if(src instanceof Player && src.hasPermission("genesys.plot.addplayer")) { 
             Player player = (Player) src;
             GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
             GPlot gplot = null;
@@ -36,13 +36,12 @@ public class CommandPlotOwnerset implements CommandExecutor {
 
             if (gplot == null){
                 player.sendMessage(NO_PLOT());
-                player.sendMessage(USAGE("/plot ownerset : change le propri\351taire de la parcelle - vous devez \352tre sur la parcelle"));
-                player.sendMessage(USAGE("/plot ownerset <NomParcelle> : change le propri\351taire de la parcelle nomm\351e"));
+                player.sendMessage(USAGE("/plot addplayer : ajoute un habitant - vous devez \352tre sur la parcelle"));
+                player.sendMessage(USAGE("/plot addplayer <nomParcelle> : ajoute un habitant sur la parcelle nomm\351e"));
                 return CommandResult.empty();
-            } else if (!gplot.getUuidOwner().equalsIgnoreCase(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
+            } else if (!gplot.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
                 player.sendMessage(ALREADY_OWNED_PLOT());
-                player.sendMessage(MESSAGE("&eVous devez \352tre propri\351taire pour taper cette commande"));
-                return CommandResult.empty();
+                return CommandResult.empty();   
             }
 
             if(ctx.getOne("player").isPresent()){
@@ -50,27 +49,24 @@ public class CommandPlotOwnerset implements CommandExecutor {
                 if (target == null){
                     player.sendMessage(MESSAGE("&e" + target + " &7 doit \352tre connect\351 pour l'ajouter"));
                     return CommandResult.empty();
-                } else {
-                    gplot.setUuidOwner(target.getUniqueId().toString());
-                    player.sendMessage(MESSAGE("&e" + target.getName() + " &7est maintenant le propri\351taire de &e" + gplot.getName()));
-                    target.sendMessage(MESSAGE("&7Vous \352tes maintenant propri\351taire de &e" + gplot.getName()));
-                    return CommandResult.success();
                 }
+                gplot.setUuidAllowed(gplot.getUuidAllowed() + " " + target.getUniqueId().toString());
+                player.sendMessage(MESSAGE("&e" + target.getName() + " &7 a \351t\351 ajout\351 à la liste des habitants"));
+                target.sendMessage(MESSAGE("&7Vous \352tes maintenant habitant de &e" + gplot.getName()));
+                return CommandResult.success();
             } else {
-                player.sendMessage(USAGE("/plot ownerset : change le propri\351taire de la parcelle - vous devez \352tre sur la parcelle"));
-                player.sendMessage(USAGE("/plot ownerset <NomParcelle> : change le propri\351taire de la parcelle nomm\351e"));
-                return CommandResult.empty();
-            }    
+                player.sendMessage(USAGE("/plot addplayer <playerName> [nomParcelle]"));
+            }
         } 
         
-        else if (src instanceof ConsoleSource){
+        else if (src instanceof ConsoleSource) {
             src.sendMessage(NO_CONSOLE());
         }
         
         else {
             src.sendMessage(NO_PERMISSIONS());
         }
-        
+
         return CommandResult.empty();	
     }
 }
