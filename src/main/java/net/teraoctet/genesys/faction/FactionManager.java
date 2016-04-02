@@ -1,6 +1,8 @@
 package net.teraoctet.genesys.faction;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import net.teraoctet.genesys.player.GPlayer;
 import net.teraoctet.genesys.utils.GData;
 import static net.teraoctet.genesys.utils.GData.commit;
@@ -89,10 +91,10 @@ public class FactionManager {
      * @return 
      */
     public List<String> getListPlayerFaction(int id_faction){
-        List<String> listPlayer = null;
-        for (String uuid : getPlayers().keySet()) {
-            if(getPlayers().get(uuid).getID_faction() == id_faction){
-                listPlayer.add(getPlayers().get(uuid).getName());
+        List<String> listPlayer =  new ArrayList<String>() ;
+        for(Map.Entry<String,GPlayer> p : getPlayers().entrySet()){
+            if(p.getValue().getID_faction() == id_faction){
+                listPlayer.add(p.getValue().getName());
             }
         }
         return listPlayer;
@@ -105,10 +107,10 @@ public class FactionManager {
      * @return 
      */
     public List<String> getListPlayerFaction(int id_faction, int rank){
-        List<String> listPlayer = null;
-        for (String uuid : getPlayers().keySet()) {
-            if(getPlayers().get(uuid).getID_faction() == id_faction && getPlayers().get(uuid).getFactionRank() == rank){
-                listPlayer.add(getPlayers().get(uuid).getName());
+        List<String> listPlayer =  new ArrayList<String>() ;
+        for(Map.Entry<String,GPlayer> p : getPlayers().entrySet()){
+            if(p.getValue().getID_faction() == id_faction && p.getValue().getFactionRank() == rank){
+                listPlayer.add(p.getValue().getName());
             }
         }
         return listPlayer;

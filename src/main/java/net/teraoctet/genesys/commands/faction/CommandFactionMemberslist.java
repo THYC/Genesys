@@ -1,5 +1,6 @@
 package net.teraoctet.genesys.commands.faction;
 
+import java.util.List;
 import static net.teraoctet.genesys.Genesys.factionManager;
 import net.teraoctet.genesys.faction.FactionManager;
 import net.teraoctet.genesys.faction.GFaction;
@@ -28,8 +29,12 @@ public class CommandFactionMemberslist implements CommandExecutor {
             //si le joueur est membre d'une faction
             if(FactionManager.hasAnyFaction(gplayer)) {
                 GFaction gfaction = getGFaction(gplayer.getID_faction());
-                //factionManager.getListPlayerFaction(gfaction.getID());
-                src.sendMessage(MESSAGE("&2Listes des membres de " + gfaction.getName() + " : &a" + String.valueOf(factionManager.getListPlayerFaction(gfaction.getID()).size())));
+                List list = factionManager.getListPlayerFaction(gfaction.getID());
+                
+                src.sendMessage(MESSAGE("&2Listes des membres de " + gfaction.getName() + " : &a" + list));
+                
+                
+                //src.sendMessage(MESSAGE("&2Listes des membres de " + gfaction.getName() + " : &a" + String.valueOf(factionManager.getListPlayerFaction(gfaction.getID()).size())));
                 return CommandResult.success();
             }
             
