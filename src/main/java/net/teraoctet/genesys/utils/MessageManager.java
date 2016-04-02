@@ -32,6 +32,7 @@ public class MessageManager {
     private static Text DAY_MESSAGE;
     private static Text NIGHT_MESSAGE;
     private static Text STORM_MESSAGE;
+    private static Text GUIDE_FACTION;
     private static Text NO_FACTION;
     private static Text WRONG_RANK;
     private static Text ALREADY_FACTION_MEMBER;
@@ -84,6 +85,7 @@ public class MessageManager {
     private static Text FLY_GIVEN;
     private static Text FLY_RETIRED;
     private static Text TP_AT_COORDS;
+    private static Text WRONG_CHARACTERS_NUMBER;
     private static Text KILLED_BY;
     private static Text SUICIDE;
        
@@ -171,8 +173,15 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&cVous \352tes dans aucune faction !");
+                msg.add("&cVous n'\352tes dans aucune faction !");
                 message.getNode("NO_FACTION").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&n&eQu'est-ce que \347a apporte d'\350tre dans une faction ?");
+                msg.add("&eComing soon ..!");
+                msg.add("&ePlus d'infos sur &bhttp://craft.teraoctet.net\n");
+                message.getNode("GUIDE_FACTION").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
@@ -186,12 +195,12 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&eVous venez de cr\351er la faction \"&6%var1%&e\"");
+                msg.add("&eVous venez de cr\351er la faction \"&r%var1%&e\"");
                 message.getNode("FACTION_CREATED_SUCCESS").setValue(msg);
                 manager.save(message);
                         
                 msg = new ArrayList<>();
-                msg.add("&eVous de supprimer votre faction \"&6%var1%&e\"");
+                msg.add("&eVous venez de supprimer votre faction \"&6%var1%&e\"");
                 message.getNode("FACTION_DELETED_SUCCESS").setValue(msg);
                 manager.save(message);
                 
@@ -283,8 +292,8 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&eVirement effectu\351 de &6%var1% \351mraudes &eavec succès !");
-                message.getNode("MISSING_BALANCE").setValue(msg);
+                msg.add("&eVirement effectu\351 de &6%var1% \351meraudes &eavec succès !");
+                message.getNode("TRANSFER_SUCCESS").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
@@ -416,6 +425,11 @@ public class MessageManager {
                 msg = new ArrayList<>();
                 msg.add("T\351l\351portation aux coordonn\351es");
                 message.getNode("TP_AT_COORDS").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&cLe nombre de caract\350res doit \352tre entre %var1% et %var2%");
+                message.getNode("WRONG_CHARACTERS_NUMBER").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
@@ -567,6 +581,8 @@ public class MessageManager {
     
     public static Text STORM_MESSAGE(Player player){return format(STORM_MESSAGE, "STORM_MESSAGE", player);}
     
+    public static Text GUIDE_FACTION(){return format(GUIDE_FACTION, "GUIDE_FACTION");}
+    
     public static Text NO_FACTION(){return format(NO_FACTION, "NO_FACTION");}
     
     public static Text WRONG_RANK(){return format(WRONG_RANK, "WRONG_RANK");}
@@ -670,6 +686,8 @@ public class MessageManager {
     public static Text FLY_RETIRED(String player){return format(FLY_RETIRED, "FLY_RETIRED",player, "");}
    
     public static Text TP_AT_COORDS(){return format(TP_AT_COORDS, "TP_AT_COORDS");}
+    
+    public static Text WRONG_CHARACTERS_NUMBER(String minLength, String maxLength){return format(WRONG_CHARACTERS_NUMBER, "WRONG_CHARACTERS_NUMBER", minLength, maxLength);}
     
     public static Text KILLED_BY(String player, String killer){return format(KILLED_BY, "KILLED_BY",player,killer);}
     

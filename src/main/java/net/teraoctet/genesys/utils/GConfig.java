@@ -27,6 +27,9 @@ public class GConfig {
                 config.getNode("limits", "MAX_MUTE_TIME_IN_SECONDS").setValue(600);
                 config.getNode("plot", "DEL_SIGN_AFTER_SALE").setValue(true);
                 config.getNode("plot", "DISPLAY_PLOT_MSG_FOR_OWNER").setValue(true);
+                config.getNode("faction", "MAX_NUMBER_OF_MEMBER").setValue(20);
+                config.getNode("faction", "NAME_MAX_SIZE").setValue(25);
+                config.getNode("faction", "NAME_MIN_SIZE").setValue(5);
                 config.getNode("version").setValue(1);
                 manager.save(config);
             }
@@ -50,4 +53,8 @@ public class GConfig {
     
     public static boolean DEL_SIGN_AFTER_SALE() { return config.getNode("plot", "DEL_SIGN_AFTER_SALE").getBoolean(); }
     public static boolean DISPLAY_PLOT_MSG_FOR_OWNER() { return config.getNode("plot", "DISPLAY_PLOT_MSG_FOR_OWNER").getBoolean(); }
+    
+    public static int FACTION_MAX_NUMBER_OF_MEMBER() { return config.getNode("faction", "MAX_NUMBER_OF_MEMBER").getInt(); }
+    public static int FACTION_NAME_MAX_SIZE() { return config.getNode("faction", "NAME_MAX_SIZE").getInt(); }
+    public static int FACTION_NAME_MIN_SIZE() { return config.getNode("faction", "NAME_MIN_SIZE").getInt(); }
 }

@@ -277,8 +277,15 @@ public class CommandManager {
         public CommandSpec CommandFactionDelete = CommandSpec.builder()
                 .description(Text.of("/faction delete <name>")) 
                 .permission("genesys.faction.delete") 
-                .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
+                .arguments(GenericArguments.remainingJoinedStrings(Text.of("name")))
                 .executor(new CommandFactionDelete()) 
+                .build();
+        
+        public CommandSpec CommandFactionRename = CommandSpec.builder()
+                .description(Text.of("/faction rename <name>")) 
+                .permission("genesys.faction.rename") 
+                .arguments(GenericArguments.remainingJoinedStrings(Text.of("name")))
+                .executor(new CommandFactionRename()) 
                 .build();
          
         public CommandSpec CommandFactionList = CommandSpec.builder()
@@ -331,7 +338,7 @@ public class CommandManager {
         public CommandSpec CommandFactionDeposit = CommandSpec.builder()
                 .description(Text.of("/faction depot <montant>")) 
                 .permission("genesys.faction.deposit") 
-                .arguments(GenericArguments.onlyOne(GenericArguments.integer(Text.of("amount"))))
+                .arguments(GenericArguments.onlyOne(GenericArguments.doubleNum(Text.of("amount"))))
                 .executor(new CommandFactionDeposit()) 
                 .build();
         
@@ -348,6 +355,7 @@ public class CommandManager {
                 .permission("genesys.faction")
                 .child(CommandFactionCreate, "create")
                 .child(CommandFactionDelete, "delete")
+                .child(CommandFactionRename, "rename")
                 .child(CommandFactionMemberslist, "memberslist")
                 .child(CommandFactionList, "list")
                 .child(CommandFactionAddplayer, "addplayer")

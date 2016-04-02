@@ -259,7 +259,7 @@ public class GData {
                         rs.getDouble("money"),
                         rs.getInt("point"),
                         rs.getInt("kill"),
-                        rs.getInt("int"));
+                        rs.getInt("dead"));
                     GData.addGFaction(faction.getID(), faction);
                 }   
             } catch (SQLException e) {}

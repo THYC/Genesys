@@ -1,6 +1,6 @@
 package net.teraoctet.genesys.commands;
 
-import net.teraoctet.genesys.faction.FactionManager;
+import static net.teraoctet.genesys.Genesys.factionManager;
 import net.teraoctet.genesys.faction.GFaction;
 import net.teraoctet.genesys.player.GPlayer;
 import static net.teraoctet.genesys.utils.GData.getGFaction;
@@ -25,8 +25,8 @@ public class CommandFactionDeposit implements CommandExecutor {
         if(src instanceof Player && src.hasPermission("genesys.faction.deposit")) {
             GPlayer gplayer = getGPlayer(src.getIdentifier());
             
-            if(FactionManager.hasAnyFaction(gplayer)) {
-                int amount = ctx.<Integer> getOne("amount").get();
+            if(factionManager.hasAnyFaction(gplayer)) {
+                double amount = ctx.<Double> getOne("amount").get();
                 double playerMoney = gplayer.getMoney();
                 
                 if(playerMoney >= amount){
@@ -34,7 +34,9 @@ public class CommandFactionDeposit implements CommandExecutor {
                     playerMoney = playerMoney - amount;
                     gplayer.setMoney(playerMoney);
                     gfaction.setMoney(gfaction.getMoney() + amount);
-                    src.sendMessage(TRANSFER_SUCCESS(Integer.toString(amount)));
+                    gplayer.update();
+                    gfaction.update();
+                    src.sendMessage(TRANSFER_SUCCESS(Double.toString(amount)));
                     return CommandResult.success();
                 } else {
                     src.sendMessage(MISSING_BALANCE());

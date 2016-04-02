@@ -1,14 +1,17 @@
 package net.teraoctet.genesys.commands;
 
-import net.teraoctet.genesys.faction.FactionManager;
+import static net.teraoctet.genesys.Genesys.factionManager;
 import net.teraoctet.genesys.faction.GFaction;
 import net.teraoctet.genesys.player.GPlayer;
+import static net.teraoctet.genesys.utils.GConfig.FACTION_NAME_MAX_SIZE;
+import static net.teraoctet.genesys.utils.GConfig.FACTION_NAME_MIN_SIZE;
 import static net.teraoctet.genesys.utils.GData.getGFaction;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import static net.teraoctet.genesys.utils.MessageManager.FACTION_RENAMED_SUCCESS;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_FACTION;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
+import static net.teraoctet.genesys.utils.MessageManager.WRONG_CHARACTERS_NUMBER;
 import static net.teraoctet.genesys.utils.MessageManager.WRONG_RANK;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -25,15 +28,19 @@ public class CommandFactionRename implements CommandExecutor {
         if(src instanceof Player && src.hasPermission("genesys.faction.rename")) {
             GPlayer gplayer = getGPlayer(src.getIdentifier());
             
-            if(FactionManager.hasAnyFaction(gplayer)) {
-                if(FactionManager.isOwner(gplayer)){
-                    GFaction gfaction = getGFaction(gplayer.getID_faction());
-                    String oldName = gfaction.getName();
+            if(factionManager.hasAnyFaction(gplayer)) {
+                if(factionManager.isOwner(gplayer)){
                     String newName = ctx.<String> getOne("name").get();
-                    gfaction.setName(newName);
-                    gfaction.update();
-                    src.sendMessage(FACTION_RENAMED_SUCCESS(oldName, newName));
-                    return CommandResult.success();
+                    if(newName.length() >= FACTION_NAME_MIN_SIZE() && newName.length() <= FACTION_NAME_MAX_SIZE()) {
+                        GFaction gfaction = getGFaction(gplayer.getID_faction());
+                        String oldName = gfaction.getName();
+                        gfaction.setName(newName);
+                        gfaction.update();
+                        src.sendMessage(FACTION_RENAMED_SUCCESS(oldName, newName));
+                        return CommandResult.success(); 
+                    } else {
+                        src.sendMessage(WRONG_CHARACTERS_NUMBER(Integer.toString(FACTION_NAME_MIN_SIZE()), Integer.toString(FACTION_NAME_MAX_SIZE())));
+                    }
                 } else {
                     src.sendMessage(WRONG_RANK());
                 }
