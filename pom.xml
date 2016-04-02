@@ -22,7 +22,8 @@
         <dependency>
             <groupId>org.spongepowered</groupId>
             <artifactId>spongeapi</artifactId>
-            <version>4.1.0-20160321.181555-11</version>
+            <version>4.1.0-20160327.044552-13</version>
+            <scope>provided</scope>
             <type>jar</type>
         </dependency>
         <dependency>

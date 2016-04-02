@@ -1,6 +1,8 @@
 package net.teraoctet.genesys.portal;
 
 import net.teraoctet.genesys.utils.GData;
+import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
+import static org.spongepowered.api.Sponge.getGame;
 import org.spongepowered.api.world.Location;
 
 public class GPortal {
@@ -62,10 +64,13 @@ public class GPortal {
     public void insert() {
 	GData.queue("INSERT INTO gportal VALUES ('" + portalname + "', " + level + ", '" + world + "', " + x1 + ", " + y1 + ", " + z1
         + ", " + x2 + ", " + y2 + ", " + z2 + ", '" + toworld + "', " + tox + ", " + toy + ", " + toz + ", '" + message + "')");
+        
+        getGame().getServer().getConsole().sendMessage(MESSAGE("INSERT INTO gportal VALUES ('" + portalname + "', " + level + ", '" + world + "', " + x1 + ", " + y1 + ", " + z1
+        + ", " + x2 + ", " + y2 + ", " + z2 + ", '" + toworld + "', " + tox + ", " + toy + ", " + toz + ", '" + message + "')"));
     }
 	
     public void update() {
-	GData.queue("UPDATE gportal SET portalname = '" + portalname + "', level = " + level + ", world = '" + world 
+	GData.queue("UPDATE gportal SET poralname = '" + portalname + "', level = " + level + ", world = '" + world 
         + "', x1 = " + x1 + ", y1 = " + y1 + ", z1 = " + z1 + ", x2 = " + x2 + ", y2 = " + y2 + ", z2 = " + z2 
         + ", toworld = '" + toworld + "', tox = " + tox + ", toy = " + toy + ", toz = " + toz + ", message = '" + message 
         + "' WHERE portalname = '" + portalname + "'");

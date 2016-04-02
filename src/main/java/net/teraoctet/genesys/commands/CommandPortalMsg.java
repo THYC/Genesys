@@ -60,7 +60,8 @@ public class CommandPortalMsg implements CommandExecutor {
                     return CommandResult.empty();
                 }
             } else {
-                player.sendMessage(USAGE("/portal msg <name> : modifie le message d'accueil du portail"));
+                player.sendMessage(USAGE("/portal msg <name> : affiche le message d'accueil du portail"));
+                player.sendMessage(USAGE("/portal msg <name> [message]: modifie le message d'accueil du portail"));
                 return CommandResult.empty();
             } 
         } 

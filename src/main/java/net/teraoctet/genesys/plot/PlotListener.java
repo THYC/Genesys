@@ -111,6 +111,11 @@ public class PlotListener {
                         Text txt1 = offering.lines().get(0);
                         if (txt1.equals(MESSAGE("&1A VENDRE"))){
                             int cout = Integer.valueOf(Text.of(offering.getValue(Keys.SIGN_LINES).get().get(2)).toPlain());
+                            if(plotManager.hasPlot(Text.of(offering.getValue(Keys.SIGN_LINES).get().get(1)).toPlain())){
+                                player.sendMessage(MESSAGE("&eCette parcelle n'existe plus"));
+                                b.getLocation().get().removeBlock();
+                                event.setCancelled(true);
+                            }
                             plot = plotManager.getPlot(Text.of(offering.getValue(Keys.SIGN_LINES).get().get(1)).toPlain());
                             if (gplayer.getMoney()< cout && !plot.getUuidOwner().contains(player.getIdentifier())){
                                 player.sendMessage(ChatTypes.CHAT,MISSING_BALANCE());

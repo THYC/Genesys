@@ -92,7 +92,7 @@ public class GData {
                 
                 if(!tables.contains("gfactions")) {
                         execute("CREATE TABLE gfactions ("
-                                + "id_faction INT PRIMARY KEY, "
+                                + "id_faction, "
                                 + "name TEXT, "
                                 + "world TEXT, "
                                 + "X INT, "
@@ -197,6 +197,7 @@ public class GData {
             } catch (SQLException e) {}
 	}
 	
+        @SuppressWarnings("ConvertToTryWithResources")
 	public static void load() {
             try {
                 Connection c = datasource.getConnection();
@@ -392,22 +393,18 @@ public class GData {
 	
 	public static void execute(String execute) {	
             try {
-                Connection connection = datasource.getConnection();
-                Statement statement = connection.createStatement();
-                statement.execute(execute);
-                statement.close();
-                connection.close();
-            } catch (SQLException e) {e.printStackTrace();}
+                try (Connection connection = datasource.getConnection(); Statement statement = connection.createStatement()) {
+                    statement.execute(execute);
+                }
+            } catch (SQLException e) {}
 	}
 	
 	public static void execute(List<String> execute) {	
             try {
-                Connection connection = datasource.getConnection();
-                Statement statement = connection.createStatement();
-                for(String e : execute) statement.execute(e);
-                statement.close();
-                connection.close();
-            } catch (SQLException e) {e.printStackTrace();}
+                try (Connection connection = datasource.getConnection(); Statement statement = connection.createStatement()) {
+                    for(String e : execute) statement.execute(e);
+                }
+            } catch (SQLException e) {}
 	}
 	
 	public static void commit() {
@@ -432,6 +429,7 @@ public class GData {
 	public static HashMap<String, GJail> getBans() { return gjails; }
 	
 	private static final HashMap<String, GPlayer> players = new HashMap<>();
+        @SuppressWarnings("element-type-mismatch")
 	public static void addGPlayer(String uuid, GPlayer gplayer) { if(!players.containsKey(players)) players.put(uuid, gplayer); }
 	public static void removeGPlayer(String uuid) { if(players.containsKey(uuid)) players.remove(uuid); }
 	public static GPlayer getGPlayer(String uuid) { return players.containsKey(uuid) ? players.get(uuid) : null; }
@@ -443,6 +441,7 @@ public class GData {
 	public static String getUUID(String name) { return uuids.containsKey(name) ? uuids.get(name) : null; }
         
         private static final HashMap<Integer, GFaction> factions = new HashMap<>();
+        @SuppressWarnings("element-type-mismatch")
 	public static void addGFaction(Integer ID, GFaction gfaction) { if(!factions.containsKey(factions)) factions.put(ID, gfaction); }
 	public static void removeGFaction(Integer id_faction) { if(factions.containsKey(id_faction)) factions.remove(id_faction); }
 	public static GFaction getGFaction(Integer id_faction) { return factions.containsKey(id_faction) ? factions.get(id_faction) : null; }

@@ -46,15 +46,15 @@ public class CommandPortalCreateOK implements CommandExecutor {
             int x2 = c[1].getBlockX();
             int y2 = c[1].getBlockY();
             int z2 = c[1].getBlockZ();
-            String message = "&c.. vers l'infini et au del\340 ...";
+            String message = "&c.. vers l''infini et au del\340 ...";
 
             GPortal gportal = new GPortal(portalName,0,worldName,x1,y1,z1,x2,y2,z2,message);
             gportal.insert();
             GData.commit();
             GData.addPortal(gportal);
 
-            player.sendMessage(Text.builder("Clique ici pour lire le message d'accueil par d\351faut du portail").onClick(TextActions.runCommand("/portal message " + portalName )).color(TextColors.AQUA).build());
-            player.sendMessage(Text.builder("Tape /portal message <message> &bpour pour modifier le message par d\351faut").onClick(TextActions.suggestCommand("/portal message " + portalName + " 'remplace ce texte par ton message'")).color(TextColors.AQUA).build());
+            player.sendMessage(Text.builder("Clique ici pour lire le message par d\351faut du portail").onClick(TextActions.runCommand("/portal msg " + portalName )).color(TextColors.AQUA).build());
+            player.sendMessage(Text.builder("Tape /portal msg <message> &bpour pour modifier le message par d\351faut").onClick(TextActions.suggestCommand("/portal msg " + portalName + " 'remplace ce texte par ton message'")).color(TextColors.AQUA).build());
             player.sendMessage(ChatTypes.ACTION_BAR,PROTECT_LOADED_PLOT(player,portalName));
             return CommandResult.success();
         } 

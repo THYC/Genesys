@@ -1,6 +1,5 @@
 package net.teraoctet.genesys.commands;
 
-import org.spongepowered.api.Game;
 import static org.spongepowered.api.Sponge.getGame;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -16,9 +15,7 @@ import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import org.spongepowered.api.command.source.ConsoleSource;
 
 public class CommandPortal implements CommandExecutor {
-    
-    public CommandPortal(Game game){}
-       
+
     @Override
     public CommandResult execute(CommandSource src, CommandContext ctx) {
 

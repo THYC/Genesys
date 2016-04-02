@@ -16,12 +16,12 @@ import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
+import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.entity.DisplaceEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
-import org.spongepowered.api.event.filter.cause.Last;
 import org.spongepowered.api.event.world.ExplosionEvent;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
@@ -37,7 +37,6 @@ public class PortalListener {
     
     @Listener
     public void onPlayerMovePortal(DisplaceEntityEvent.Move event, @First Player player) {
-        //Player player = (Player) event.getTargetEntity();
         GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
         Location locTo = event.getToTransform().getLocation();
         GPortal gportal = portalManager.getPortal(locTo);
@@ -46,7 +45,7 @@ public class PortalListener {
             if(player.hasPermission("genesys.portal." + gportal.getName()) || gplayer.getLevel() == 10)
             {
                 if(!player.transferToWorld(gportal.gettoworld(), new Vector3d(gportal.gettoX(), gportal.gettoY(), gportal.gettoZ()))) { 
-                    player.sendMessage(ChatTypes.CHAT,MESSAGE("&aPoint de spawn du portail non configuré, aller au point d'apparition souhaité et taper &e/portal tpfrom " + gportal.getName())); 
+                    player.sendMessage(MESSAGE("&aPoint de spawn du portail non configuré, aller au point d'apparition souhaité et taper &e/portal tpfrom " + gportal.getName())); 
                     return;
                 }
                 gplayer.setLastposition(DeSerialize.location(event.getFromTransform().getLocation()));
@@ -72,6 +71,21 @@ public class PortalListener {
                 }
                 
                 player.offer(Keys.GAME_MODE, player.getWorld().getProperties().getGameMode());
+            }
+        }
+    }
+    
+    @Listener
+    public void onEntityMovePortal(DisplaceEntityEvent.Move event, @First Entity entity) {
+        Location locTo = event.getToTransform().getLocation();
+        GPortal gportal = portalManager.getPortal(locTo);
+        
+        if(entity instanceof Player == false){
+            if (gportal != null){            
+                //entity.transferToWorld(gportal.gettoworld(), new Vector3d(gportal.gettoX(), gportal.gettoY(), gportal.gettoZ())); 
+                Optional<World> world = getGame().getServer().getWorld(gportal.gettoworld());
+                Location loc = new Location(world.get(), new Vector3d(gportal.gettoX(), gportal.gettoY(), gportal.gettoZ()));
+                entity.setLocation(loc);
             }
         }
     }

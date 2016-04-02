@@ -390,9 +390,9 @@ public class CommandManager {
                 .build();
         
         public CommandSpec CommandPortalMsg = CommandSpec.builder()
-                .description(Text.of("/portal msg [message]"))
+                .description(Text.of("/portal msg <name> [message]"))
                 .permission("genesys.admin.portal")
-                .arguments(GenericArguments.seq(
+                .arguments(GenericArguments.firstParsing(
                         GenericArguments.optional(GenericArguments.string(Text.of("name"))),
                         GenericArguments.remainingJoinedStrings(Text.of("arguments"))))
                 .executor(new CommandPortalMsg())
@@ -437,15 +437,15 @@ public class CommandManager {
                 .build();
         
         public CommandSpec CommandPortal = CommandSpec.builder()
-                .description(Text.of("/plot")) 
-                .permission("genesys.plot") 
+                .description(Text.of("/portal")) 
+                .permission("genesys.admin.portal") 
                 .child(CommandPortalCreate, "create", "add")
                 .child(CommandPortalCreateOK, "createok")
                 .child(CommandPortalRemove, "remove", "rem", "del")
                 .child(CommandPortalList, "list")
                 .child(CommandPortalTPFrom, "tpfrom", "tpf")
                 .child(CommandPortalMsg, "msg")
-                .executor(new CommandPlot())
+                .executor(new CommandPortal())
                 .build();
        
 }

@@ -4,7 +4,6 @@ import java.util.List;
 import net.teraoctet.genesys.player.GPlayer;
 import net.teraoctet.genesys.utils.GData;
 import static net.teraoctet.genesys.utils.GData.commit;
-import static net.teraoctet.genesys.utils.GData.getFactions;
 import static net.teraoctet.genesys.utils.GData.getGFaction;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import static net.teraoctet.genesys.utils.GData.getPlayers;
@@ -54,10 +53,12 @@ public class FactionManager {
      * @return 
      */
     public Integer newKey(){
-        int size = getFactions().size();
         int key = 1;
-        if(size > 0){
-            key = getFactions().get(size).getID() + 1;
+        
+        for (String uuid : getPlayers().keySet()) {
+            if(getPlayers().get(uuid).getID_faction() >= key){
+               key = getPlayers().get(uuid).getID_faction() + 1;
+            }
         }
         return key;
     }
