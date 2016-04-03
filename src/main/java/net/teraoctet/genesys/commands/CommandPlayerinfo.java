@@ -57,7 +57,7 @@ public class CommandPlayerinfo implements CommandExecutor {
                             .build());*/
 
                 if(serverManager.isOnline(targetName)){
-                    Player tPlayer = getPlayer(targetName);
+                    Player tPlayer = getGame().getServer().getPlayer(targetName).get();
                     src.sendMessage(Text.builder(targetName + " est connect\351")
                             .onHover(TextActions.showText(Text.builder("IP: " + tPlayer.getConnection().getAddress().toString()).build()))
                             .color(TextColors.DARK_GRAY)

@@ -44,7 +44,7 @@ public class PortalListener {
         if (gportal != null){            
             if(player.hasPermission("genesys.portal." + gportal.getName()) || gplayer.getLevel() == 10)
             {
-                if(gportal.gettoworld().equalsIgnoreCase("DESABLED")){
+                if(gportal.gettoworld().equalsIgnoreCase("DISABLED")){
                     player.sendMessage(MESSAGE("&aPoint de spawn du portail non configuré, aller au point d'apparition souhaité et taper &e/portal tpfrom " + gportal.getName())); 
                     return;
                 }
@@ -86,7 +86,7 @@ public class PortalListener {
         
         if(entity instanceof Player == false){
             if (gportal != null){  
-                if(!gportal.gettoworld().equalsIgnoreCase("DESABLED")){
+                if(!gportal.gettoworld().equalsIgnoreCase("DISABLED")){
                     Optional<World> world = getGame().getServer().getWorld(gportal.gettoworld());
                     Location loc = new Location(world.get(), new Vector3d(gportal.gettoX(), gportal.gettoY(), gportal.gettoZ()));
                     entity.setLocation(loc);

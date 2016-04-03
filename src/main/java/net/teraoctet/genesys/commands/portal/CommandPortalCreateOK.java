@@ -2,6 +2,7 @@ package net.teraoctet.genesys.commands.portal;
 
 import net.teraoctet.genesys.plot.PlotManager;
 import net.teraoctet.genesys.portal.GPortal;
+import net.teraoctet.genesys.portal.PortalManager;
 import net.teraoctet.genesys.utils.GData;
 import static net.teraoctet.genesys.utils.MessageManager.USAGE;
 import org.spongepowered.api.command.CommandResult;
@@ -29,14 +30,20 @@ public class CommandPortalCreateOK implements CommandExecutor {
         if(src instanceof Player && src.hasPermission("genesys.admin.portal")) { 
             Player player = (Player) src;
             PlotManager plotManager = PlotManager.getSett(player);
+            PortalManager portalManager = new PortalManager();
         
             if(!ctx.getOne("name").isPresent()) { 
                 player.sendMessage(MESSAGE("&bVous devez utliser la commande &7/portal create &bpour creer un portail :"));
                 player.sendMessage(USAGE("/portal create <name> : cr\351ation d'un portail au point d\351clar\351"));
                 return CommandResult.empty();
             }
-
+            
             String portalName = ctx.<String> getOne("name").get();
+            if(portalManager.hasPortal(portalName)){
+                player.sendMessage(MESSAGE("&bce portail existe d\351ja"));
+                return CommandResult.empty();
+            }
+
             Location[] c = {plotManager.getBorder1(), plotManager.getBorder2()};
             Location <World> world = c[0];
             String worldName = world.getExtent().getName();
