@@ -34,18 +34,24 @@ public class MessageManager {
     private static Text STORM_MESSAGE;
     private static Text GUIDE_FACTION;
     private static Text NO_FACTION;
+    private static Text NOT_IN_SAME_FACTION;
     private static Text WRONG_RANK;
+    private static Text OWNER_CANNOT_LEAVE;
     private static Text ALREADY_FACTION_MEMBER;
     private static Text FACTION_CREATED_SUCCESS;
     private static Text FACTION_RENAMED_SUCCESS;
     private static Text FACTION_DELETED_SUCCESS;
+    private static Text LEAVING_FACTION_SUCCESS;
+    private static Text FACTION_MEMBER_REMOVED_SUCCESS;
+    private static Text FACTION_RETURNED_BY;
+    private static Text FACTION_DELETED_NOTIFICATION;
     private static Text BUYING_COST_PLOT;
     private static Text PROTECT_PLOT_SUCCESS;
     private static Text BEDROCK2SKY_PROTECT_PLOT_SUCCESS;
     private static Text PROTECT_LOADED_PLOT;
     private static Text UNDEFINED_PLOT_ANGLES;
     private static Text ALREADY_OWNED_PLOT;
-    private static Text PLOT_NAME_ALREADY_USED;
+    private static Text NAME_ALREADY_USED;
     private static Text NO_PLOT;
     private static Text PLOT_INFO;
     private static Text TARGET_PLOT_LIST;
@@ -65,7 +71,7 @@ public class MessageManager {
     private static Text NB_HOME;
     private static Text NB_ALLOWED_HOME;
     private static Text HOME_NOT_FOUND;
-    private static Text HOME_ERROR;
+    private static Text ERROR;
     private static Text HOME_TP_SUCCESS;
     private static Text NOT_FOUND;
     private static Text DATA_NOT_FOUND;
@@ -95,6 +101,7 @@ public class MessageManager {
     private static Text ONHOVER_FACTION_REMOVEMEMBER;
     private static Text ONHOVER_FACTION_WITHDRAWAL;
     private static Text ONHOVER_FACTION_DEPOSIT;
+    private static Text ONHOVER_FACTION_LEAVE;
     private static Text ONHOVER_PI_NAME;
        
     public static File file = new File("config/genesys/message.conf");
@@ -179,8 +186,18 @@ public class MessageManager {
                 //-------------------------
                 
                 msg = new ArrayList<>();
+                msg.add("&cUne erreur est survenue !");
+                message.getNode("EXCEPTION","ERROR").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
                 msg.add("&cCe nom est incorrect !");
                 message.getNode("EXCEPTION","WRONG_NAME").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&cCe nom est d\351j\340 utilis\351 !");       
+                message.getNode("EXCEPTION","NAME_ALREADY_USED").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
@@ -268,6 +285,17 @@ public class MessageManager {
                 msg.add("&cVotre rang dans la faction ne vous permet pas d'utiliser \347a !");
                 message.getNode("FACTION","WRONG_RANK").setValue(msg);
                 manager.save(message);
+                        
+                msg = new ArrayList<>();
+                msg.add("&c%var1% ne fait pas parti de votre faction !");
+                message.getNode("FACTION","NOT_IN_SAME_FACTION").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&cVous \352tes chef de votre faction, vous ne pouvez pas la quitter !");
+                msg.add("&cVeuillez c\351der le grade à un autre membre avec : /faction setgrade 1 <player>");
+                message.getNode("FACTION","OWNER_CANNOT_LEAVE").setValue(msg);
+                manager.save(message);
                 
                 msg = new ArrayList<>();
                 msg.add("&n&eQu'est-ce que \347a apporte d'\350tre dans une faction ?");
@@ -291,9 +319,35 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
+                msg.add("&eVous venez de quitter la faction \"&r%var1%&e\"");
+                message.getNode("FACTION","LEAVING_FACTION_SUCCESS").setValue(msg);
+                manager.save(message);
+                        
+                msg = new ArrayList<>();
+                msg.add("&eVous avez renvoy\351 &6%var1% &ede votre faction");
+                message.getNode("FACTION","FACTION_MEMBER_REMOVED_SUCCESS").setValue(msg);
+                manager.save(message);
+                     
+                msg = new ArrayList<>();
+                msg.add("&eVous avez \351t\351 renvoy\351 de votre faction par &6%var1%");
+                message.getNode("FACTION","FACTION_RETURNED_BY").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&1La faction \"&r%var1%&1\" a \351t\351 dissoute !");
+                message.getNode("FACTION","FACTION_DELETED_NOTIFICATION").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
                 msg.add("&l&6Affiche un menu pour g\351rer la faction");
                 msg.add("&n&eAccessible par :&r Chef, Sous-chef, Officier");
                 message.getNode("FACTION","ONHOVER_FACTION_MOREACTIONS").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&l&6Shift+Click pour quitter la faction");
+                msg.add("\n&7/faction leave");
+                message.getNode("FACTION","ONHOVER_FACTION_LEAVE").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
@@ -382,11 +436,6 @@ public class MessageManager {
                 msg = new ArrayList<>();
                 msg.add("&cVous ne pouvez pas cr\351er cette parcelle, d\351j\340 une parcelle prot\351g\351e dans cette s\351lection !");         
                 message.getNode("PLOT","ALREADY_OWNED_PLOT").setValue(msg);
-                manager.save(message);
-                
-                msg = new ArrayList<>();
-                msg.add("&cCe nom de parcelle est d\351j\340 utilis\351 !");       
-                message.getNode("PLOT","PLOT_NAME_ALREADY_USED").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
@@ -484,11 +533,6 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
-                msg.add("&cUne erreur est survenue avec votre Home, t\351l\351portation impossible !");
-                message.getNode("TELEPORTATION","HOME_ERROR").setValue(msg);
-                manager.save(message);
-                
-                msg = new ArrayList<>();
                 msg.add("&eT\351l\351portation sur votre home : &6%var1%");
                 message.getNode("TELEPORTATION","HOME_TP_SUCCESS").setValue(msg);
                 manager.save(message);
@@ -499,8 +543,8 @@ public class MessageManager {
                 
                 msg = new ArrayList<>();
                 msg.add("&nUUID:&r %var1%\n");
-                msg.add("&8&n&oClick :&r &8&o/kick <player> <raison>");
-                msg.add("&8&n&oShift+Click :&r &8&o/ban <player> <raison>");
+                msg.add("&7&n&oClick :&r &8&o/kick <player> <raison>");
+                msg.add("&7&n&oShift+Click :&r &8&o/ban <player> <raison>");
                 message.getNode("CMD_PLAYERINFO","ONHOVER_PI_NAME").setValue(msg);
                 manager.save(message);
                 
@@ -689,6 +733,8 @@ public class MessageManager {
     // Message EXCEPTION / ERROR
     //-------------------------
     
+    public static Text ERROR(){return format(ERROR, "EXCEPTION","ERROR");}
+    
     public static Text NO_PERMISSIONS(){return format(NO_PERMISSIONS, "EXCEPTION","NO_PERMISSIONS");}
     
     public static Text NO_CONSOLE(){return format(NO_CONSOLE, "EXCEPTION", "NO_CONSOLE");}
@@ -696,6 +742,8 @@ public class MessageManager {
     public static Text WRONG_CHARACTERS_NUMBER(String minLength, String maxLength){return format(WRONG_CHARACTERS_NUMBER, "EXCEPTION", "WRONG_CHARACTERS_NUMBER", minLength, maxLength);}
     
     public static Text WRONG_NAME(){return format(WRONG_NAME, "EXCEPTION", "WRONG_NAME");}
+    
+    public static Text NAME_ALREADY_USED(){return format(NAME_ALREADY_USED, "EXCEPTION", "NAME_ALREADY_USED");}
     
     public static Text NOT_FOUND(String name){return format(NOT_FOUND, "EXCEPTION", "NOT_FOUND",name, "");}
     
@@ -731,7 +779,11 @@ public class MessageManager {
     
     public static Text WRONG_RANK(){return format(WRONG_RANK, "FACTION", "WRONG_RANK");}
     
+    public static Text NOT_IN_SAME_FACTION(String targetName){return format(NOT_IN_SAME_FACTION, "FACTION", "NOT_IN_SAME_FACTION", targetName, "");}
+    
     public static Text ALREADY_FACTION_MEMBER(){return format(ALREADY_FACTION_MEMBER, "FACTION", "ALREADY_FACTION_MEMBER");}
+    
+    public static Text OWNER_CANNOT_LEAVE(){return format(OWNER_CANNOT_LEAVE, "FACTION", "OWNER_CANNOT_LEAVE");}
     
     public static Text GUIDE_FACTION(){return format(GUIDE_FACTION, "FACTION", "GUIDE_FACTION");}
     
@@ -741,7 +793,17 @@ public class MessageManager {
     
     public static Text FACTION_DELETED_SUCCESS(String factionName){return format(FACTION_DELETED_SUCCESS, "FACTION", "FACTION_DELETED_SUCCESS", factionName, "");}
     
+    public static Text LEAVING_FACTION_SUCCESS(String factionName){return format(LEAVING_FACTION_SUCCESS, "FACTION", "LEAVING_FACTION_SUCCESS", factionName, "");}
+    
+    public static Text FACTION_MEMBER_REMOVED_SUCCESS(String targetName){return format(FACTION_MEMBER_REMOVED_SUCCESS, "FACTION", "FACTION_MEMBER_REMOVED_SUCCESS", targetName, "");}
+            
+    public static Text FACTION_RETURNED_BY(String src){return format(FACTION_RETURNED_BY, "FACTION", "FACTION_RETURNED_BY", src, "");}
+    
+    public static Text FACTION_DELETED_NOTIFICATION(String factionName){return format(FACTION_DELETED_NOTIFICATION, "FACTION", "FACTION_DELETED_NOTIFICATION", factionName, "");}
+    
     public static Text ONHOVER_FACTION_MOREACTIONS(){return format(ONHOVER_FACTION_MOREACTIONS, "FACTION", "ONHOVER_FACTION_MOREACTIONS");}
+    
+    public static Text ONHOVER_FACTION_LEAVE(){return format(ONHOVER_FACTION_LEAVE, "FACTION", "ONHOVER_FACTION_LEAVE");}
     
     public static Text ONHOVER_FACTION_DEPOSIT(){return format(ONHOVER_FACTION_DEPOSIT, "FACTION", "ONHOVER_FACTION_DEPOSIT");}
     
@@ -772,8 +834,6 @@ public class MessageManager {
     public static Text UNDEFINED_PLOT_ANGLES(){return format(UNDEFINED_PLOT_ANGLES, "PLOT", "UNDEFINED_PLOT_ANGLES");}
         
     public static Text ALREADY_OWNED_PLOT(){return format(ALREADY_OWNED_PLOT, "PLOT", "ALREADY_OWNED_PLOT");}
-    
-    public static Text PLOT_NAME_ALREADY_USED(){return format(PLOT_NAME_ALREADY_USED, "PLOT", "PLOT_NAME_ALREADY_USED");}
     
     public static Text NO_PLOT(){return format(NO_PLOT, "PLOT", "NO_PLOT");}
     
@@ -824,8 +884,6 @@ public class MessageManager {
     public static Text NB_ALLOWED_HOME(Player player, String var1){return format(NB_ALLOWED_HOME, "TELEPORTATION","NB_ALLOWED_HOME", player, var1, "");}
     
     public static Text HOME_NOT_FOUND(){return format(HOME_NOT_FOUND, "TELEPORTATION","HOME_NOT_FOUND");}
-    
-    public static Text HOME_ERROR(){return format(HOME_ERROR, "TELEPORTATION","HOME_ERROR");}
     
     public static Text HOME_TP_SUCCESS(Player player, String var1){return format(HOME_TP_SUCCESS, "TELEPORTATION","HOME_TP_SUCCESS", player, var1, "");}
     

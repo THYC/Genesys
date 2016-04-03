@@ -5,12 +5,14 @@ import net.teraoctet.genesys.faction.GFaction;
 import net.teraoctet.genesys.player.GPlayer;
 import static net.teraoctet.genesys.utils.GData.getGFaction;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
+import static net.teraoctet.genesys.utils.MessageManager.FACTION_DELETED_NOTIFICATION;
 import static net.teraoctet.genesys.utils.MessageManager.FACTION_DELETED_SUCCESS;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_FACTION;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static net.teraoctet.genesys.utils.MessageManager.WRONG_NAME;
 import static net.teraoctet.genesys.utils.MessageManager.WRONG_RANK;
+import static org.spongepowered.api.Sponge.getGame;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -36,6 +38,7 @@ public class CommandFactionDelete implements CommandExecutor {
                         int id_faction = gplayer.getID_faction();
                         factionManager.removeFaction(id_faction);
                         src.sendMessage(FACTION_DELETED_SUCCESS(factionName));
+                        getGame().getServer().getBroadcastChannel().send(FACTION_DELETED_NOTIFICATION(factionName));
                         return CommandResult.success();
                     } else {
                         src.sendMessage(WRONG_NAME());

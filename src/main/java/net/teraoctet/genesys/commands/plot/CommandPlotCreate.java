@@ -16,7 +16,7 @@ import org.spongepowered.api.world.Location;
 import static net.teraoctet.genesys.utils.MessageManager.BUYING_COST_PLOT;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
-import static net.teraoctet.genesys.utils.MessageManager.PLOT_NAME_ALREADY_USED;
+import static net.teraoctet.genesys.utils.MessageManager.NAME_ALREADY_USED;
 import static net.teraoctet.genesys.utils.MessageManager.ALREADY_OWNED_PLOT;
 import static net.teraoctet.genesys.utils.MessageManager.UNDEFINED_PLOT_ANGLES;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
@@ -80,7 +80,7 @@ public class CommandPlotCreate implements CommandExecutor {
                     player.sendMessage(BUYING_COST_PLOT(player,String.valueOf(amount),String.valueOf(gplayer.getMoney())));
                 }
             } else {
-                player.sendMessage(PLOT_NAME_ALREADY_USED());
+                player.sendMessage(NAME_ALREADY_USED());
             }
         } 
         

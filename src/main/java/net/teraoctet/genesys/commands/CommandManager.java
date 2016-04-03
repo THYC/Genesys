@@ -13,6 +13,7 @@ import net.teraoctet.genesys.commands.plot.CommandPlotAddplayer;
 import net.teraoctet.genesys.commands.plot.CommandPlotList;
 import net.teraoctet.genesys.commands.plot.CommandPlotFlaglist;
 import net.teraoctet.genesys.commands.plot.CommandPlotSale;
+import net.teraoctet.genesys.commands.faction.CommandFaction;
 import net.teraoctet.genesys.commands.faction.CommandFactionWithdrawal;
 import net.teraoctet.genesys.commands.faction.CommandFactionDelete;
 import net.teraoctet.genesys.commands.faction.CommandFactionSetowner;
@@ -23,7 +24,7 @@ import net.teraoctet.genesys.commands.faction.CommandFactionInvit;
 import net.teraoctet.genesys.commands.faction.CommandFactionRemoveplayer;
 import net.teraoctet.genesys.commands.faction.CommandFactionList;
 import net.teraoctet.genesys.commands.faction.CommandFactionMemberslist;
-import net.teraoctet.genesys.commands.faction.CommandFaction;
+import net.teraoctet.genesys.commands.faction.CommandFactionLeave;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.text.Text;
@@ -281,14 +282,14 @@ public class CommandManager {
                 .executor(new CommandPlayerinfo())
                 .build();
         
-        public CommandSpec CommandBroadcastmessage = CommandSpec.builder()
+        public CommandSpec CommandBroadcast = CommandSpec.builder()
                 .description(Text.of("/broadcast [hide = 0:1] <message..>"))
-                .permission("genesys.broadcastmessage")
+                .permission("genesys.broadcast")
                 .arguments(GenericArguments.firstParsing( 
                     GenericArguments.flags()
                         .flag("-hide", "h")
                         .buildWith(GenericArguments.remainingJoinedStrings(Text.of("message")))))
-                .executor(new CommandBroadcastmessage())
+                .executor(new CommandBroadcast())
                 .build();
          
         public CommandSpec CommandFactionCreate = CommandSpec.builder()
@@ -303,6 +304,12 @@ public class CommandManager {
                 .permission("genesys.faction.delete") 
                 .arguments(GenericArguments.remainingJoinedStrings(Text.of("name")))
                 .executor(new CommandFactionDelete()) 
+                .build();
+        
+        public CommandSpec CommandFactionLeave = CommandSpec.builder()
+                .description(Text.of("/faction leave")) 
+                .permission("genesys.faction.leave") 
+                .executor(new CommandFactionLeave()) 
                 .build();
         
         public CommandSpec CommandFactionRename = CommandSpec.builder()
@@ -334,9 +341,7 @@ public class CommandManager {
         public CommandSpec CommandFactionRemoveplayer = CommandSpec.builder()
                 .description(Text.of("/faction removeplayer <player>")) 
                 .permission("genesys.faction.removeplayer") 
-                .arguments(
-                    GenericArguments.seq(
-                        GenericArguments.onlyOne(GenericArguments.player(Text.of("player")))))
+                .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
                 .executor(new CommandFactionRemoveplayer()) 
                 .build();
          
@@ -375,9 +380,10 @@ public class CommandManager {
         public CommandSpec CommandFaction = CommandSpec.builder()
                 .description(Text.of("Affiche des informations sur votre faction"))
                 .permission("genesys.faction")
-                .child(CommandFactionCreate, "create")
+                .child(CommandFactionCreate, "create", "new", "add", "creer")
                 .child(CommandFactionDelete, "delete")
                 .child(CommandFactionRename, "rename")
+                .child(CommandFactionLeave, "leave", "quit", "quitter")
                 .child(CommandFactionMemberslist, "memberslist")
                 .child(CommandFactionList, "list")
                 .child(CommandFactionInvit, "invit", "inviter", "add")

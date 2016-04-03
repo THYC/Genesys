@@ -1,16 +1,16 @@
 package net.teraoctet.genesys.commands.faction;
 
-import java.util.List;
 import static net.teraoctet.genesys.Genesys.factionManager;
-import net.teraoctet.genesys.faction.FactionManager;
 import net.teraoctet.genesys.faction.GFaction;
 import net.teraoctet.genesys.player.GPlayer;
 import static net.teraoctet.genesys.utils.GData.getGFaction;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
-import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
+import static net.teraoctet.genesys.utils.MessageManager.LEAVING_FACTION_SUCCESS;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_FACTION;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
+import static net.teraoctet.genesys.utils.MessageManager.OWNER_CANNOT_LEAVE;
+import static org.spongepowered.api.Sponge.getGame;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -18,28 +18,33 @@ import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 
-public class CommandFactionMemberslist implements CommandExecutor {
+public class CommandFactionLeave implements CommandExecutor {
         
     @Override
     public CommandResult execute(CommandSource src, CommandContext ctx) {
 
-        if(src instanceof Player && src.hasPermission("genesys.faction.memberslist")) {
+        if(src instanceof Player && src.hasPermission("genesys.faction.setowner")) {
             GPlayer gplayer = getGPlayer(src.getIdentifier());
+            int id_faction = gplayer.getID_faction();
+            GFaction gfaction = getGFaction(id_faction);
             
-            //si le joueur est membre d'une faction
-            if(FactionManager.hasAnyFaction(gplayer)) {
-                GFaction gfaction = getGFaction(gplayer.getID_faction());
-                List list = factionManager.getFactionPlayers(gfaction.getID());
-                
-                src.sendMessage(MESSAGE("&2Listes des membres de " + gfaction.getName() + " : &a" + list));
-                
-                
-                //src.sendMessage(MESSAGE("&2Listes des membres de " + gfaction.getName() + " : &a" + String.valueOf(factionManager.getPlayers(gfaction.getID()).size())));
-                return CommandResult.success();
-            }
-            
-            //si le joueur n'est dans aucune faction
-            else {
+            if(factionManager.hasAnyFaction(gplayer)) {
+                if(factionManager.isOwner(gplayer)) {
+                    if(factionManager.getFactionPlayers(id_faction).size() > 1) {
+                        src.sendMessage(OWNER_CANNOT_LEAVE());
+                    } else {
+                        getGame().getCommandManager().process(src, "faction delete " + gfaction.getName());
+                    }
+                } else {
+                    String factionName = gfaction.getName();
+                    gplayer.setID_faction(0);
+                    gplayer.setFactionRank(0);
+                    gplayer.update();
+                    src.sendMessage(LEAVING_FACTION_SUCCESS(factionName));
+                    //ENVOYER UNE NOTIFICATION DANS LE CANAL DE GUILDE
+                    return CommandResult.success();
+                }
+            } else {
                 src.sendMessage(NO_FACTION());
             }
         } 

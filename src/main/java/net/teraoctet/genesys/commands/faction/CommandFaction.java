@@ -1,5 +1,6 @@
 package net.teraoctet.genesys.commands.faction;
 
+import java.util.List;
 import static net.teraoctet.genesys.Genesys.factionManager;
 import net.teraoctet.genesys.faction.GFaction;
 import net.teraoctet.genesys.player.GPlayer;
@@ -14,6 +15,7 @@ import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static net.teraoctet.genesys.utils.MessageManager.ONHOVER_FACTION_DELETE;
 import static net.teraoctet.genesys.utils.MessageManager.ONHOVER_FACTION_DEPOSIT;
 import static net.teraoctet.genesys.utils.MessageManager.ONHOVER_FACTION_INVIT;
+import static net.teraoctet.genesys.utils.MessageManager.ONHOVER_FACTION_LEAVE;
 import static net.teraoctet.genesys.utils.MessageManager.ONHOVER_FACTION_MOREACTIONS;
 import static net.teraoctet.genesys.utils.MessageManager.ONHOVER_FACTION_REMOVEMEMBER;
 import static net.teraoctet.genesys.utils.MessageManager.ONHOVER_FACTION_RENAME;
@@ -53,28 +55,22 @@ public class CommandFaction implements CommandExecutor {
                         builder.header(Text.builder().append(MESSAGE("&2Actions:")).toText())
                                 .contents(Text.builder().append(MESSAGE("&2+ &aAjouter un membre"))
                                         .onClick(TextActions.suggestCommand("/faction invit "))    
-                                        .onHover(TextActions.showText(ONHOVER_FACTION_INVIT()))
-                                        .toText(),
+                                        .onHover(TextActions.showText(ONHOVER_FACTION_INVIT())).toText(),
                                     Text.builder().append(MESSAGE("&2+ &aChanger le grade d'un membre"))
                                         .onClick(TextActions.suggestCommand("/faction setplayergrade "))    
-                                        .onHover(TextActions.showText(ONHOVER_FACTION_SETGRADE()))
-                                        .toText(),
-                                    Text.builder().append(MESSAGE("&2+ &aSupprimer un membre"))
+                                        .onHover(TextActions.showText(ONHOVER_FACTION_SETGRADE())).toText(),
+                                    Text.builder().append(MESSAGE("&2+ &aRenvoyer un membre"))
                                         .onClick(TextActions.suggestCommand("/faction removeplayer "))    
-                                        .onHover(TextActions.showText(ONHOVER_FACTION_REMOVEMEMBER()))
-                                        .toText(),
+                                        .onHover(TextActions.showText(ONHOVER_FACTION_REMOVEMEMBER())).toText(),
                                     Text.builder().append(MESSAGE("&2+ &aRetrait bancaire"))
                                         .onClick(TextActions.suggestCommand("/faction withdraw "))    
-                                        .onHover(TextActions.showText(ONHOVER_FACTION_WITHDRAWAL()))
-                                        .toText(),
+                                        .onHover(TextActions.showText(ONHOVER_FACTION_WITHDRAWAL())).toText(),
                                     Text.builder().append(TextSerializers.formattingCode('&').deserialize("&2+ &aRenommer la faction"))
                                         .onClick(TextActions.suggestCommand("/faction rename "))    
-                                        .onHover(TextActions.showText(ONHOVER_FACTION_RENAME()))
-                                        .toText(),
+                                        .onHover(TextActions.showText(ONHOVER_FACTION_RENAME())).toText(),
                                     Text.builder().append(MESSAGE("&2+ &aSupprimer la faction"))
                                         .onClick(TextActions.suggestCommand("/faction delete "))    
-                                        .onHover(TextActions.showText(ONHOVER_FACTION_DELETE()))
-                                        .toText())
+                                        .onHover(TextActions.showText(ONHOVER_FACTION_DELETE())).toText())
                                 .padding(Text.of("-"))
                                 .sendTo(src);
                         return CommandResult.success();
@@ -83,35 +79,41 @@ public class CommandFaction implements CommandExecutor {
                     }
                 //Menu affiché par défaut   
                 } else {
+                    int factionSize = factionManager.getFactionPlayers(gfaction.getID()).size();
+                    String playerRank = factionManager.rankIDtoString(gplayer.getFactionRank());
+                    String factionOwner = factionManager.getOwner(gfaction.getID()).getName();
+                    List listRank2 = factionManager.getFactionPlayers(gfaction.getID(), 2);
+                    List listRank3 = factionManager.getFactionPlayers(gfaction.getID(), 3);
+                    List listRank4 = factionManager.getFactionPlayers(gfaction.getID(), 4);
+                    List listRank5 = factionManager.getFactionPlayers(gfaction.getID(), 5);
+                    
                     builder.title(Text.builder().append(MESSAGE("&2Faction : &f" + gfaction.getName())).toText())
-                            .header(Text.builder().append(MESSAGE("&2Membres: ")).build()) //+ factionManager.getListPlayerFaction(gfaction.getID()).size() + " / " + FACTION_MAX_NUMBER_OF_MEMBER()))
-                            .contents(Text.builder().append(MESSAGE("&aChef :")).toText(),
-                                    Text.builder().append(MESSAGE("&a- Sous-chef (" + ")"))
+                            .contents(Text.builder().append(MESSAGE("&2Vous \352tes " + playerRank + " de " + gfaction.getName()))
+                                            .onShiftClick(TextActions.insertText("/faction leave"))
+                                            .onHover(TextActions.showText(ONHOVER_FACTION_LEAVE())).toText(),
+                                    Text.builder().append(MESSAGE("&2Chef : &a" + factionOwner)).toText(),
+                                    Text.builder().append(MESSAGE("&a- Sous-chef (" + listRank2.size() + ")"))
                                             .onClick(TextActions.runCommand("/faction memberslist"))
-                                            .onHover(TextActions.showText(MESSAGE("Sous-chef(s): ")))      //mettre la liste des SOUS-CHEFS en hover
-                                            .toText(),
-                                    Text.builder().append(MESSAGE("&a- Officier (" + ")"))
+                                            .onHover(TextActions.showText(MESSAGE("Sous-chef(s): " + listRank2))).toText(),
+                                    Text.builder().append(MESSAGE("&a- Officier (" + listRank3.size() + ")"))
                                             .onClick(TextActions.runCommand("/faction memberslist"))
-                                            .onHover(TextActions.showText(MESSAGE("Officier(s): ")))      //mettre la liste des OFFICIERS en hover
-                                            .toText(),
-                                    Text.builder().append(MESSAGE("&a- Membre (" + ")"))
+                                            .onHover(TextActions.showText(MESSAGE("Officier(s): " + listRank3))).toText(),
+                                    Text.builder().append(MESSAGE("&a- Membre (" + listRank4.size() + ")"))
                                             .onClick(TextActions.runCommand("/faction memberslist"))
-                                            .onHover(TextActions.showText(MESSAGE("Membre(s): ")))      //mettre la liste des MEMBRES en hover
-                                            .toText(),
-                                    Text.builder().append(MESSAGE("&a- Recrue (" + ")"))
+                                            .onHover(TextActions.showText(MESSAGE("Membre(s): " + listRank4))).toText(),
+                                    Text.builder().append(MESSAGE("&a- Recrue (" + listRank5.size() + ")"))
                                             .onClick(TextActions.runCommand("/faction memberslist"))
-                                            .onHover(TextActions.showText(MESSAGE("Recrue(s): ")))      //mettre la liste des RECRUES en hover
-                                            .toText(),
+                                            .onHover(TextActions.showText(MESSAGE("Recrue(s): " + listRank5))).toText(),
+                                    Text.builder().append(MESSAGE("&2Membres: " + factionSize + " / " + FACTION_MAX_NUMBER_OF_MEMBER())).toText(),
                                     Text.builder().append(MESSAGE("&2Bank de Faction : &a" + gfaction.getMoney() + " \351meraudes"))
                                             .onClick(TextActions.suggestCommand("/faction depot "))
-                                            .onHover(TextActions.showText(ONHOVER_FACTION_DEPOSIT()))
-                                            .toText(),
+                                            .onHover(TextActions.showText(ONHOVER_FACTION_DEPOSIT())).toText(),
                                     Text.builder().append(MESSAGE("&2+ Afficher les Actions"))
                                             .onClick(TextActions.runCommand("/faction -a"))
-                                            .onHover(TextActions.showText(ONHOVER_FACTION_MOREACTIONS()))
-                                            .toText())
+                                            .onHover(TextActions.showText(ONHOVER_FACTION_MOREACTIONS())).toText())
                             .padding(Text.of("-"))
                             .sendTo(src); 
+                    
                     return CommandResult.success();
                 }
             }

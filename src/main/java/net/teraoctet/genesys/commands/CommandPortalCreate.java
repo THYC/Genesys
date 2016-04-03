@@ -14,7 +14,7 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
-import static net.teraoctet.genesys.utils.MessageManager.PLOT_NAME_ALREADY_USED;
+import static net.teraoctet.genesys.utils.MessageManager.NAME_ALREADY_USED;
 import static net.teraoctet.genesys.utils.MessageManager.UNDEFINED_PLOT_ANGLES;
 import org.spongepowered.api.command.source.ConsoleSource;
 
@@ -43,7 +43,7 @@ public class CommandPortalCreate implements CommandExecutor {
                player.sendMessage(Text.builder("Clique ici pour confirmer la cr\351ation du portail").onClick(TextActions.runCommand("/portal createok " + name )).color(TextColors.AQUA).build()); 
                return CommandResult.success();
            } else {
-               player.sendMessage(PLOT_NAME_ALREADY_USED());
+               player.sendMessage(NAME_ALREADY_USED());
            }   
         } 
         

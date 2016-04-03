@@ -1,20 +1,20 @@
 package net.teraoctet.genesys.commands;
 
-import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource; 
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 
-import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static net.teraoctet.genesys.utils.MessageManager.USAGE;
 import static org.spongepowered.api.Sponge.getGame;
+import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
+import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 
-public class CommandBroadcastmessage implements CommandExecutor {
+public class CommandBroadcast implements CommandExecutor {
         
     @Override
     public CommandResult execute(CommandSource src, CommandContext ctx) {
-        if(ctx.hasAny("message") && src.hasPermission("genesys.broadcastmessage")){
+        if(ctx.hasAny("message") && src.hasPermission("genesys.broadcast")){
             String prefix = "&4[ADMIN]&c";
             String message = ctx.<String> getOne("message").get();
             
@@ -29,7 +29,7 @@ public class CommandBroadcastmessage implements CommandExecutor {
             return CommandResult.success();
         }
 
-        else if (src.hasPermission("genesys.broadcastmessage")) {
+        else if (src.hasPermission("genesys.broadcast")) {
             src.sendMessage(USAGE("/broadcast [-h] <message..>"));
         }       
         

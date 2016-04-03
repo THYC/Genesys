@@ -9,7 +9,7 @@ import net.teraoctet.genesys.player.GPlayer;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static net.teraoctet.genesys.utils.MessageManager.HOME_NOT_FOUND;
-import static net.teraoctet.genesys.utils.MessageManager.HOME_ERROR;
+import static net.teraoctet.genesys.utils.MessageManager.ERROR;
 import static net.teraoctet.genesys.utils.MessageManager.HOME_TP_SUCCESS;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -43,7 +43,7 @@ public class CommandHome implements CommandExecutor {
             Location lastLocation = player.getLocation();
 
             if(!player.transferToWorld(ghome.getWorld(), new Vector3d(ghome.getX(), ghome.getY(), ghome.getZ()))) { 
-                src.sendMessage(HOME_ERROR()); 
+                src.sendMessage(ERROR()); 
                 return CommandResult.empty(); 
             }
 

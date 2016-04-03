@@ -90,7 +90,7 @@ public class FactionManager {
      * @param id_faction
      * @return 
      */
-    public List<String> getListPlayerFaction(int id_faction){
+    public List<String> getFactionPlayers(int id_faction){
         List<String> listPlayer =  new ArrayList<String>() ;
         for(Map.Entry<String,GPlayer> p : getPlayers().entrySet()){
             if(p.getValue().getID_faction() == id_faction){
@@ -106,7 +106,7 @@ public class FactionManager {
      * @param rank
      * @return 
      */
-    public List<String> getListPlayerFaction(int id_faction, int rank){
+    public List<String> getFactionPlayers(int id_faction, int rank){
         List<String> listPlayer =  new ArrayList<String>() ;
         for(Map.Entry<String,GPlayer> p : getPlayers().entrySet()){
             if(p.getValue().getID_faction() == id_faction && p.getValue().getFactionRank() == rank){
@@ -114,14 +114,44 @@ public class FactionManager {
             }
         }
         return listPlayer;
-        
-        /*public boolean getListPlayerFaction(int id_faction, int rank){
-        List listPlayer = null;
-        for (String uuid : getPlayers().keySet()) {
-            if(getPlayers().get(uuid).getID_faction() == id_faction && getPlayers().get(uuid).getFactionRank() == rank){
-                listPlayer.add(getPlayers().get(uuid).getName());
+    }
+    
+    /**
+     * Retourne le owner d'une faction
+     * @param id_faction
+     * @return 
+     */
+    public GPlayer getOwner(int id_faction){
+        for(Map.Entry<String,GPlayer> p : getPlayers().entrySet()){
+            if(p.getValue().getID_faction() == id_faction && p.getValue().getFactionRank() == 1){
+                return p.getValue();
             }
         }
-        return listPlayer;*/
+        return null;
+    }
+    
+    public String rankIDtoString(int rank){
+        String grade;
+        switch(rank) {
+            case 1:
+                grade = "Chef";
+                break;
+            case 2:
+                grade = "Sous-Chef";
+                break;
+            case 3:
+                grade = "Officier";
+                break;
+            case 4:
+                grade = "Membre";
+                break;
+            case 5:
+                grade = "Recrue";
+                break;
+            default:
+                grade = "ERREUR";
+                break;
+        }
+        return grade;
     }
 }
