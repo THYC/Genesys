@@ -1,5 +1,12 @@
 package net.teraoctet.genesys.commands;
 
+import net.teraoctet.genesys.commands.portal.CommandPortalList;
+import net.teraoctet.genesys.commands.portal.CommandPortalMsg;
+import net.teraoctet.genesys.commands.portal.CommandPortalCreateOK;
+import net.teraoctet.genesys.commands.portal.CommandPortal;
+import net.teraoctet.genesys.commands.portal.CommandPortalTPFrom;
+import net.teraoctet.genesys.commands.portal.CommandPortalRemove;
+import net.teraoctet.genesys.commands.portal.CommandPortalCreate;
 import net.teraoctet.genesys.commands.plot.CommandPlotRemove;
 import net.teraoctet.genesys.commands.plot.CommandPlotCreate;
 import net.teraoctet.genesys.commands.plot.CommandPlotOwnerset;
@@ -175,7 +182,7 @@ public class CommandManager {
         public CommandSpec CommandPlotMsg = CommandSpec.builder()
                 .description(Text.of("/plot msg [message]"))
                 .permission("genesys.plot.msg")
-                .arguments(GenericArguments.remainingJoinedStrings(Text.of("arguments")))
+                .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Text.of("arguments"))))
                 .executor(new CommandPlotMsg())
                 .build();
         

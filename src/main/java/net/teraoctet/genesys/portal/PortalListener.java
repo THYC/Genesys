@@ -44,11 +44,7 @@ public class PortalListener {
         if (gportal != null){            
             if(player.hasPermission("genesys.portal." + gportal.getName()) || gplayer.getLevel() == 10)
             {
-                //if(!player.transferToWorld(gportal.gettoworld(), new Vector3d(gportal.gettoX(), gportal.gettoY(), gportal.gettoZ()))) { 
-                //    player.sendMessage(MESSAGE("&aPoint de spawn du portail non configuré, aller au point d'apparition souhaité et taper &e/portal tpfrom " + gportal.getName())); 
-                    //return;
-                //}
-                if(!gportal.gettoworld().equalsIgnoreCase("DESABLED")){
+                if(gportal.gettoworld().equalsIgnoreCase("DISABLED")){
                     player.sendMessage(MESSAGE("&aPoint de spawn du portail non configuré, aller au point d'apparition souhaité et taper &e/portal tpfrom " + gportal.getName())); 
                     return;
                 }
@@ -78,7 +74,6 @@ public class PortalListener {
                     player.getLocation().getExtent().spawnParticles(pEffect, origin.add(-Math.cos(incr), 0, Math.sin(incr)), 500);
                     player.getLocation().getExtent().spawnParticles(pEffect, origin.add(-Math.cos(incr), 0, -Math.sin(incr)), 500);
                 }
-                
                 player.offer(Keys.GAME_MODE, player.getWorld().getProperties().getGameMode());
             }
         }
@@ -90,10 +85,12 @@ public class PortalListener {
         GPortal gportal = portalManager.getPortal(locTo);
         
         if(entity instanceof Player == false){
-            if (gportal != null){            
-                Optional<World> world = getGame().getServer().getWorld(gportal.gettoworld());
-                Location loc = new Location(world.get(), new Vector3d(gportal.gettoX(), gportal.gettoY(), gportal.gettoZ()));
-                entity.setLocation(loc);
+            if (gportal != null){  
+                if(!gportal.gettoworld().equalsIgnoreCase("DISABLED")){
+                    Optional<World> world = getGame().getServer().getWorld(gportal.gettoworld());
+                    Location loc = new Location(world.get(), new Vector3d(gportal.gettoX(), gportal.gettoY(), gportal.gettoZ()));
+                    entity.setLocation(loc);
+                }
             }
         }
     }

@@ -1,12 +1,18 @@
 package net.teraoctet.genesys.commands;
 
+import com.flowpowered.math.vector.Vector3d;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import net.teraoctet.genesys.player.GPlayer;
 import static net.teraoctet.genesys.plot.PlotManager.playerPlots;
+import static net.teraoctet.genesys.utils.GData.getGPlayer;
+import net.teraoctet.genesys.utils.GHome;
+import static net.teraoctet.genesys.utils.MessageManager.HOME_NOT_FOUND;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import net.teraoctet.genesys.utils.Permissions;
+import net.teraoctet.genesys.utils.SettingCompass;
 import static org.spongepowered.api.Sponge.getGame;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -20,6 +26,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 import static org.spongepowered.api.entity.living.player.gamemode.GameModes.CREATIVE;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.service.permission.SubjectData;
 import org.spongepowered.api.util.Tristate;
 import org.spongepowered.api.world.World;
@@ -33,75 +40,23 @@ public class CommandTest implements CommandExecutor {
     public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException {    
 
         Player player = (Player) src;
-        /*if(!player.hasPermission("genesys.test")) { 
-            sender.sendMessage(NO_PERMISSIONS()); 
-            return CommandResult.success(); 
-        }*/
+        SettingCompass sc = new SettingCompass();
+        ItemStack is = sc.MagicCompass(player,"&eHOME","");
+        player.setItemInHand(is);
         
-        player.sendMessage(MESSAGE(String.valueOf(playerPlots(player.getIdentifier()).size())));
-        player.sendMessage(MESSAGE(String.valueOf(playerPlots(player.getIdentifier()).get(0).getUuidOwner())));
-        //if (playerPlots(player.getIdentifier().length()){
-            
-        //}
-        //WorldProperties properties = player.getLocation().getExtent().getProperties();
+        GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
+        String homename = "default"; 
+        GHome ghome = gplayer.getHome(homename);
+            if(ghome == null) { 
+                src.sendMessage(HOME_NOT_FOUND()); 
+                return CommandResult.empty();
+            }
+        Vector3d d = new Vector3d(
+                ghome.getX()- player.getLocation().getBlockX(),
+                ghome.getY()- player.getLocation().getBlockY(), 
+                ghome.getZ()- player.getLocation().getBlockZ());
+        sc.setCompassLocation(player, d);
                     
-        //String value = optValue.get();
-        //properties.setGameMode(CREATIVE);//setGameRule(gamerule, value);
-        //properties.setWorldBorderCenter(-220, 266);
-                        
-        //World w = player.getWorld();
-        //WorldCreationSettings ws =  w.getCreationSettings();
-        
-        //WorldProperties wp = w.getProperties();
-        //wp.setEnabled(false);
-        //wp.setGameMode(CREATIVE);
-        //wp.setEnabled(true);
-        
-        
-        /*Extent extent = player.getLocation().getExtent();
-        // We need to create the entity
-        Optional<Entity> optional = extent.createEntity(EntityTypes.HUMAN,player.getLocation().getPosition());
-        if (optional.isPresent()) {
-            Entity human = optional.get();
-            human.offer(Keys.DISPLAY_NAME, MESSAGE("thyc82"));
-            human.offer(Keys.SKIN_UNIQUE_ID, player.getUniqueId());
-            human.offer(Keys.REPRESENTED_PLAYER,player.getProfile());
-            //human.offer(Keys.IS_SITTING,true);
-            extent.spawnEntity(human, Cause.of(player));
-        }*/
-
-        //Title build;
-        //build = new Title(MESSAGE("test"),MESSAGE("test"),20,20,20,true,true);
-        //Title build1 = build.builder().title(MESSAGE("test")).build();
-        //build.builder().build().getTitle().
-        //player.sendMessage(ChatTypes.ACTION_BAR, Texts.of("Some text"));
-        
-        //player.sendTitle(build1);
-        
-            /*for (Inventory inventory : player.getInventory()) {
-            inventory.query(types)
-            }*/
-            
-            /*Optional<Entity> optional = player.getLocation().getExtent().createEntity(EntityTypes.HUMAN, player.getLocation().getPosition());
-            if(optional.isPresent()) {
-            Human human = (Human) optional.get();
-            //human.offer(Keys.REPRESENTED_PLAYER, player.getProfile());
-            human.offer(Keys.AI_ENABLED,true);
-            human.offer(Keys.DISPLAY_NAME,MESSAGE("thyc82"));
-            //human.offer(Keys.SKIN,player.getUniqueId());
-            human.offer(Keys.IS_SITTING,true);
-            
-            player.getLocation().getExtent().spawnEntity(human, Cause.of(player));
-            }*/
-        
-        //player.getSubjectData().getPermissions(SubjectData.GLOBAL_CONTEXT).put("genesys.fly", Boolean.FALSE);
-        //player.getSubjectData().getParents(SubjectData.GLOBAL_CONTEXT).
-        //player.getSubjectData().setPermission(SubjectData.GLOBAL_CONTEXT, "genesys.fly", Tristate.FALSE); 
-        //List<String> msg = new ArrayList<>();
-        //msg = Permissions.getGroups(player);
-        //src.sendMessage(MESSAGE(msg,player,""));
-        
-        
         return CommandResult.success();
     }	
 }

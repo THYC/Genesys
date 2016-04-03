@@ -11,11 +11,15 @@ public class PortalManager {
     public PortalManager(){}
     
     private GPortal portalContainsVector(Location loc){
-        for(GPortal portal : gportals){if(foundPortal(loc,portal)){return portal;}}
+        for (GPortal portal : gportals) {
+            if(foundPortal(loc,portal)){return portal;}
+        }
         return null;
     }
     
-    public Boolean hasPortal(String name){for(GPortal gportal : gportals){if(gportal.getName().contains(name)){return true;}}return false;}
+    public Boolean hasPortal(String name){
+        return gportals.stream().anyMatch((gportal) -> (gportal.getName().contains(name)));
+    }
             
     private boolean foundPortal(Location location, GPortal portal){
         Location <World> world = location;
