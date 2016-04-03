@@ -2,15 +2,15 @@ package net.teraoctet.genesys.world;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import static net.teraoctet.genesys.Genesys.thisGame;
-//import static net.teraoctet.genesys.Genesys.getPlugin;
-import static org.spongepowered.api.Sponge.getGame;
+import static net.teraoctet.genesys.Genesys.plugin;
+
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.scheduler.Scheduler;
 
-public class Restore {
+public class Restore{
     
     private final List<Transaction<BlockSnapshot>> bs;
     private Integer i = 0;
@@ -21,7 +21,7 @@ public class Restore {
     }
     
     public void run(){
-        Scheduler scheduler = getGame().getScheduler();
+        Scheduler scheduler = Sponge.getScheduler();
         Task.Builder taskBuilder = scheduler.createTaskBuilder();
             
         task = taskBuilder
@@ -33,7 +33,7 @@ public class Restore {
                 /*.async()*/.delay(100, TimeUnit.MILLISECONDS)
                 .interval(50, TimeUnit.MILLISECONDS)
                 .name("Restore")
-                .submit(thisGame());
+                .submit(plugin);
 
     }
 }

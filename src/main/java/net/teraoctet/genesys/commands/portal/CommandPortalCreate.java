@@ -1,4 +1,4 @@
-package net.teraoctet.genesys.commands;
+package net.teraoctet.genesys.commands.portal;
 
 import static net.teraoctet.genesys.Genesys.portalManager;
 import net.teraoctet.genesys.plot.PlotManager;

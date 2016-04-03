@@ -27,7 +27,7 @@ public class CommandPlotMsg implements CommandExecutor {
                         
             Player player = (Player)src;
                         
-            // on vérifie que le jouer se situe bien sur une parcelle sinon on sort
+            // on vérifie que le joueur se situe bien sur une parcelle sinon on sort
             GPlot gplot = plotManager.getPlot(player.getLocation());
             if(gplot == null){
                 player.sendMessage(NO_PLOT());

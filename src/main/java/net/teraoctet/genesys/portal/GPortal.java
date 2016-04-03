@@ -1,5 +1,6 @@
 package net.teraoctet.genesys.portal;
 
+import static net.teraoctet.genesys.Genesys.serverManager;
 import net.teraoctet.genesys.utils.GData;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static org.spongepowered.api.Sponge.getGame;
@@ -54,7 +55,7 @@ public class GPortal {
         this.x2 = x2;
         this.y2 = y2;
         this.z2 = z2;
-        this.toworld = "DESABLED";
+        this.toworld = "DISABLED";
         this.tox = 0;
         this.toy = 0;
         this.toz = 0;
@@ -64,16 +65,18 @@ public class GPortal {
     public void insert() {
 	GData.queue("INSERT INTO gportal VALUES ('" + portalname + "', " + level + ", '" + world + "', " + x1 + ", " + y1 + ", " + z1
         + ", " + x2 + ", " + y2 + ", " + z2 + ", '" + toworld + "', " + tox + ", " + toy + ", " + toz + ", '" + message + "')");
-        
-        getGame().getServer().getConsole().sendMessage(MESSAGE("INSERT INTO gportal VALUES ('" + portalname + "', " + level + ", '" + world + "', " + x1 + ", " + y1 + ", " + z1
-        + ", " + x2 + ", " + y2 + ", " + z2 + ", '" + toworld + "', " + tox + ", " + toy + ", " + toz + ", '" + message + "')"));
     }
 	
     public void update() {
-	GData.queue("UPDATE gportal SET poralname = '" + portalname + "', level = " + level + ", world = '" + world 
+	GData.queue("UPDATE gportal SET portalname = '" + portalname + "', level = " + level + ", world = '" + world 
+        + "', x1 = " + x1 + ", y1 = " + y1 + ", z1 = " + z1 + ", x2 = " + x2 + ", y2 = " + y2 + ", z2 = " + z2 
+        + ", toworld = '" + toworld + "', tox = " + tox + ", toy = " + toy + ", toz = " + toz + ", message = '" + serverManager.quoteToSQL(message) 
+        + "' WHERE portalname = '" + portalname + "'");
+        
+        getGame().getServer().getConsole().sendMessage(MESSAGE("UPDATE gportal SET portalname = '" + portalname + "', level = " + level + ", world = '" + world 
         + "', x1 = " + x1 + ", y1 = " + y1 + ", z1 = " + z1 + ", x2 = " + x2 + ", y2 = " + y2 + ", z2 = " + z2 
         + ", toworld = '" + toworld + "', tox = " + tox + ", toy = " + toy + ", toz = " + toz + ", message = '" + message 
-        + "' WHERE portalname = '" + portalname + "'");
+        + "' WHERE portalname = '" + portalname + "'"));
     }
 	
     public void delete() {

@@ -19,6 +19,7 @@ import net.teraoctet.genesys.utils.ServerManager;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
 
 import static org.spongepowered.api.Sponge.getGame;
 import org.spongepowered.api.event.Listener;
@@ -27,6 +28,7 @@ import org.spongepowered.api.event.game.state.GameLoadCompleteEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.plugin.PluginContainer;
 
 @Plugin(id = PluginInfo.ID, name = PluginInfo.NAME, version = PluginInfo.INFORMATIVE_VERSION, description = PluginInfo.DESCRIPTION, authors = {"THYC", "Votop"})
 public class Genesys {
@@ -37,7 +39,8 @@ public class Genesys {
     public static PortalManager portalManager = new PortalManager();
     public static FactionManager factionManager = new FactionManager();
     public Logger getLogger(){return logger;}  
-    public static Game thisGame() {return getGame();}
+    public static Game game;
+    public static PluginContainer plugin;
                 
     @Listener
     public void onServerInit(GameInitializationEvent event) {
@@ -98,6 +101,8 @@ public class Genesys {
     @Listener
     public void onServerStarted(GameStartedServerEvent event)
     {
+        game = Sponge.getGame();    	
+    	plugin = Sponge.getPluginManager().getPlugin("net.teraoctet.genesys").get();
         WorldManager.init();
     }   
 }
