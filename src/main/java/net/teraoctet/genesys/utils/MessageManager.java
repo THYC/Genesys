@@ -79,6 +79,7 @@ public class MessageManager {
     private static Text NOT_FOUND;
     private static Text NOT_CONNECTED;
     private static Text DATA_NOT_FOUND;
+    private static Text CANNOT_EJECT_OWNER;
     private static Text WORLD_ALREADY_EXIST;
     private static Text WORLD_CREATED;
     private static Text WORLD_CREATION_ERROR;
@@ -205,6 +206,11 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
+                msg.add("&cVous ne pouvez pas renvoyer le propri\351taire !");
+                message.getNode("EXCEPTION","CANNOT_EJECT_OWNER").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
                 msg.add("&4%var1% &cest introuvable");
                 message.getNode("EXCEPTION","NOT_FOUND").setValue(msg);
                 manager.save(message);
@@ -214,6 +220,7 @@ public class MessageManager {
                 message.getNode("EXCEPTION","NOT_CONNECTED").setValue(msg);
                 manager.save(message);
                 
+                msg = new ArrayList<>();
                 msg.add("&cVous n'avez pas la permission pour utiliser cette commande !");
                 message.getNode("EXCEPTION","NO_PERMISSIONS").setValue(msg);
                 manager.save(message);
@@ -774,6 +781,8 @@ public class MessageManager {
     public static Text NOT_CONNECTED(String name){return format(NOT_CONNECTED, "EXCEPTION", "NOT_CONNECTED",name, "");}
     
     public static Text DATA_NOT_FOUND(String player){return format(DATA_NOT_FOUND, "EXCEPTION", "DATA_NOT_FOUND",player, "");}
+    
+    public static Text CANNOT_EJECT_OWNER(){return format(CANNOT_EJECT_OWNER, "EXCEPTION", "CANNOT_EJECT_OWNER");}
     
     //-------------------------
     // Message DEAD_MSG
