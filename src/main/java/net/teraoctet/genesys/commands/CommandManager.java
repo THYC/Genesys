@@ -380,7 +380,7 @@ public class CommandManager {
                 .description(Text.of("/faction retrait <montant>")) 
                 .permission("genesys.faction.withdrawal") 
                 .arguments(
-                    GenericArguments.onlyOne(GenericArguments.integer(Text.of("amount"))))
+                    GenericArguments.onlyOne(GenericArguments.doubleNum(Text.of("amount"))))
                 .executor(new CommandFactionWithdrawal()) 
                 .build();
          

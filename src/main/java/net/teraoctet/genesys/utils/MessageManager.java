@@ -67,7 +67,7 @@ public class MessageManager {
     private static Text PLOT_NO_FIRE;
     private static Text PLOT_NO_EXIT;
     private static Text MISSING_BALANCE;
-    private static Text TRANSFER_SUCCESS;
+    private static Text DEPOSIT_SUCCESS;
     private static Text HOME_ALREADY_EXIST;
     private static Text HOME_SET_SUCCESS;
     private static Text HOME_DEL_SUCCESS;
@@ -108,6 +108,8 @@ public class MessageManager {
     private static Text ONHOVER_FACTION_DEPOSIT;
     private static Text ONHOVER_FACTION_LEAVE;
     private static Text ONHOVER_PI_NAME;
+    private static Text WITHDRAW_SUCCESS;
+    private static Text FACTION_MISSING_BALANCE;
        
     public static File file = new File("config/genesys/message.conf");
     public static final ConfigurationLoader<?> manager = HoconConfigurationLoader.builder().setFile(file).build();
@@ -511,11 +513,21 @@ public class MessageManager {
                 //-------------------------
                 
                 msg = new ArrayList<>();
-                msg.add("&eVirement effectu\351 de &6%var1% \351meraudes &eavec succès !");
-                message.getNode("ECONOMY", "TRANSFER_SUCCESS").setValue(msg);
+                msg.add("&eVirement de &6%var1% \351meraudes &eeffectu\351 avec succès !");
+                message.getNode("ECONOMY", "DEPOSIT_SUCCESS").setValue(msg);
                 
+                msg = new ArrayList<>();
+                msg.add("&eRerait de &6%var1% \351meraudes &eeffectu\351 avec succès !");
+                message.getNode("ECONOMY", "WITHDRAW_SUCCESS").setValue(msg);
+                
+                msg = new ArrayList<>();
                 msg.add("&cVous ne poss\351dez pas assez d'assez d'\351meraudes sur votre compte, tapez /bank pour voir votre solde");
                 message.getNode("ECONOMY","MISSING_BALANCE").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&cVotre faction ne poss\351de pas autant d'\351meraudes dans ses coffres !");
+                message.getNode("ECONOMY","FACTION_MISSING_BALANCE").setValue(msg);
                 manager.save(message);
                 
                 //-------------------------
@@ -904,7 +916,11 @@ public class MessageManager {
     
     public static Text MISSING_BALANCE(){return format(MISSING_BALANCE, "ECONOMY", "MISSING_BALANCE");}
     
-    public static Text TRANSFER_SUCCESS(String amount){return format(TRANSFER_SUCCESS, "ECONOMY", "TRANSFER_SUCCESS",amount, "");}
+    public static Text FACTION_MISSING_BALANCE(){return format(FACTION_MISSING_BALANCE, "ECONOMY", "FACTION_MISSING_BALANCE");}
+    
+    public static Text WITHDRAW_SUCCESS(String amount){return format(WITHDRAW_SUCCESS, "ECONOMY", "WITHDRAW_SUCCESS",amount, "");}
+    
+    public static Text DEPOSIT_SUCCESS(String amount){return format(DEPOSIT_SUCCESS, "ECONOMY", "DEPOSIT_SUCCESS",amount, "");}
     
     //-------------------------
     // Message TELEPORATION

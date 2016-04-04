@@ -9,7 +9,7 @@ import static net.teraoctet.genesys.utils.MessageManager.MISSING_BALANCE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_FACTION;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
-import static net.teraoctet.genesys.utils.MessageManager.TRANSFER_SUCCESS;
+import static net.teraoctet.genesys.utils.MessageManager.DEPOSIT_SUCCESS;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -31,12 +31,14 @@ public class CommandFactionDeposit implements CommandExecutor {
                 
                 if(playerMoney >= amount){
                     GFaction gfaction = getGFaction(gplayer.getID_faction());
+                    
                     playerMoney = playerMoney - amount;
                     gplayer.setMoney(playerMoney);
                     gfaction.setMoney(gfaction.getMoney() + amount);
                     gplayer.update();
                     gfaction.update();
-                    src.sendMessage(TRANSFER_SUCCESS(Double.toString(amount)));
+                    
+                    src.sendMessage(DEPOSIT_SUCCESS(Double.toString(amount)));
                     return CommandResult.success();
                 } else {
                     src.sendMessage(MISSING_BALANCE());

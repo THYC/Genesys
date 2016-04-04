@@ -29,7 +29,7 @@ public class CommandFactionRename implements CommandExecutor {
             GPlayer gplayer = getGPlayer(src.getIdentifier());
             
             if(factionManager.hasAnyFaction(gplayer)) {
-                if(factionManager.isOwner(gplayer)){
+                if(gplayer.getFactionRank() <= 2){
                     String newName = ctx.<String> getOne("name").get();
                     if(newName.length() >= FACTION_NAME_MIN_SIZE() && newName.length() <= FACTION_NAME_MAX_SIZE()) {
                         GFaction gfaction = getGFaction(gplayer.getID_faction());
