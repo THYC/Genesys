@@ -45,6 +45,9 @@ public class MessageManager {
     private static Text FACTION_MEMBER_REMOVED_SUCCESS;
     private static Text FACTION_RETURNED_BY;
     private static Text FACTION_DELETED_NOTIFICATION;
+    private static Text FACTION_NEW_CHEF;
+    private static Text FACTION_CHEF_GRADE_GIVEN;
+    private static Text FACTION_YOU_ARE_NEW_CHEF;
     private static Text BUYING_COST_PLOT;
     private static Text PROTECT_PLOT_SUCCESS;
     private static Text BEDROCK2SKY_PROTECT_PLOT_SUCCESS;
@@ -74,6 +77,7 @@ public class MessageManager {
     private static Text ERROR;
     private static Text HOME_TP_SUCCESS;
     private static Text NOT_FOUND;
+    private static Text NOT_CONNECTED;
     private static Text DATA_NOT_FOUND;
     private static Text WORLD_ALREADY_EXIST;
     private static Text WORLD_CREATED;
@@ -205,6 +209,11 @@ public class MessageManager {
                 message.getNode("EXCEPTION","NOT_FOUND").setValue(msg);
                 manager.save(message);
                 
+                msg = new ArrayList<>();
+                msg.add("&4%var1% &cn'est pas connect\351 !");
+                message.getNode("EXCEPTION","NOT_CONNECTED").setValue(msg);
+                manager.save(message);
+                
                 msg.add("&cVous n'avez pas la permission pour utiliser cette commande !");
                 message.getNode("EXCEPTION","NO_PERMISSIONS").setValue(msg);
                 manager.save(message);
@@ -295,6 +304,21 @@ public class MessageManager {
                 msg.add("&cVous \352tes chef de votre faction, vous ne pouvez pas la quitter !");
                 msg.add("&cVeuillez c\351der le grade à un autre membre avec : /faction setgrade 1 <player>");
                 message.getNode("FACTION","OWNER_CANNOT_LEAVE").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&9%var1% est le nouveau leader de la faction \"%var2%&9\" !");
+                message.getNode("FACTION","FACTION_NEW_CHEF").setValue(msg);
+                manager.save(message);
+                        
+                msg = new ArrayList<>();
+                msg.add("&2Vous avez c\351d\351 votre grade de chef \340 %var1% !");
+                message.getNode("FACTION","FACTION_CHEF_GRADE_GIVEN").setValue(msg);
+                manager.save(message);
+                        
+                msg = new ArrayList<>();
+                msg.add("&2Vous \352tes le nouveau leader de votre faction !");
+                message.getNode("FACTION","FACTION_YOU_ARE_NEW_CHEF").setValue(msg);
                 manager.save(message);
                 
                 msg = new ArrayList<>();
@@ -747,6 +771,8 @@ public class MessageManager {
     
     public static Text NOT_FOUND(String name){return format(NOT_FOUND, "EXCEPTION", "NOT_FOUND",name, "");}
     
+    public static Text NOT_CONNECTED(String name){return format(NOT_CONNECTED, "EXCEPTION", "NOT_CONNECTED",name, "");}
+    
     public static Text DATA_NOT_FOUND(String player){return format(DATA_NOT_FOUND, "EXCEPTION", "DATA_NOT_FOUND",player, "");}
     
     //-------------------------
@@ -784,6 +810,12 @@ public class MessageManager {
     public static Text ALREADY_FACTION_MEMBER(){return format(ALREADY_FACTION_MEMBER, "FACTION", "ALREADY_FACTION_MEMBER");}
     
     public static Text OWNER_CANNOT_LEAVE(){return format(OWNER_CANNOT_LEAVE, "FACTION", "OWNER_CANNOT_LEAVE");}
+    
+    public static Text FACTION_NEW_CHEF(String targetName, String factionName){return format(FACTION_NEW_CHEF, "FACTION", "FACTION_NEW_CHEF", targetName, factionName);}
+    
+    public static Text FACTION_CHEF_GRADE_GIVEN(String targetName){return format(FACTION_CHEF_GRADE_GIVEN, "FACTION", "FACTION_CHEF_GRADE_GIVEN", targetName, "");}
+    
+    public static Text FACTION_YOU_ARE_NEW_CHEF(){return format(FACTION_YOU_ARE_NEW_CHEF, "FACTION", "FACTION_YOU_ARE_NEW_CHEF");}
     
     public static Text GUIDE_FACTION(){return format(GUIDE_FACTION, "FACTION", "GUIDE_FACTION");}
     

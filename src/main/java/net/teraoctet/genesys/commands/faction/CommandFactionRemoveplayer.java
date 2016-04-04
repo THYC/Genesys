@@ -58,6 +58,7 @@ public class CommandFactionRemoveplayer implements CommandExecutor {
                                     //ENVOYER UN MAIL AU JOUEUR QUI A ETE RENVOYE
                                 }
 
+                                //ENVOYER UNE NOTIFICATION DANS LE CANAL DE FACTION
                                 src.sendMessage(FACTION_MEMBER_REMOVED_SUCCESS(targetName));
                                 return CommandResult.success();
                             }

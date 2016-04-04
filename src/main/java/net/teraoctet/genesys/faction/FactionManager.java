@@ -130,6 +130,11 @@ public class FactionManager {
         return null;
     }
     
+    /**
+     * Retourne le nom du grade correspondant à son ID
+     * @param rank
+     * @return
+     */
     public String rankIDtoString(int rank){
         String grade;
         switch(rank) {

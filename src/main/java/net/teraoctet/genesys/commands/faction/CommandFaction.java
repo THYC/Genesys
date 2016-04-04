@@ -87,8 +87,8 @@ public class CommandFaction implements CommandExecutor {
                     List listRank4 = factionManager.getFactionPlayers(gfaction.getID(), 4);
                     List listRank5 = factionManager.getFactionPlayers(gfaction.getID(), 5);
                     
-                    builder.title(Text.builder().append(MESSAGE("&2Faction : &f" + gfaction.getName())).toText())
-                            .contents(Text.builder().append(MESSAGE("&2Vous \352tes " + playerRank + " de " + gfaction.getName()))
+                    builder.title(Text.builder().append(MESSAGE(gfaction.getName() + "&r - &2Membres: " + factionSize + " / " + FACTION_MAX_NUMBER_OF_MEMBER())).toText())
+                            .contents(Text.builder().append(MESSAGE("&2Vous \352tes \"" + playerRank + "\" de " + gfaction.getName()))
                                             .onShiftClick(TextActions.insertText("/faction leave"))
                                             .onHover(TextActions.showText(ONHOVER_FACTION_LEAVE())).toText(),
                                     Text.builder().append(MESSAGE("&2Chef : &a" + factionOwner)).toText(),
@@ -104,7 +104,6 @@ public class CommandFaction implements CommandExecutor {
                                     Text.builder().append(MESSAGE("&a- Recrue (" + listRank5.size() + ")"))
                                             .onClick(TextActions.runCommand("/faction memberslist"))
                                             .onHover(TextActions.showText(MESSAGE("Recrue(s): " + listRank5))).toText(),
-                                    Text.builder().append(MESSAGE("&2Membres: " + factionSize + " / " + FACTION_MAX_NUMBER_OF_MEMBER())).toText(),
                                     Text.builder().append(MESSAGE("&2Bank de Faction : &a" + gfaction.getMoney() + " \351meraudes"))
                                             .onClick(TextActions.suggestCommand("/faction depot "))
                                             .onHover(TextActions.showText(ONHOVER_FACTION_DEPOSIT())).toText(),
