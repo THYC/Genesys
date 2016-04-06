@@ -103,30 +103,38 @@ public class MessageManager {
     private static Text ONHOVER_FACTION_DEPOSIT;
     private static Text ONHOVER_FACTION_LEAVE;
     private static Text ONHOVER_PI_NAME;
+    private static Text SHOP_TRANSACT_FORMAT;
+    private static Text SHOP_SALE;
+    private static Text SHOP_BUY;
        
     public static File file = new File("config/genesys/message.conf");
     public static final ConfigurationLoader<?> manager = HoconConfigurationLoader.builder().setFile(file).build();
     public static ConfigurationNode message = manager.createEmptyNode(ConfigurationOptions.defaults());
         
-    public static void init() {
+    public static void init() throws ObjectMappingException {
         try {
             if (!file.exists()) {
                 file.createNewFile();
-                
+             }    
+                List<String> msg = new ArrayList<>();
+           
                 //-------------------------
                 // Message général serveur
                 //-------------------------
-                                
-                List<String> msg = new ArrayList<>();
-                msg.add("&6Bienvenue, &e%name%!");
-                msg.add("&6Tu es sur la map &e%world%!\n");
-                message.getNode("SERVER","JOIN_MESSAGE").setValue(msg);
-                manager.save(message);
                 
-                msg = new ArrayList<>();
-                msg.add("&7%name% a rejoint le serveur");
-                message.getNode("SERVER","EVENT_LOGIN_MESSAGE").setValue(msg);
-                manager.save(message);
+                if(message.getNode("SERVER","JOIN_MESSAGE").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&6Bienvenue, &e%name%!");
+                    msg.add("&6Tu es sur la map &e%world%!\n");
+                    message.getNode("SERVER","JOIN_MESSAGE").setValue(msg);
+                    manager.save(message);
+                }
+                if(message.getNode("SERVER","EVENT_LOGIN_MESSAGE").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&7%name% a rejoint le serveur");
+                    message.getNode("SERVER","EVENT_LOGIN_MESSAGE").setValue(msg);
+                    manager.save(message);
+                }
                 
                 msg = new ArrayList<>();
                 msg.add("&eSalut &6%name%&e, c'est visiblement la premi\350re fois que tu viens !");
@@ -590,7 +598,7 @@ public class MessageManager {
                 msg.add("&cPortail prot\351g\351");
                 message.getNode("PORTAL","PROTECT_PORTAL").setValue(msg);
                 manager.save(message);        
-            }
+            //}
             message = manager.load();
 
         } catch (IOException e) {}
@@ -914,6 +922,14 @@ public class MessageManager {
     //-------------------------
     
     public static Text PROTECT_PORTAL(){return format(PROTECT_PORTAL, "PORTAL","PROTECT_PORTAL");}
+    
+    //-------------------------
+    // Message SHOP
+    //-------------------------
+    
+    public static Text SHOP_SALE(){return format(SHOP_SALE, "SHOP","SHOP_SALE");}
+    
+    public static Text SHOP_BUY(){return format(SHOP_BUY, "SHOP","SHOP_BUY");}
               
     
     public static Text USAGE(String usage){

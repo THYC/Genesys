@@ -89,7 +89,9 @@ public class PortalListener {
                 if(!gportal.gettoworld().equalsIgnoreCase("DISABLED")){
                     Optional<World> world = getGame().getServer().getWorld(gportal.gettoworld());
                     Location loc = new Location(world.get(), new Vector3d(gportal.gettoX(), gportal.gettoY(), gportal.gettoZ()));
-                    entity.setLocation(loc);
+                    
+                    entity.transferToWorld(world.get().getName(), new Vector3d(gportal.gettoX(), gportal.gettoY(), gportal.gettoZ()));
+                    //entity.setLocation(loc);
                 }
             }
         }

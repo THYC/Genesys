@@ -5,7 +5,6 @@ import static net.teraoctet.genesys.Genesys.serverManager;
 import net.teraoctet.genesys.player.GPlayer;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import static net.teraoctet.genesys.utils.GData.getUUID;
-import static net.teraoctet.genesys.utils.ServerManager.getPlayer;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -55,7 +54,7 @@ public class CommandPlayerinfo implements CommandExecutor {
                             .onHover(TextActions.showText(Text.builder("UUID: " + targetUUID).build()))
                             .color(TextColors.DARK_GRAY)
                             .build());*/
-
+                                        
                 if(serverManager.isOnline(targetName)){
                     Player tPlayer = getGame().getServer().getPlayer(targetName).get();
                     src.sendMessage(Text.builder(targetName + " est connect\351")
@@ -68,7 +67,7 @@ public class CommandPlayerinfo implements CommandExecutor {
                             .color(TextColors.DARK_GRAY)
                             .build());
                 } else {
-                    Date lastConnection = serverManager.doubleToDate(gplayer.getLastonline());
+                    String lastConnection = serverManager.dateShortToString(gplayer.getLastonline());
                     src.sendMessage(Text.builder(targetName + " est d\351connect\351")
                             .onHover(TextActions.showText(Text.builder("Derni\350re connexion: " + lastConnection.toString()).build()))
                             .color(TextColors.DARK_GRAY)

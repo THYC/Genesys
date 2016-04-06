@@ -16,6 +16,7 @@ import net.teraoctet.genesys.world.WorldManager;
 import net.teraoctet.genesys.commands.CommandManager;
 import net.teraoctet.genesys.faction.FactionManager;
 import net.teraoctet.genesys.utils.ServerManager;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
@@ -43,7 +44,7 @@ public class Genesys {
     public static PluginContainer plugin;
                 
     @Listener
-    public void onServerInit(GameInitializationEvent event) {
+    public void onServerInit(GameInitializationEvent event) throws ObjectMappingException {
 	        
         File folder = new File("config/genesys");
     	if(!folder.exists()) folder.mkdir();
@@ -80,6 +81,7 @@ public class Genesys {
 	getGame().getCommandManager().register(this, new CommandManager().CommandTest, "test");
         getGame().getCommandManager().register(this, new CommandManager().CommandRocket, "rocket");
         getGame().getCommandManager().register(this, new CommandManager().CommandPortal, "portal", "portail", "pl", "po");
+        getGame().getCommandManager().register(this, new CommandManager().CommandShopAdd, "shopadd");
 
         getLogger().info("-----------------------------"); 
 	getLogger().info("...........Genesys..........."); 

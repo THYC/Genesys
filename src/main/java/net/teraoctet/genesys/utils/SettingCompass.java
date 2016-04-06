@@ -15,6 +15,8 @@ import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 public class SettingCompass {
     
@@ -22,13 +24,11 @@ public class SettingCompass {
         
     public boolean setCompassLocation(Player player, final Vector3d location) {
         Optional<TargetedLocationData> compass = player.getOrCreate(TargetedLocationData.class);
-        //if (!compass.isPresent()) {
-            
-            //return false;
-        //}
-        getGame().getServer().getConsole().sendMessage(MESSAGE(String.valueOf(compass.get().target()))); //compass.get().target()
+        if (!compass.isPresent()) {
+            return false;
+        }
+
         compass.get().set(Keys.TARGETED_LOCATION, location);
-        //compass.get().target().set(location);
         
         getGame().getServer().getConsole().sendMessage(MESSAGE(String.valueOf(compass.get().target()))); //compass.get().target()
         return true;

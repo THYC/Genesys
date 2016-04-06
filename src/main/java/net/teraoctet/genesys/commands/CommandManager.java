@@ -32,6 +32,7 @@ import net.teraoctet.genesys.commands.faction.CommandFactionRemoveplayer;
 import net.teraoctet.genesys.commands.faction.CommandFactionList;
 import net.teraoctet.genesys.commands.faction.CommandFactionMemberslist;
 import net.teraoctet.genesys.commands.faction.CommandFactionLeave;
+import net.teraoctet.genesys.commands.shop.CommandShopAdd;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.text.Text;
@@ -247,6 +248,13 @@ public class CommandManager {
                 .executor(new CommandLevel())
                 .build();
         
+        public CommandSpec CommandHead = CommandSpec.builder()
+                .description(Text.of("/head [head]"))
+                .permission("genesys.head")
+                .arguments(GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.string(Text.of("head")))))
+                .executor(new CommandHead())
+                .build();
+        
         public CommandSpec CommandWorldCreate = CommandSpec.builder()
                 .description(Text.of("/worldCreate <name> <environment> <gamemode> <difficulty>"))
                 .permission("genesys.admin.world.worldcreate")
@@ -411,7 +419,6 @@ public class CommandManager {
                     GenericArguments.optional(GenericArguments.string(Text.of("arg1")))))
                 .executor(new CommandTest())
                 .build();
-
         
         public CommandSpec CommandRocket = CommandSpec.builder() 
                 .description(Text.of("Rocket Command")) 
@@ -428,8 +435,8 @@ public class CommandManager {
                 .description(Text.of("/portal msg <name> [message]"))
                 .permission("genesys.admin.portal")
                 .arguments(GenericArguments.firstParsing(
-                        GenericArguments.optional(GenericArguments.string(Text.of("name"))),
-                        GenericArguments.remainingJoinedStrings(Text.of("arguments"))))
+                    GenericArguments.optional(GenericArguments.string(Text.of("name"))),
+                    GenericArguments.remainingJoinedStrings(Text.of("arguments"))))
                 .executor(new CommandPortalMsg())
                 .build();
         
@@ -483,4 +490,13 @@ public class CommandManager {
                 .executor(new CommandPortal())
                 .build();
        
+        public CommandSpec CommandShopAdd = CommandSpec.builder()
+                .description(Text.of("/shopadd [shopType] [price] <ItemType>"))
+                .permission("genesys.admin.shop")
+                .arguments(GenericArguments.seq(
+                    GenericArguments.optional(GenericArguments.string(Text.of("shoptype"))),
+                    GenericArguments.optional(GenericArguments.doubleNum(Text.of("price"))),
+                    GenericArguments.optional(GenericArguments.string(Text.of("itemtype")))))
+                .executor(new CommandShopAdd())
+                .build();
 }

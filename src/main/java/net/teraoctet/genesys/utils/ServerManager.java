@@ -85,11 +85,69 @@ public class ServerManager {
      * @param date date au format double
      * @return 
      */
-    public Date doubleToDate(double date){
-        double itemDouble = date;
+    public Date doubleToDate(long date){
+        long itemDouble = date;
         long itemLong = (long) (itemDouble * 1000);
         Date itemDate = new Date(itemLong);
         return itemDate;
+    }
+    
+    /**
+     * 
+     * @param milliseconds
+     * @return 
+     */
+    public static String dateToString(double milliseconds) {	
+        int days = 0;
+        int hours = 0;
+        int minutes = 0;
+        int seconds = 0;
+
+        while(milliseconds >= 1000 * 60 * 60 * 24) { days += 1; milliseconds -= 1000 * 60 * 60 * 24; }
+        while(milliseconds >= 1000 * 60 * 60) { hours += 1; milliseconds -= 1000 * 60 * 60; }
+        while(milliseconds >= 1000 * 60) { minutes += 1; milliseconds -= 1000 * 60; }
+        while(milliseconds >= 1000) { seconds += 1; milliseconds -= 1000; }
+
+        return String.valueOf(days) + "d " + String.valueOf(hours) + "h " + String.valueOf(minutes) + "m " + String.valueOf(seconds) + "s";
+
+    }
+    
+    /**
+     * 
+     * @param milliseconds
+     * @return 
+     */
+    public static String dateShortToString(double milliseconds) {
+        int days = 0;
+        int hours = 0;
+        int minutes = 0;
+
+        while(milliseconds >= 1000 * 60 * 60 * 24) { days += 1; milliseconds -= 1000 * 60 * 60 * 24; }
+        while(milliseconds >= 1000 * 60 * 60) { hours += 1; milliseconds -= 1000 * 60 * 60; }
+        while(milliseconds >= 1000 * 60) { minutes += 1; milliseconds -= 1000 * 60; }
+
+        String time = "";
+        if(days > 0) time = days + "d ";
+        time = time + hours + "h ";
+        time = time + minutes + "m";
+
+        return time;
+
+    }
+    
+    /**
+     * 
+     * @param time
+     * @param unit
+     * @return 
+     */
+    public static double dateToMilliseconds(double time, String unit) {
+        if(unit.equalsIgnoreCase("days")) { return time * 1000 * 60 * 60 * 24; }
+        else if(unit.equalsIgnoreCase("hours")) { return time * 1000 * 60 * 60; }
+        else if(unit.equalsIgnoreCase("minutes")) { return time * 1000 * 60; }
+        else if(unit.equalsIgnoreCase("seconds")) { return time * 1000; }
+
+        return 0;
     }
     
     /**
