@@ -1,11 +1,16 @@
 package net.teraoctet.genesys.commands.faction;
 
-import net.teraoctet.genesys.faction.FactionManager;
+import static net.teraoctet.genesys.Genesys.factionManager;
+import net.teraoctet.genesys.faction.GFaction;
 import net.teraoctet.genesys.player.GPlayer;
+import static net.teraoctet.genesys.utils.GData.getGFaction;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
+import static net.teraoctet.genesys.utils.MessageManager.FACTION_MISSING_BALANCE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_FACTION;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
+import static net.teraoctet.genesys.utils.MessageManager.WITHDRAW_SUCCESS;
+import static net.teraoctet.genesys.utils.MessageManager.WRONG_RANK;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -21,9 +26,30 @@ public class CommandFactionWithdrawal implements CommandExecutor {
         if(src instanceof Player && src.hasPermission("genesys.faction.withdrawal")) {
             GPlayer gplayer = getGPlayer(src.getIdentifier());
             
-            if(FactionManager.hasAnyFaction(gplayer)) {
-                
-                return CommandResult.success();
+            if(factionManager.hasAnyFaction(gplayer)) {
+                if(gplayer.getFactionRank() <= 2){
+                    double amount = ctx.<Double> getOne("amount").get();
+                    GFaction gfaction = getGFaction(gplayer.getID_faction());
+                    double factionMoney = gfaction.getMoney();
+                    
+                    if(factionMoney >= amount) {
+                        double playerMoney = gplayer.getMoney();
+
+                        gfaction.setMoney(factionMoney - amount);
+                        playerMoney = playerMoney + amount;
+                        gplayer.setMoney(playerMoney);
+                        gplayer.update();
+                        gfaction.update();
+
+                        src.sendMessage(WITHDRAW_SUCCESS(Double.toString(amount)));
+                        //AJOUTER NOTIFICATION DE LE CANAL FACTION
+                        return CommandResult.success();
+                    } else {
+                        src.sendMessage(FACTION_MISSING_BALANCE());
+                    }
+                } else {
+                    src.sendMessage(WRONG_RANK());
+                }
             } else {
                 src.sendMessage(NO_FACTION());
             }

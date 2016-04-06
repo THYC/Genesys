@@ -4,9 +4,11 @@ import static net.teraoctet.genesys.Genesys.factionManager;
 import net.teraoctet.genesys.player.GPlayer;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import static net.teraoctet.genesys.utils.GData.getUUID;
+import static net.teraoctet.genesys.utils.MessageManager.CANNOT_EJECT_OWNER;
 import static net.teraoctet.genesys.utils.MessageManager.DATA_NOT_FOUND;
 import static net.teraoctet.genesys.utils.MessageManager.FACTION_MEMBER_REMOVED_SUCCESS;
 import static net.teraoctet.genesys.utils.MessageManager.FACTION_RETURNED_BY;
+import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.NOT_FOUND;
 import static net.teraoctet.genesys.utils.MessageManager.NOT_IN_SAME_FACTION;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
@@ -45,7 +47,7 @@ public class CommandFactionRemoveplayer implements CommandExecutor {
 
                         if(player_id_faction == target_id_faction) {
                             if(playerRank == 2 && target_gplayer.getFactionRank() <= 2) {
-                                src.sendMessage(NO_PERMISSIONS());
+                                src.sendMessage(CANNOT_EJECT_OWNER());
                             } else {
                                 target_gplayer.setID_faction(0);
                                 target_gplayer.setFactionRank(0);
@@ -58,6 +60,7 @@ public class CommandFactionRemoveplayer implements CommandExecutor {
                                     //ENVOYER UN MAIL AU JOUEUR QUI A ETE RENVOYE
                                 }
 
+                                //ENVOYER UNE NOTIFICATION DANS LE CANAL DE FACTION
                                 src.sendMessage(FACTION_MEMBER_REMOVED_SUCCESS(targetName));
                                 return CommandResult.success();
                             }

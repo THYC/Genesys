@@ -45,6 +45,9 @@ public class MessageManager {
     private static Text FACTION_MEMBER_REMOVED_SUCCESS;
     private static Text FACTION_RETURNED_BY;
     private static Text FACTION_DELETED_NOTIFICATION;
+    private static Text FACTION_NEW_CHEF;
+    private static Text FACTION_CHEF_GRADE_GIVEN;
+    private static Text FACTION_YOU_ARE_NEW_CHEF;
     private static Text BUYING_COST_PLOT;
     private static Text PROTECT_PLOT_SUCCESS;
     private static Text BEDROCK2SKY_PROTECT_PLOT_SUCCESS;
@@ -64,7 +67,7 @@ public class MessageManager {
     private static Text PLOT_NO_FIRE;
     private static Text PLOT_NO_EXIT;
     private static Text MISSING_BALANCE;
-    private static Text TRANSFER_SUCCESS;
+    private static Text DEPOSIT_SUCCESS;
     private static Text HOME_ALREADY_EXIST;
     private static Text HOME_SET_SUCCESS;
     private static Text HOME_DEL_SUCCESS;
@@ -74,7 +77,9 @@ public class MessageManager {
     private static Text ERROR;
     private static Text HOME_TP_SUCCESS;
     private static Text NOT_FOUND;
+    private static Text NOT_CONNECTED;
     private static Text DATA_NOT_FOUND;
+    private static Text CANNOT_EJECT_OWNER;
     private static Text WORLD_ALREADY_EXIST;
     private static Text WORLD_CREATED;
     private static Text WORLD_CREATION_ERROR;
@@ -102,10 +107,13 @@ public class MessageManager {
     private static Text ONHOVER_FACTION_WITHDRAWAL;
     private static Text ONHOVER_FACTION_DEPOSIT;
     private static Text ONHOVER_FACTION_LEAVE;
+    private static Text ONHOVER_FACTION_LIST_LVL10;
     private static Text ONHOVER_PI_NAME;
     private static Text SHOP_TRANSACT_FORMAT;
     private static Text SHOP_SALE;
     private static Text SHOP_BUY;
+    private static Text WITHDRAW_SUCCESS;
+    private static Text FACTION_MISSING_BALANCE;
        
     public static File file = new File("config/genesys/message.conf");
     public static final ConfigurationLoader<?> manager = HoconConfigurationLoader.builder().setFile(file).build();
@@ -209,10 +217,21 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
+                msg.add("&cVous ne pouvez pas renvoyer le propri\351taire !");
+                message.getNode("EXCEPTION","CANNOT_EJECT_OWNER").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
                 msg.add("&4%var1% &cest introuvable");
                 message.getNode("EXCEPTION","NOT_FOUND").setValue(msg);
                 manager.save(message);
                 
+                msg = new ArrayList<>();
+                msg.add("&4%var1% &cn'est pas connect\351 !");
+                message.getNode("EXCEPTION","NOT_CONNECTED").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
                 msg.add("&cVous n'avez pas la permission pour utiliser cette commande !");
                 message.getNode("EXCEPTION","NO_PERMISSIONS").setValue(msg);
                 manager.save(message);
@@ -306,6 +325,21 @@ public class MessageManager {
                 manager.save(message);
                 
                 msg = new ArrayList<>();
+                msg.add("&9%var1% est le nouveau leader de la faction \"%var2%&9\" !");
+                message.getNode("FACTION","FACTION_NEW_CHEF").setValue(msg);
+                manager.save(message);
+                        
+                msg = new ArrayList<>();
+                msg.add("&2Vous avez c\351d\351 votre grade de chef \340 %var1% !");
+                message.getNode("FACTION","FACTION_CHEF_GRADE_GIVEN").setValue(msg);
+                manager.save(message);
+                        
+                msg = new ArrayList<>();
+                msg.add("&2Vous \352tes le nouveau leader de votre faction !");
+                message.getNode("FACTION","FACTION_YOU_ARE_NEW_CHEF").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
                 msg.add("&n&eQu'est-ce que \347a apporte d'\350tre dans une faction ?");
                 msg.add("&eComing soon ..!");
                 msg.add("&ePlus d'infos sur &bhttp://craft.teraoctet.net\n");
@@ -317,7 +351,7 @@ public class MessageManager {
                 manager.save(message);
                         
                 msg = new ArrayList<>();
-                msg.add("&eVous venez de supprimer votre faction \"&r%var1%&e\"");
+                msg.add("&eVous venez de supprimer la faction \"&r%var1%&e\"");
                 message.getNode("FACTION","FACTION_DELETED_SUCCESS").setValue(msg);
                 manager.save(message);
                 
@@ -407,6 +441,13 @@ public class MessageManager {
                 message.getNode("FACTION","ONHOVER_FACTION_DEPOSIT").setValue(msg);
                 manager.save(message);
                 
+                msg = new ArrayList<>();
+                msg.add("&l&6Faction : &r%var1%");
+                msg.add("&e&nChef : &r%var2%");
+                msg.add("\n&7&n&oShift+Click :&r &8&o/faction delete <name>");
+                message.getNode("FACTION","ONHOVER_FACTION_LIST_LVL10").setValue(msg);
+                manager.save(message);
+                
                 //-------------------------
                 // Message Plot / parcelle
                 //-------------------------
@@ -488,11 +529,21 @@ public class MessageManager {
                 //-------------------------
                 
                 msg = new ArrayList<>();
-                msg.add("&eVirement effectu\351 de &6%var1% \351meraudes &eavec succès !");
-                message.getNode("ECONOMY", "TRANSFER_SUCCESS").setValue(msg);
+                msg.add("&eVirement de &6%var1% \351meraudes &eeffectu\351 avec succès !");
+                message.getNode("ECONOMY", "DEPOSIT_SUCCESS").setValue(msg);
                 
+                msg = new ArrayList<>();
+                msg.add("&eRerait de &6%var1% \351meraudes &eeffectu\351 avec succès !");
+                message.getNode("ECONOMY", "WITHDRAW_SUCCESS").setValue(msg);
+                
+                msg = new ArrayList<>();
                 msg.add("&cVous ne poss\351dez pas assez d'assez d'\351meraudes sur votre compte, tapez /bank pour voir votre solde");
                 message.getNode("ECONOMY","MISSING_BALANCE").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&cVotre faction ne poss\351de pas autant d'\351meraudes dans ses coffres !");
+                message.getNode("ECONOMY","FACTION_MISSING_BALANCE").setValue(msg);
                 manager.save(message);
                 
                 //-------------------------
@@ -755,7 +806,11 @@ public class MessageManager {
     
     public static Text NOT_FOUND(String name){return format(NOT_FOUND, "EXCEPTION", "NOT_FOUND",name, "");}
     
+    public static Text NOT_CONNECTED(String name){return format(NOT_CONNECTED, "EXCEPTION", "NOT_CONNECTED",name, "");}
+    
     public static Text DATA_NOT_FOUND(String player){return format(DATA_NOT_FOUND, "EXCEPTION", "DATA_NOT_FOUND",player, "");}
+    
+    public static Text CANNOT_EJECT_OWNER(){return format(CANNOT_EJECT_OWNER, "EXCEPTION", "CANNOT_EJECT_OWNER");}
     
     //-------------------------
     // Message DEAD_MSG
@@ -793,6 +848,12 @@ public class MessageManager {
     
     public static Text OWNER_CANNOT_LEAVE(){return format(OWNER_CANNOT_LEAVE, "FACTION", "OWNER_CANNOT_LEAVE");}
     
+    public static Text FACTION_NEW_CHEF(String targetName, String factionName){return format(FACTION_NEW_CHEF, "FACTION", "FACTION_NEW_CHEF", targetName, factionName);}
+    
+    public static Text FACTION_CHEF_GRADE_GIVEN(String targetName){return format(FACTION_CHEF_GRADE_GIVEN, "FACTION", "FACTION_CHEF_GRADE_GIVEN", targetName, "");}
+    
+    public static Text FACTION_YOU_ARE_NEW_CHEF(){return format(FACTION_YOU_ARE_NEW_CHEF, "FACTION", "FACTION_YOU_ARE_NEW_CHEF");}
+    
     public static Text GUIDE_FACTION(){return format(GUIDE_FACTION, "FACTION", "GUIDE_FACTION");}
     
     public static Text FACTION_CREATED_SUCCESS(String factionName){return format(FACTION_CREATED_SUCCESS, "FACTION", "FACTION_CREATED_SUCCESS", factionName, "");}
@@ -826,6 +887,8 @@ public class MessageManager {
     public static Text ONHOVER_FACTION_RENAME(){return format(ONHOVER_FACTION_RENAME, "FACTION", "ONHOVER_FACTION_RENAME");}
     
     public static Text ONHOVER_FACTION_DELETE(){return format(ONHOVER_FACTION_DELETE, "FACTION", "ONHOVER_FACTION_DELETE");}
+    
+    public static Text ONHOVER_FACTION_LIST_LVL10(String factionName, String ownerName){return format(ONHOVER_FACTION_LIST_LVL10, "FACTION", "ONHOVER_FACTION_LIST_LVL10", factionName, ownerName);}
     
     //-------------------------
     // Message PLOT / PARCELLE
@@ -871,7 +934,11 @@ public class MessageManager {
     
     public static Text MISSING_BALANCE(){return format(MISSING_BALANCE, "ECONOMY", "MISSING_BALANCE");}
     
-    public static Text TRANSFER_SUCCESS(String amount){return format(TRANSFER_SUCCESS, "ECONOMY", "TRANSFER_SUCCESS",amount, "");}
+    public static Text FACTION_MISSING_BALANCE(){return format(FACTION_MISSING_BALANCE, "ECONOMY", "FACTION_MISSING_BALANCE");}
+    
+    public static Text WITHDRAW_SUCCESS(String amount){return format(WITHDRAW_SUCCESS, "ECONOMY", "WITHDRAW_SUCCESS",amount, "");}
+    
+    public static Text DEPOSIT_SUCCESS(String amount){return format(DEPOSIT_SUCCESS, "ECONOMY", "DEPOSIT_SUCCESS",amount, "");}
     
     //-------------------------
     // Message TELEPORATION
