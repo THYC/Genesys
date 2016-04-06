@@ -42,6 +42,7 @@ public class CommandFactionWithdrawal implements CommandExecutor {
                         gfaction.update();
 
                         src.sendMessage(WITHDRAW_SUCCESS(Double.toString(amount)));
+                        //AJOUTER NOTIFICATION DE LE CANAL FACTION
                         return CommandResult.success();
                     } else {
                         src.sendMessage(FACTION_MISSING_BALANCE());

@@ -5,7 +5,6 @@ import java.util.List;
 import net.teraoctet.genesys.utils.GHome;
 import static net.teraoctet.genesys.utils.GData.addGPlayer;
 import static net.teraoctet.genesys.utils.GData.addUUID;
-import static net.teraoctet.genesys.utils.GData.queue;
 import static net.teraoctet.genesys.utils.GData.removeGPlayer;
 import static net.teraoctet.genesys.utils.GData.removeUUID;
 import net.teraoctet.genesys.utils.ServerManager;

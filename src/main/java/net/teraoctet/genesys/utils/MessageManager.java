@@ -107,6 +107,7 @@ public class MessageManager {
     private static Text ONHOVER_FACTION_WITHDRAWAL;
     private static Text ONHOVER_FACTION_DEPOSIT;
     private static Text ONHOVER_FACTION_LEAVE;
+    private static Text ONHOVER_FACTION_LIST_LVL10;
     private static Text ONHOVER_PI_NAME;
     private static Text WITHDRAW_SUCCESS;
     private static Text FACTION_MISSING_BALANCE;
@@ -342,7 +343,7 @@ public class MessageManager {
                 manager.save(message);
                         
                 msg = new ArrayList<>();
-                msg.add("&eVous venez de supprimer votre faction \"&r%var1%&e\"");
+                msg.add("&eVous venez de supprimer la faction \"&r%var1%&e\"");
                 message.getNode("FACTION","FACTION_DELETED_SUCCESS").setValue(msg);
                 manager.save(message);
                 
@@ -430,6 +431,13 @@ public class MessageManager {
                 msg.add("&l&6D\351poser des \351meraudes dans la banque de la faction");
                 msg.add("\n&7/faction depot <montant>");
                 message.getNode("FACTION","ONHOVER_FACTION_DEPOSIT").setValue(msg);
+                manager.save(message);
+                
+                msg = new ArrayList<>();
+                msg.add("&l&6Faction : &r%var1%");
+                msg.add("&e&nChef : &r%var2%");
+                msg.add("\n&7&n&oShift+Click :&r &8&o/faction delete <name>");
+                message.getNode("FACTION","ONHOVER_FACTION_LIST_LVL10").setValue(msg);
                 manager.save(message);
                 
                 //-------------------------
@@ -871,6 +879,8 @@ public class MessageManager {
     public static Text ONHOVER_FACTION_RENAME(){return format(ONHOVER_FACTION_RENAME, "FACTION", "ONHOVER_FACTION_RENAME");}
     
     public static Text ONHOVER_FACTION_DELETE(){return format(ONHOVER_FACTION_DELETE, "FACTION", "ONHOVER_FACTION_DELETE");}
+    
+    public static Text ONHOVER_FACTION_LIST_LVL10(String factionName, String ownerName){return format(ONHOVER_FACTION_LIST_LVL10, "FACTION", "ONHOVER_FACTION_LIST_LVL10", factionName, ownerName);}
     
     //-------------------------
     // Message PLOT / PARCELLE
