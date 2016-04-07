@@ -11,16 +11,14 @@ import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.SHOP_BUY;
 import static net.teraoctet.genesys.utils.MessageManager.SHOP_SALE;
 
-public abstract class ItemShop implements ItemStack{
+public class ItemShop {
     
     private ItemStack itemStack;
     private String name;
     private String shopType;
     private double price;
     private String itemType;
-    
-    public ItemShop(){}
-    
+        
     public ItemShop(ItemStack itemStack, String shopType, double price, String itemType){
         this.itemStack = itemStack;
         this.shopType = shopType;

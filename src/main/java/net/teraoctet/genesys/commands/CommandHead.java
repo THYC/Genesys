@@ -1,9 +1,7 @@
 package net.teraoctet.genesys.commands;
 
 import java.util.Optional;
-import net.teraoctet.genesys.utils.ServerManager;
-import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
-import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
+import static net.teraoctet.genesys.Genesys.serverManager;
 import static org.spongepowered.api.Sponge.getGame;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -32,9 +30,9 @@ public class CommandHead implements CommandExecutor {
             Optional<String> head = ctx.<String> getOne("head");
             
             if (head.isPresent()){
-                Player Target = ServerManager.getPlayer(head.get());
+                Optional<Player> Target = serverManager.getPlayer(head.get());
 
-                if (Target != null){
+                if (Target.isPresent()){
                     ItemStack.Builder builder = getGame().getRegistry().createBuilder(ItemStack.Builder.class);
                     ItemStack skullStack = builder.itemType(ItemTypes.SKULL).quantity(1).build();
                     skullStack.offer(Keys.SKULL_TYPE, SkullTypes.PLAYER);

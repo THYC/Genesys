@@ -2,6 +2,8 @@ package net.teraoctet.genesys.player;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
+import static net.teraoctet.genesys.Genesys.serverManager;
 import net.teraoctet.genesys.utils.GHome;
 import static net.teraoctet.genesys.utils.GData.addGPlayer;
 import static net.teraoctet.genesys.utils.GData.addUUID;
@@ -145,8 +147,8 @@ public class GPlayer {
     public void sendMessage(Text text)
     {
         if(ServerManager.isOnline(name)){
-            Player player = ServerManager.getPlayer(name);
-            if (player != null)player.sendMessage(text);
+            Optional<Player> player = serverManager.getPlayer(name);
+            if(player.isPresent()){player.get().sendMessage(text);}
         }
     }
 }

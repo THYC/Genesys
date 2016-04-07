@@ -3,7 +3,6 @@ package net.teraoctet.genesys.commands.plot;
 import static net.teraoctet.genesys.Genesys.plotManager;
 import net.teraoctet.genesys.player.GPlayer;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
-import static net.teraoctet.genesys.utils.ServerManager.getPlayer;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -26,14 +25,13 @@ public class CommandPlotList implements CommandExecutor {
 
             if(ctx.getOne("tplayer").isPresent() && src.hasPermission("genesys.plot.otherlist")){
                 String targetName = ctx.<String> getOne("tplayer").get();
-                GPlayer gplayer = getGPlayer(getPlayer(targetName).getUniqueId().toString());
+                GPlayer gplayer = getGPlayer(targetName);
                 // si <tplayer> n'est pas dans la base de donnée
                 if(gplayer == null){
                     player.sendMessage(DATA_NOT_FOUND(targetName));
                     return CommandResult.empty();
                 } else {    //lorsque <tplayer> est dans la base de donnée
-                    String targetUUID = getPlayer(targetName).getIdentifier();
-                    Text listPlot = plotManager.getListPlot(targetUUID);
+                    Text listPlot = plotManager.getListPlot(gplayer.getUUID());
                     player.sendMessage(TARGET_PLOT_LIST(targetName));
                     player.sendMessage(listPlot); 
                 }

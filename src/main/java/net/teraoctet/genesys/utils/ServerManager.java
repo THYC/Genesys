@@ -3,16 +3,13 @@ package net.teraoctet.genesys.utils;
 import com.flowpowered.math.vector.Vector3d;
 import java.util.Date;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.teraoctet.genesys.player.GPlayer;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import org.spongepowered.api.Sponge;
 import static org.spongepowered.api.Sponge.getGame;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.service.ProviderRegistration;
 import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
@@ -26,40 +23,41 @@ public class ServerManager {
      * @param player nom du joueur à retourner
      * @return 
      */
-    public static Player getPlayer(String player){
-        try {
-            Optional<UserStorageService> service = Sponge.getServiceManager().provide(UserStorageService.class);
-            UUID uuid = service.get().getOrCreate(Sponge.getGame().getServer().getGameProfileManager().get(player, false).get()).getUniqueId();
-            Optional<User> userOptional = service.get().get(uuid);
+    public Optional<Player> getPlayer(String player){
+        Optional<ProviderRegistration<UserStorageService>> opt_provider = Sponge.getServiceManager().getRegistration(UserStorageService.class);
+        if(opt_provider.isPresent()) {
+            ProviderRegistration<UserStorageService> provider = opt_provider.get();
+            UserStorageService service = provider.getProvider();
+            Optional<User> opt_user = service.get(player);
             
-            if (userOptional.isPresent()){
-                return userOptional.get().getPlayer().get();
+            if(opt_user.isPresent()) {
+                return Optional.of(opt_user.get().getPlayer().get());
             }else{
-                return null;
+                return Optional.empty();
             }
-        } catch (InterruptedException | ExecutionException ex) {
-            Logger.getLogger(ServerManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+        return Optional.empty();
     }
     
     /**
      * retourne l'idetifier UUID du joueur
      * @param player nom du joueur à retourner
      * @return 
-     * @throws java.lang.InterruptedException 
-     * @throws java.util.concurrent.ExecutionException 
      */
-    public static String getPlayerUUID(String player) throws InterruptedException, ExecutionException {
-        Optional<UserStorageService> service = Sponge.getServiceManager().provide(UserStorageService.class);
-        UUID uuid = service.get().getOrCreate(Sponge.getGame().getServer().getGameProfileManager().get(player, false).get()).getUniqueId();
-        Optional<User> userOptional = service.get().get(uuid);
-
-        if (userOptional.isPresent()){
-            return userOptional.get().getIdentifier();
-        }else{
-            return null;
+    public Optional<String> getPlayerUUID(String player){
+        Optional<ProviderRegistration<UserStorageService>> opt_provider = Sponge.getServiceManager().getRegistration(UserStorageService.class);
+        if(opt_provider.isPresent()) {
+            ProviderRegistration<UserStorageService> provider = opt_provider.get();
+            UserStorageService service = provider.getProvider();
+            Optional<User> opt_user = service.get(player);
+            
+            if(opt_user.isPresent()) {
+                return Optional.of(opt_user.get().getPlayer().get().getIdentifier());
+            }else{
+                return Optional.empty();
+            }
         }
+        return Optional.empty();
     }
     
     /**
