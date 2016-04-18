@@ -55,17 +55,42 @@ public class PlotManager {
         int Y = location.getBlockY();
         int Z = location.getBlockZ();
         
-        if (plot.getworld().equalsIgnoreCase(world.getExtent().getName()) == false){return false;}
-        if ((X < plot.getX1()) || (X > plot.getX2())){return false;}
-        if ((Z < plot.getZ1()) || (Z > plot.getZ2())){return false;}
-        if ((Y < plot.getY1()) || (Y > plot.getY2())){return false;}
+        if (plot.getworldName().equalsIgnoreCase(world.getExtent().getName()) == false){return false;}
+        else if ((X < plot.getX1()) || (X > plot.getX2())){return false;}
+        else if ((Z < plot.getZ1()) || (Z > plot.getZ2())){return false;}
+        else if ((Y < plot.getY1()) || (Y > plot.getY2())){return false;}
         return true;
     }
-  
+    
+    /**
+     * Parcelle (Plot) enregistré au point de l'objet Location 
+     * avec le Flag Jail = True si la paramètre flaJail = True
+     * @param loc Objet Location
+     * @param flagJail True pour les parcelles Jails
+     * @return La parcelle ou Null si rien trouvé
+     */
     public GPlot getPlot(Location loc, boolean flagJail){return plotContainsVector(loc, flagJail);}
+    
+    /**
+     * Parcelle (Plot) enregistré au point de l'objet Location
+     * @param loc Objet Location
+     * @return La parcelle ou Null si rien trouvé
+     */
     public GPlot getPlot(Location loc){return plotContainsVector(loc, false);}
-    public Boolean hasPlot(String name){for(GPlot plot : plots){if(plot.getName().contains(name)){return true;}}return false;}
-    public Boolean hasJail(String name){for(GPlot jail : jails){if(jail.getName().contains(name)){return true;}}return false;}
+    
+    /**
+     * Retourne True si le nom indiqué correspond bien a un nom de parcelle(Plot)
+     * @param name
+     * @return 
+     */
+    public Boolean hasPlot(String name){return plots.stream().anyMatch((plot) -> (plot.getName().contains(name)));}
+    
+    /**
+     * Retourne True si le nom indiqué correspond a une parcelle enregistré en Jail(Prison)
+     * @param name Nom de la parcelle (Plot)
+     * @return Boolean
+     */
+    public Boolean hasJail(String name){return jails.stream().anyMatch((jail) -> (jail.getName().contains(name)));}
     
     /**
      * Retourne la valeur GPlot de la parcelle nommée
@@ -73,7 +98,7 @@ public class PlotManager {
      * @return 
      */
     public GPlot getPlot(String plotName){
-        for(GPlot plot : plots){
+        for (GPlot plot : plots) {
             if(plot.getName().contains(plotName)){return plot;}
         }
         return null;
@@ -193,17 +218,11 @@ public class PlotManager {
         World world = w.getExtent();
         GPlot newPlot = new GPlot(world.getName(),this.border1.getBlockX(),0,l1.getBlockZ(),l2.getBlockX(),500,l2.getBlockZ());
                 
-        for(GPlot plot : plots){            
-            if(plot.getworld().equalsIgnoreCase(newPlot.getworld())){
-                if( foundPlot(plot.getLocation1(),newPlot) || foundPlot(plot.getLocation2(),newPlot) || 
-                    foundPlot(plot.getLocation3(),newPlot) || foundPlot(plot.getLocation4(),newPlot) || 
-                    foundPlot(plot.getLocation5(),newPlot) || foundPlot(plot.getLocation6(),newPlot) ||
-                    foundPlot(plot.getLocation7(),newPlot) || foundPlot(plot.getLocation8(),newPlot)){
-                    return true;
-                }
-            }
-        }
-        return false;
+        return plots.stream().filter((plot) -> (plot.getworldName().equalsIgnoreCase(newPlot.getworldName()))).anyMatch((plot) -> ( 
+                foundPlot(plot.getLocX1Y1Z1(),newPlot) || foundPlot(plot.getLocX2Y2Z2(),newPlot) ||
+                foundPlot(plot.getLocX1Y1Z2(),newPlot) || foundPlot(plot.getLocX2Y2Z1(),newPlot) ||
+                foundPlot(plot.getLocX1Y2Z2(),newPlot) || foundPlot(plot.getLocX2Y1Z2(),newPlot) ||
+                foundPlot(plot.getLocX2Y1Z1(),newPlot) || foundPlot(plot.getLocX1Y2Z1(),newPlot)));
     }
 }
 

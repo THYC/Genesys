@@ -135,62 +135,69 @@ public class MessageManager {
                     msg.add("&6Bienvenue, &e%name%!");
                     msg.add("&6Tu es sur la map &e%world%!\n");
                     message.getNode("SERVER","JOIN_MESSAGE").setValue(msg);
-                    manager.save(message);
                 }
                 if(message.getNode("SERVER","EVENT_LOGIN_MESSAGE").isVirtual()){
                     msg = new ArrayList<>();
                     msg.add("&7%name% a rejoint le serveur");
                     message.getNode("SERVER","EVENT_LOGIN_MESSAGE").setValue(msg);
-                    manager.save(message);
                 }
                 
-                msg = new ArrayList<>();
-                msg.add("&eSalut &6%name%&e, c'est visiblement la premi\350re fois que tu viens !");
-                msg.add("&7Assure-toi d'avoir bien lu le r\350glement en tapant &e/rules");
-                msg.add("&7Si tu veux participer \340 la vie du serveur ou te tenir inform\351");
-                msg.add("&7inscris-toi sur notre forum &bhttp://craft.teraoctet.net\n");
-                message.getNode("SERVER","FIRSTJOIN_MESSAGE").setValue(msg);
-                manager.save(message);
+                if(message.getNode("SERVER","FIRSTJOIN_MESSAGE").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&eSalut &6%name%&e, c'est visiblement la premi\350re fois que tu viens !");
+                    msg.add("&7Assure-toi d'avoir bien lu le r\350glement en tapant &e/rules");
+                    msg.add("&7Si tu veux participer \340 la vie du serveur ou te tenir inform\351");
+                    msg.add("&7inscris-toi sur notre forum &bhttp://craft.teraoctet.net\n");
+                    message.getNode("SERVER","FIRSTJOIN_MESSAGE").setValue(msg);
+                }
                 
-                msg = new ArrayList<>();
-                msg.add("&7%name% s'est d\351connect\351");
-                message.getNode("SERVER","EVENT_DISCONNECT_MESSAGE").setValue(msg);
-                manager.save(message);
+                if(message.getNode("SERVER","EVENT_DISCONNECT_MESSAGE").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&7%name% s'est d\351connect\351");
+                    message.getNode("SERVER","EVENT_DISCONNECT_MESSAGE").setValue(msg);
+                }
                 
-                msg = new ArrayList<>();
-                msg.add("&9%name% est nouveau sur le serveur !");
-                message.getNode("SERVER","FIRSTJOIN_BROADCAST_MESSAGE").setValue(msg);
-                manager.save(message);
+                if(message.getNode("SERVER","FIRSTJOIN_BROADCAST_MESSAGE").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&9%name% est nouveau sur le serveur !");
+                    message.getNode("SERVER","FIRSTJOIN_BROADCAST_MESSAGE").setValue(msg);
+                }
                 
-                msg = new ArrayList<>();
-                msg.add("&8%var1% &7a chang\351 son nom en &8%var2%");
-                message.getNode("SERVER","NAME_CHANGE").setValue(msg);
-                manager.save(message);
+                if(message.getNode("SERVER","NAME_CHANGE").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&8%var1% &7a chang\351 son nom en &8%var2%");
+                    message.getNode("SERVER","NAME_CHANGE").setValue(msg);
+                }
                 
-                msg = new ArrayList<>();
-                msg.add("&cVotre inventaire a \351t\351 \351ffac\351");
-                message.getNode("SERVER","INVENTORY_CLEARED").setValue(msg);
-                manager.save(message);
+                if(message.getNode("SERVER","INVENTORY_CLEARED").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&cVotre inventaire a \351t\351 \351ffac\351");
+                    message.getNode("SERVER","INVENTORY_CLEARED").setValue(msg);
+                }
                 
-                msg = new ArrayList<>();
-                msg.add("&eL'inventaire de &6%var1% a \351t\351 supprim\351");
-                message.getNode("SERVER","CLEARINVENTORY_SUCCESS").setValue(msg);
-                manager.save(message);
+                if(message.getNode("SERVER","CLEARINVENTORY_SUCCESS").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&eL'inventaire de &6%var1% a \351t\351 supprim\351");
+                    message.getNode("SERVER","CLEARINVENTORY_SUCCESS").setValue(msg);
+                }
                 
-                msg = new ArrayList<>();
-                msg.add("&eFly activ\351");
-                message.getNode("SERVER","FLY_ENABLED").setValue(msg);
-                manager.save(message);
+                if(message.getNode("SERVER","FLY_ENABLED").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&eFly activ\351");
+                    message.getNode("SERVER","FLY_ENABLED").setValue(msg);
+                }
                 
-                msg = new ArrayList<>();
-                msg.add("&eFly d\351sactiv\351");
-                message.getNode("SERVER","FLY_DISABLED").setValue(msg);
-                manager.save(message);
+                if(message.getNode("SERVER","FLY_DISABLED").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&eFly d\351sactiv\351");
+                    message.getNode("SERVER","FLY_DISABLED").setValue(msg);
+                }
                 
-                msg = new ArrayList<>();
-                msg.add("&eVous avez activ\351 le fly de &6%var1%");
-                message.getNode("SERVER","FLY_GIVEN").setValue(msg);
-                manager.save(message);
+                if(message.getNode("SERVER","FLY_GIVEN").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&eVous avez activ\351 le fly de &6%var1%");
+                    message.getNode("SERVER","FLY_GIVEN").setValue(msg);
+                }
                 
                 msg = new ArrayList<>();
                 msg.add("&eVous avez d\351sactiv\351 le fly de &6%var1%");
@@ -505,7 +512,7 @@ public class MessageManager {
                 msg = new ArrayList<>();
                 msg.add("\n&6Vous \352tes sur une parcelle proteg\351e : &e%plot%");
                 msg.add("&6Propri\351taire : &e%owner%");
-                msg.add("&6Habitant(s) : &e%allow%\n");
+                msg.add("&6Habitant(s) : &e%allow%");
                 message.getNode("PLOT","PLOT_INFO").setValue(msg);
                 manager.save(message);
                 

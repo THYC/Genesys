@@ -15,7 +15,7 @@ import net.teraoctet.genesys.commands.plot.CommandPlotRemoveplayer;
 import net.teraoctet.genesys.commands.plot.CommandPlotMsg;
 import net.teraoctet.genesys.commands.plot.CommandPlotCreateOK;
 import net.teraoctet.genesys.commands.plot.CommandPlotFlag;
-import net.teraoctet.genesys.commands.plot.CommandPlotExtand;
+import net.teraoctet.genesys.commands.plot.CommandPlotExpand;
 import net.teraoctet.genesys.commands.plot.CommandPlotAddplayer;
 import net.teraoctet.genesys.commands.plot.CommandPlotList;
 import net.teraoctet.genesys.commands.plot.CommandPlotFlaglist;
@@ -32,6 +32,8 @@ import net.teraoctet.genesys.commands.faction.CommandFactionRemoveplayer;
 import net.teraoctet.genesys.commands.faction.CommandFactionList;
 import net.teraoctet.genesys.commands.faction.CommandFactionMemberslist;
 import net.teraoctet.genesys.commands.faction.CommandFactionLeave;
+import net.teraoctet.genesys.commands.plot.CommandPlotLevel;
+import net.teraoctet.genesys.commands.plot.CommandPlotTP;
 import net.teraoctet.genesys.commands.shop.CommandShopAdd;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
@@ -42,7 +44,8 @@ public class CommandManager {
         public CommandSpec CommandKill = CommandSpec.builder()
                 .description(Text.of("/kill"))
                 .permission("genesys.kill")
-                .arguments(GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.player(Text.of("player")))))
+                .arguments(GenericArguments.optional(
+                        GenericArguments.onlyOne(GenericArguments.player(Text.of("player")))))
                 .executor(new CommandKill())
                 .build();
         
@@ -89,8 +92,7 @@ public class CommandManager {
         public CommandSpec CommandPlotCreateOK = CommandSpec.builder() 
                 .description(Text.of("use /plot create <name> [strict]")) 
                 .permission("genesys.plot.create") 
-                .arguments(
-                    GenericArguments.seq(
+                .arguments(GenericArguments.seq(
                         GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))),
                         GenericArguments.onlyOne(GenericArguments.integer(Text.of("amount"))),
                         GenericArguments.onlyOne(GenericArguments.bool(Text.of("strict")))))
@@ -99,11 +101,11 @@ public class CommandManager {
         
         public CommandSpec CommandPlotFlag = CommandSpec.builder()
                 .description(Text.of("/plot flag <flag> <0|1> [name]")) 
+                .extendedDescription(Text.of("/plot flag <flag> <0|1> [name]"))
                 .permission("genesys.plot.flag") 
-                .arguments(
-                    GenericArguments.seq(
-                        GenericArguments.onlyOne(GenericArguments.string(Text.of("flag"))),
-                        GenericArguments.onlyOne(GenericArguments.integer(Text.of("value"))),
+                .arguments(GenericArguments.seq(
+                        GenericArguments.optional(GenericArguments.string(Text.of("flag"))),
+                        GenericArguments.optional(GenericArguments.integer(Text.of("value"))),
                         GenericArguments.optional(GenericArguments.string(Text.of("name")))))
                 .executor(new CommandPlotFlag()) 
                 .build(); 
@@ -169,15 +171,15 @@ public class CommandManager {
                 .executor(new CommandPlotList()) 
                 .build(); 
         
-        public CommandSpec CommandPlotExtand = CommandSpec.builder()
-                .description(Text.of("/plot extand <value>")) 
-                .permission("genesys.plot.extand") 
+        public CommandSpec CommandPlotExpand = CommandSpec.builder()
+                .description(Text.of("/plot expand <value>")) 
+                .permission("genesys.plot.expand") 
                 .arguments(
                     GenericArguments.seq(
                         GenericArguments.optional(GenericArguments.integer(Text.of("value"))),
                         GenericArguments.optional(GenericArguments.integer(Text.of("point"))),
                         GenericArguments.optional(GenericArguments.string(Text.of("axe")))))
-                .executor(new CommandPlotExtand()) 
+                .executor(new CommandPlotExpand()) 
                 .build(); 
         
         public CommandSpec CommandPlotMsg = CommandSpec.builder()
@@ -187,12 +189,29 @@ public class CommandManager {
                 .executor(new CommandPlotMsg())
                 .build();
         
+        public CommandSpec CommandPlotTP = CommandSpec.builder()
+                .description(Text.of("/plot tp <name>"))
+                .permission("genesys.plot.tp")
+                .arguments(GenericArguments.optional(GenericArguments.string(Text.of("name"))))
+                .executor(new CommandPlotTP())
+                .build();
+        
+        public CommandSpec CommandPlotLevel = CommandSpec.builder()
+                .description(Text.of("/plot level [level]")) 
+                .permission("genesys.plot.level") 
+                .arguments(
+                    GenericArguments.seq(
+                        GenericArguments.optional(GenericArguments.string(Text.of("naem"))),
+                        GenericArguments.optional(GenericArguments.integer(Text.of("level")))))
+                .executor(new CommandPlotLevel()) 
+                .build(); 
+        
         public CommandSpec CommandPlot = CommandSpec.builder()
                 .description(Text.of("/plot")) 
                 .permission("genesys.plot") 
                 .child(CommandPlotCreate, "create")
                 .child(CommandPlotCreateOK, "createok")
-                .child(CommandPlotExtand, "extand")
+                .child(CommandPlotExpand, "expand")
                 .child(CommandPlotList, "list")
                 .child(CommandPlotFlag, "flag")
                 .child(CommandPlotFlaglist, "flaglist")
@@ -202,6 +221,8 @@ public class CommandManager {
                 .child(CommandPlotRemoveplayer, "removeplayer")
                 .child(CommandPlotOwnerset, "ownerset")
                 .child(CommandPlotMsg, "msg")
+                .child(CommandPlotTP, "tp")
+                .child(CommandPlotLevel, "level")
                 .executor(new CommandPlot())
                 .build();
 
@@ -251,7 +272,8 @@ public class CommandManager {
         public CommandSpec CommandHead = CommandSpec.builder()
                 .description(Text.of("/head [head]"))
                 .permission("genesys.head")
-                .arguments(GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.string(Text.of("head")))))
+                .arguments(GenericArguments.optional(
+                        GenericArguments.onlyOne(GenericArguments.string(Text.of("head")))))
                 .executor(new CommandHead())
                 .build();
         
@@ -498,5 +520,34 @@ public class CommandManager {
                     GenericArguments.optional(GenericArguments.doubleNum(Text.of("price"))),
                     GenericArguments.optional(GenericArguments.string(Text.of("itemtype")))))
                 .executor(new CommandShopAdd())
+                .build();
+        
+        public CommandSpec CommandMagicCompass = CommandSpec.builder()
+                .description(Text.of("/mc <Direction> <name> <X> <Y> <Z>"))
+                .permission("genesys.magiccompass")
+                .arguments(GenericArguments.seq(
+                    GenericArguments.optional(GenericArguments.string(Text.of("direction"))),
+                    GenericArguments.optional(GenericArguments.string(Text.of("name"))),
+                    GenericArguments.optional(GenericArguments.integer(Text.of("x"))),
+                    GenericArguments.optional(GenericArguments.integer(Text.of("y"))),
+                    GenericArguments.optional(GenericArguments.integer(Text.of("z")))))
+                .executor(new CommandMagicCompass())
+                .build();
+        
+        public CommandSpec CommandSignWrite = CommandSpec.builder()
+                .description(Text.of("/write <line> <message>"))
+                .permission("genesys.sign.write")
+                .arguments(GenericArguments.seq(
+                    GenericArguments.optional(GenericArguments.integer(Text.of("line"))), 
+                    GenericArguments.optional(GenericArguments.remainingJoinedStrings(Text.of("message")))))
+                .executor(new CommandSignWrite())
+                .build();
+        
+        public CommandSpec CommandSignHelp = CommandSpec.builder()
+                .description(Text.of("/signhelp <name>"))
+                .permission("genesys.sign.help")
+                .arguments(
+                    GenericArguments.optional(GenericArguments.string(Text.of("name"))))
+                .executor(new CommandSignHelp())
                 .build();
 }

@@ -4,6 +4,7 @@ import net.teraoctet.genesys.player.PlayerListener;
 import com.google.inject.Inject;
 
 import java.io.File;
+import net.teraoctet.genesys.bookmessage.BookManager;
 import net.teraoctet.genesys.plot.PlotListener;
 import net.teraoctet.genesys.plot.PlotManager;
 import net.teraoctet.genesys.portal.PortalListener;
@@ -14,6 +15,7 @@ import net.teraoctet.genesys.utils.MessageManager;
 import net.teraoctet.genesys.world.WorldListener;
 import net.teraoctet.genesys.world.WorldManager;
 import net.teraoctet.genesys.commands.CommandManager;
+import net.teraoctet.genesys.economy.ShopListener;
 import net.teraoctet.genesys.faction.FactionManager;
 import net.teraoctet.genesys.utils.ServerManager;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -39,6 +41,7 @@ public class Genesys {
     public static PlotManager plotManager = new PlotManager();
     public static PortalManager portalManager = new PortalManager();
     public static FactionManager factionManager = new FactionManager();
+    public static BookManager bookManager = new BookManager();
     public Logger getLogger(){return logger;}  
     public static Game game;
     public static PluginContainer plugin;
@@ -52,11 +55,13 @@ public class Genesys {
     	GData.setup();
     	GData.load();
         MessageManager.init();
+        BookManager.init();
 
         getGame().getEventManager().registerListeners(this, new PlotListener());
         getGame().getEventManager().registerListeners(this, new PortalListener());
         getGame().getEventManager().registerListeners(this, new PlayerListener());
         getGame().getEventManager().registerListeners(this, new WorldListener());
+        getGame().getEventManager().registerListeners(this, new ShopListener());
          
 	getGame().getCommandManager().register(this, new CommandManager().CommandKill, "kill", "tue");
 	getGame().getCommandManager().register(this, new CommandManager().CommandSun, "sun", "soleil");
@@ -81,7 +86,11 @@ public class Genesys {
 	getGame().getCommandManager().register(this, new CommandManager().CommandTest, "test");
         getGame().getCommandManager().register(this, new CommandManager().CommandRocket, "rocket");
         getGame().getCommandManager().register(this, new CommandManager().CommandPortal, "portal", "portail", "pl", "po");
-        getGame().getCommandManager().register(this, new CommandManager().CommandShopAdd, "shopadd");
+        getGame().getCommandManager().register(this, new CommandManager().CommandShopAdd, "shopadd", "addshop");
+        getGame().getCommandManager().register(this, new CommandManager().CommandHead, "head", "skull", "tete");
+        getGame().getCommandManager().register(this, new CommandManager().CommandMagicCompass, "mc", "magic", "compass", "boussole");
+        getGame().getCommandManager().register(this, new CommandManager().CommandSignWrite, "write", "ecrire", "signwrite", "sw", "print");
+        getGame().getCommandManager().register(this, new CommandManager().CommandSignHelp, "signhelp", "sh");
 
         getLogger().info("-----------------------------"); 
 	getLogger().info("...........Genesys..........."); 

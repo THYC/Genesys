@@ -1,58 +1,115 @@
 package net.teraoctet.genesys.utils;
 
 import com.flowpowered.math.vector.Vector3d;
-import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Optional;
+import static net.teraoctet.genesys.Genesys.plotManager;
+import net.teraoctet.genesys.player.GPlayer;
+import net.teraoctet.genesys.plot.GPlot;
+import static net.teraoctet.genesys.utils.DeSerialize.getVector3d;
+import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
-import static org.spongepowered.api.Sponge.getGame;
 import org.spongepowered.api.data.DataTransactionResult;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.manipulator.mutable.TargetedLocationData;
 import org.spongepowered.api.data.manipulator.mutable.item.LoreData;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.serializer.TextSerializers;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
 
 public class SettingCompass {
     
-         
-        
-    public boolean setCompassLocation(Player player, final Vector3d location) {
-        Optional<TargetedLocationData> compass = player.getOrCreate(TargetedLocationData.class);
-        if (!compass.isPresent()) {
-            return false;
+    public Optional<Vector3d> getLookLocation(ItemStack magicCompass){
+        if(magicCompass.getOrCreate(LoreData.class).isPresent()){
+            LoreData loreMCompass = magicCompass.getOrCreate(LoreData.class).get();
+            if(loreMCompass.get(3).isPresent()){
+                Vector3d location = getVector3d(loreMCompass.get(3).get().toPlain());
+                return Optional.of(location);
+            }
         }
-
-        compass.get().set(Keys.TARGETED_LOCATION, location);
-        
-        getGame().getServer().getConsole().sendMessage(MESSAGE(String.valueOf(compass.get().target()))); //compass.get().target()
-        return true;
+        return Optional.empty();
     }
     
-    public ItemStack MagicCompass(Player player, String name, String direction){
+    public Optional<ItemStack> MagicCompass(Player player){
+        GPlayer gplayer = getGPlayer(player.getIdentifier());
         ItemStack magicCompass = ItemStack.builder().itemType(ItemTypes.COMPASS).build();
 	LoreData loreMCompass = magicCompass.getOrCreate(LoreData.class).get();
-        magicCompass.offer(Keys.DISPLAY_NAME, MESSAGE("&4SUPER &5BOUSSOLE DE &9OUF"));
-                    
-        
-	//Text nameLore = TextSerializers.FORMATTING_CODE.deserialize(name);
+        magicCompass.offer(Keys.DISPLAY_NAME, MESSAGE("&4Magic &5Compass"));
+                 
 	List<Text> newLore = loreMCompass.lore().get();
-        
-	//newLore.add(nameLore);
-        newLore.add(MESSAGE("&6Magic Compass"));
-        newLore.add(MESSAGE("&8" + player.getName()));
-        newLore.add(MESSAGE("&4Direction: HOME"));
+        newLore.add(MESSAGE("&l&n&2Owner: &e" + player.getName()));
+        newLore.add(MESSAGE("&8 Fait un clik droit voir prendre la direction"));
+        newLore.add(MESSAGE("&4Direction: GRAVE "));
+        newLore.add(MESSAGE("&8" + gplayer.getLastdeath()));
 	DataTransactionResult dataTransactionResult = magicCompass.offer(Keys.ITEM_LORE, newLore);
 
 	if (dataTransactionResult.isSuccessful()){ 
-            return magicCompass;
+            return Optional.of(magicCompass);
         } else {
-            return null;
+            return Optional.empty();
         }				
+    }
+    
+    public Optional<ItemStack> MagicCompass(Player player, String direction){
+        GPlayer gplayer = getGPlayer(player.getIdentifier());
+        ItemStack magicCompass = ItemStack.builder().itemType(ItemTypes.COMPASS).build();
+	LoreData loreMCompass = magicCompass.getOrCreate(LoreData.class).get();
+        String arg[] = direction.split(":");
+        magicCompass.offer(Keys.DISPLAY_NAME, MESSAGE("&4Magic &5Compass &e" + arg[0]));
+        String loc = "";
+        switch(arg[0]){
+            case "HOME":
+                String homeName = "default";
+                if(arg.length == 2){ homeName = arg[1];}
+                loc =   String.valueOf(gplayer.getHome(homeName).getX()) + ":" +
+                        String.valueOf(gplayer.getHome(homeName).getY()) + ":" +
+                        String.valueOf(gplayer.getHome(homeName).getZ());
+                break;
+            case "GRAVE":
+                loc = gplayer.getLastdeath();
+                break;
+            case "PLOT": 
+                if(arg.length == 1){return Optional.empty();}
+                GPlot gplot = plotManager.getPlot(arg[1]);
+                loc =   DeSerialize.location(gplot.getSpawnPlot().get());
+                break;
+            default:
+            
+        }
+	List<Text> newLore = loreMCompass.lore().get();
+        newLore.add(MESSAGE("&l&n&2Owner: &e" + player.getName()));
+        newLore.add(MESSAGE("&8 Fait un clik droit voir prendre la direction"));
+        newLore.add(MESSAGE("&4Direction:&8 " + arg[0] + " " + arg[1] ));
+        newLore.add(MESSAGE("&8" + loc));
+	DataTransactionResult dataTransactionResult = magicCompass.offer(Keys.ITEM_LORE, newLore);
+
+	if (dataTransactionResult.isSuccessful()){ 
+            return Optional.of(magicCompass);
+        } else {
+            return Optional.empty();
+        }				
+    }
+    
+    public Optional<ItemStack> MagicCompass(Player player, String direction, String locationString){
+        ItemStack magicCompass = ItemStack.builder().itemType(ItemTypes.COMPASS).build();
+	LoreData loreMCompass = magicCompass.getOrCreate(LoreData.class).get();
+        magicCompass.offer(Keys.DISPLAY_NAME, MESSAGE("&4Magic &5Compass &e" + direction));
+                 
+	List<Text> newLore = loreMCompass.lore().get();
+        newLore.add(MESSAGE("&l&n&2Owner: &e" + player.getName()));
+        newLore.add(MESSAGE("&8 Fait un clik droit voir prendre la direction"));
+        newLore.add(MESSAGE("&4Direction:&8 " + direction));
+        newLore.add(MESSAGE("&8" + locationString));
+	DataTransactionResult dataTransactionResult = magicCompass.offer(Keys.ITEM_LORE, newLore);
+
+	if (dataTransactionResult.isSuccessful()){ 
+            return Optional.of(magicCompass);
+        } else {
+            return Optional.empty();
+        }				
+    }
+    
+    public void lookDirection(Player player, Vector3d direction){
+        player.lookAt(direction);
     }
 }

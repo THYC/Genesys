@@ -14,7 +14,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import static net.teraoctet.genesys.utils.GData.queue;
 
-public class GPlayer {
+public class GPlayer{
 	
     private String uuid;
     private int level;

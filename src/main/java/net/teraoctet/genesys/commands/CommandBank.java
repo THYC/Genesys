@@ -9,14 +9,19 @@ import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 
-public class CommandSetCompass implements CommandExecutor {
+public class CommandBank implements CommandExecutor {
         
     @Override
     public CommandResult execute(CommandSource src, CommandContext ctx) {
 
-        if(src instanceof Player && src.hasPermission("genesys.compass")) {
-            Player player = (Player)src;
-            //player.setItemInHand(stack);
+        if(src instanceof Player && src.hasPermission("genesys.")) {
+            //remplir "src.hasPermission("genesys.")" avec le nom de la permission de la commande
+            //      -------------------------------------------
+            //si la console peut utiliser la commande :
+            //  - supprimer "src instanceof Player"
+            //  - supprimer "else if (src instanceof ConsoleSource)"            
+            
+            //CODER LA COMMANDE ICI
             
             return CommandResult.success();
         } 

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import net.teraoctet.genesys.player.GPlayer;
-import net.teraoctet.genesys.utils.GData;
 import static net.teraoctet.genesys.utils.GData.commit;
 import static net.teraoctet.genesys.utils.GData.getGFaction;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
@@ -70,7 +69,7 @@ public class FactionManager {
      * et supprime la faction
      * @param id_faction 
      */
-    public void removeFaction(int id_faction){
+    /*public void removeFaction(int id_faction){
         for (String uuid : getPlayers().keySet()) {
             if(getPlayers().get(uuid).getID_faction() == id_faction){
                 getPlayers().get(uuid).setID_faction(0);
@@ -83,6 +82,20 @@ public class FactionManager {
             }
         }
         GData.commit();
+    }*/
+    
+    public void removeFaction(int id_faction){
+        for(Map.Entry<String,GPlayer> p : getPlayers().entrySet()){
+            if(p.getValue().getID_faction() == id_faction){
+                p.getValue().setFactionRank(0);
+                p.getValue().setID_faction(0);
+                p.getValue().update();
+            }
+        }
+        GFaction gfaction = getGFaction(id_faction);
+        gfaction.delete();
+        removeGFaction(id_faction);
+        commit();
     }
     
     /**
@@ -91,12 +104,10 @@ public class FactionManager {
      * @return 
      */
     public List<String> getFactionPlayers(int id_faction){
-        List<String> listPlayer =  new ArrayList<String>() ;
-        for(Map.Entry<String,GPlayer> p : getPlayers().entrySet()){
-            if(p.getValue().getID_faction() == id_faction){
-                listPlayer.add(p.getValue().getName());
-            }
-        }
+        List<String> listPlayer =  new ArrayList<>() ;
+        getPlayers().entrySet().stream().filter((p) -> (p.getValue().getID_faction() == id_faction)).forEach((p) -> {
+            listPlayer.add(p.getValue().getName());
+        });
         return listPlayer;
     }
     
@@ -107,12 +118,10 @@ public class FactionManager {
      * @return 
      */
     public List<String> getFactionPlayers(int id_faction, int rank){
-        List<String> listPlayer =  new ArrayList<String>() ;
-        for(Map.Entry<String,GPlayer> p : getPlayers().entrySet()){
-            if(p.getValue().getID_faction() == id_faction && p.getValue().getFactionRank() == rank){
-                listPlayer.add(p.getValue().getName());
-            }
-        }
+        List<String> listPlayer =  new ArrayList<>() ;
+        getPlayers().entrySet().stream().filter((p) -> (p.getValue().getID_faction() == id_faction && p.getValue().getFactionRank() == rank)).forEach((p) -> {
+            listPlayer.add(p.getValue().getName());
+        });
         return listPlayer;
     }
     

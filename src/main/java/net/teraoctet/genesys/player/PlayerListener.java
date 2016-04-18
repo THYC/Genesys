@@ -1,8 +1,14 @@
 package net.teraoctet.genesys.player;
 
+import com.flowpowered.math.vector.Vector3d;
+import com.google.common.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import static net.teraoctet.genesys.Genesys.bookManager;
+import static net.teraoctet.genesys.Genesys.plotManager;
+import net.teraoctet.genesys.plot.GPlot;
+import net.teraoctet.genesys.plot.PlotManager;
 import net.teraoctet.genesys.utils.GData;
 import static net.teraoctet.genesys.utils.GData.addGPlayer;
 import static net.teraoctet.genesys.utils.GData.commit;
@@ -18,9 +24,14 @@ import static net.teraoctet.genesys.utils.MessageManager.NAME_CHANGE;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import net.teraoctet.genesys.utils.Permissions;
 import net.teraoctet.genesys.utils.DeSerialize;
+import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import static net.teraoctet.genesys.utils.MessageManager.FIRSTJOIN_BROADCAST_MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.EVENT_LOGIN_MESSAGE;
+import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
+import net.teraoctet.genesys.utils.SettingCompass;
 import static org.spongepowered.api.Sponge.getGame;
+import org.spongepowered.api.block.BlockSnapshot;
+import org.spongepowered.api.block.BlockState;
 
 import org.spongepowered.api.block.BlockTypes;
 import static org.spongepowered.api.block.BlockTypes.AIR;
@@ -34,18 +45,31 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.Order;
+import org.spongepowered.api.event.action.InteractEvent;
+import org.spongepowered.api.event.block.InteractBlockEvent;
+import org.spongepowered.api.event.block.InteractBlockEvent.Secondary;
+import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.event.command.SendCommandEvent;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.cause.Last;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.message.MessageChannelEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
+import static org.spongepowered.api.item.ItemTypes.COMPASS;
+import static org.spongepowered.api.item.ItemTypes.SIGN;
+import static org.spongepowered.api.item.ItemTypes.WOODEN_SHOVEL;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.crafting.CraftingInventory;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.entity.HumanInventory;
+import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.item.inventory.type.GridInventory;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.chat.ChatTypes;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -137,6 +161,15 @@ public class PlayerListener {
         Text prefixWorld = MESSAGE(getWorld(player.getWorld().getName()).getPrefix()) ;
         Text newMessage = prefixWorld.builder().append(message).build();
         event.setMessage(newMessage);
+    }
+    
+    @Listener
+    public void onPlayerCraft(CraftingInventory event, @First Player player)
+    {
+        getGame().getServer().getConsole().sendMessage(MESSAGE("crafting"));
+        if(event.contains(COMPASS)){
+            getGame().getServer().getConsole().sendMessage(MESSAGE("crafting"));
+        }
     }
     
     @Listener
@@ -272,5 +305,109 @@ public class PlayerListener {
             }
         }
         return location;
+    }
+    
+    @Listener
+    public void onCompassInteract(InteractBlockEvent event, @First Player player) {
+        Optional<ItemStack> is = player.getItemInHand();
+        SettingCompass sc = new SettingCompass();
+        
+        if (is.isPresent()) {
+            // Event click droit
+            if (event instanceof InteractBlockEvent.Secondary){
+                if(is.get().getItem().equals(COMPASS)){      
+                    
+                    // si interact sur sign "Parcelle a vendre"
+                    Optional<Location<World>> loc = event.getTargetBlock().getLocation();
+                    if(loc.isPresent()){
+                        Optional<TileEntity> block = loc.get().getTileEntity();
+                        if (block.isPresent()) {
+                            TileEntity tile=block.get();
+                            if (tile instanceof Sign) {
+                                Sign sign=(Sign)tile;
+                                Optional<SignData> optional=sign.getOrCreate(SignData.class);
+                                if (optional.isPresent()) {
+                                    SignData offering = optional.get();
+                                    Text txt1 = offering.lines().get(0);
+                                    if (txt1.equals(MESSAGE("&1A VENDRE"))){
+                                        if(!plotManager.hasPlot(Text.of(offering.getValue(Keys.SIGN_LINES).get().get(1)).toPlain())){
+                                            player.sendMessage(MESSAGE("&eCette parcelle n'existe plus"));
+                                            event.setCancelled(true);
+                                            return;
+                                        }else{
+                                            String name = offering.getValue(Keys.SIGN_LINES).get().get(1).toPlain();
+                                            is = sc.MagicCompass(player,"PLOT:" + name);
+                                            player.setItemInHand(is.get());
+                                            player.sendMessage(MESSAGE("&2MagicComapss : &eCoordonn\351e enregistr\351e sur votre boussole"));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    Optional<Vector3d> v3d = sc.getLookLocation(is.get());
+                    if(v3d.isPresent())player.lookAt(v3d.get()); 
+                }
+            }
+        }
+    }
+    
+    @Listener
+    public void onColorSign(ChangeSignEvent event, @First Player player){
+        if (player.hasPermission("genesys.sign.color")){
+            SignData signData = event.getText();
+            if (signData.getValue(Keys.SIGN_LINES).isPresent()){
+                String line0 = signData.getValue(Keys.SIGN_LINES).get().get(0).toPlain();
+                String line1 = signData.getValue(Keys.SIGN_LINES).get().get(1).toPlain();
+                String line2 = signData.getValue(Keys.SIGN_LINES).get().get(2).toPlain();
+                String line3 = signData.getValue(Keys.SIGN_LINES).get().get(3).toPlain();
+
+                signData = signData.set(signData.getValue(Keys.SIGN_LINES).get().set(0, MESSAGE(line0)));
+                signData = signData.set(signData.getValue(Keys.SIGN_LINES).get().set(1, MESSAGE(line1)));
+                signData = signData.set(signData.getValue(Keys.SIGN_LINES).get().set(2, MESSAGE(line2)));
+                signData = signData.set(signData.getValue(Keys.SIGN_LINES).get().set(3, MESSAGE(line3)));                
+            }
+        }
+    }
+    
+    @Listener
+    public void onInteractSign(InteractBlockEvent event){ 
+        Optional<Player> optPlayer = event.getCause().first(Player.class);
+        if (!optPlayer.isPresent()) {
+            return;
+        }
+        Player player = optPlayer.get();
+
+        BlockSnapshot b = event.getTargetBlock();
+        if(!b.getLocation().isPresent()){return;}
+        Location loc = b.getLocation().get();              
+        Optional<TileEntity> block = loc.getTileEntity();
+        if (block.isPresent()) {
+            TileEntity tile=block.get();
+            if (tile instanceof Sign) {
+                if (event instanceof InteractBlockEvent.Secondary){
+                    Sign sign=(Sign)tile;
+                    Optional<SignData> optional=sign.getOrCreate(SignData.class);
+                    if (optional.isPresent()) {
+                        SignData offering = optional.get();
+                        Text txt1 = offering.lines().get(0);
+                        if (txt1.equals(MESSAGE("&l&1[?]"))){
+                            String tag = Text.of(offering.getValue(Keys.SIGN_LINES).get().get(2)).toPlain();
+                            getGame().getServer().getConsole().sendMessage(MESSAGE(tag));
+                            player.sendBookView(bookManager.getBookMessage(tag));
+                            //event.setCancelled(true);
+                            //return;
+                        }
+                        
+                        /*if (txt1.equals(MESSAGE("&l&1[CMD]"))){
+                            String tag = Text.of(offering.getValue(Keys.SIGN_LINES).get().get(1)).toPlain();
+                            player.sendBookView(bookManager.getBookMessage(tag));
+                            event.setCancelled(true);
+                            return;
+                        }*/
+                    }
+                } 
+            }
+        }
     }
 }

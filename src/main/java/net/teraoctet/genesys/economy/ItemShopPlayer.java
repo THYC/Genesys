@@ -11,7 +11,7 @@ import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.SHOP_BUY;
 import static net.teraoctet.genesys.utils.MessageManager.SHOP_SALE;
 
-public class ItemShop {
+public class ItemShopPlayer {
     
     private final ItemStack itemStack;
     private final String name;
@@ -22,7 +22,7 @@ public class ItemShop {
     private final int amount;
     private final String enchantment;
         
-    public ItemShop(ItemStack itemStack, String shopType, double price, String itemType){
+    public ItemShopPlayer(ItemStack itemStack, String shopType, double price, String itemType){
         this.itemStack = itemStack;
         this.shopType = shopType;
         this.price = price;
@@ -33,7 +33,7 @@ public class ItemShop {
         this.enchantment = "";
     }
     
-    public ItemShop(ItemStack itemStack, String shopType, double price){
+    public ItemShopPlayer(ItemStack itemStack, String shopType, double price){
         this.itemStack = itemStack;
         this.shopType = shopType;
         this.price = price;

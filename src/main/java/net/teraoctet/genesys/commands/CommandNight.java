@@ -20,7 +20,7 @@ public class CommandNight implements CommandExecutor {
         if(src instanceof Player && src.hasPermission("genesys.time.night")) {
             Player player = (Player) src; 
             World world = player.getLocation().getExtent();
-            world.getProperties().setWorldTime(12); 
+            world.getProperties().setWorldTime(14000); 
             getGame().getServer().getBroadcastChannel().send(NIGHT_MESSAGE(player)); 
             return CommandResult.success();
         } 

@@ -1,6 +1,5 @@
 package net.teraoctet.genesys.plot;
 
-import java.util.ArrayList;
 import java.util.Optional;
 import static net.teraoctet.genesys.Genesys.plotManager;
 import net.teraoctet.genesys.utils.GData;
@@ -41,6 +40,7 @@ import static net.teraoctet.genesys.utils.MessageManager.MISSING_BALANCE;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static org.spongepowered.api.block.BlockTypes.STANDING_SIGN;
 import static org.spongepowered.api.block.BlockTypes.WALL_SIGN;
+import static org.spongepowered.api.item.ItemTypes.COMPASS;
 
 public class PlotListener {
         
@@ -56,6 +56,7 @@ public class PlotListener {
         Player player = optPlayer.get();
         GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
         BlockSnapshot b = event.getTargetBlock();
+        if(!b.getLocation().isPresent()){return;}
         Location loc = b.getLocation().get();
         Optional<ItemStack> itemInHand = player.getItemInHand();
         GPlot plot = plotManager.getPlot(loc);
@@ -65,16 +66,20 @@ public class PlotListener {
             if(itemInHand.isPresent()){
                 if(itemInHand.get().getItem() == WOODEN_SHOVEL){
                     if (plot != null) {
-                        player.sendMessage(ChatTypes.CHAT,PLOT_INFO(player,plot.getNameAllowed(),plot.getNameOwner(),plot.getName()));
-                        event.setCancelled(true);
-                        return;
+                        player.sendMessage(PLOT_INFO(player,plot.getNameAllowed(),plot.getNameOwner(),plot.getName()));
+                        if(player.hasPermission("genesys.admin.plot")){
+                            PlotManager plotPlayer = PlotManager.getSett(player);
+                            plotPlayer.setBorder(1, loc);
+                            player.sendMessage(MESSAGE("&aNiveau : &e" + plot.getLevel()));
+                            player.sendMessage(Text.of(TextColors.GREEN, "Angle1 : ", TextColors.YELLOW, String.format("%d %d %d", new Object[] { loc.getBlockX(), loc.getBlockY(), loc.getBlockZ() })));
+                        }
                     } else {
                         PlotManager plotPlayer = PlotManager.getSett(player);
                         plotPlayer.setBorder(1, loc);
-                        player.sendMessage(ChatTypes.CHAT,Text.of(TextColors.GREEN, "Angle1 : ", TextColors.YELLOW, String.format("%d %d %d", new Object[] { loc.getBlockX(), loc.getBlockY(), loc.getBlockZ() })));
-                        event.setCancelled(true);
-                        return;
+                        player.sendMessage(Text.of(TextColors.GREEN, "Angle1 : ", TextColors.YELLOW, String.format("%d %d %d", new Object[] { loc.getBlockX(), loc.getBlockY(), loc.getBlockZ() })));
                     }
+                    event.setCancelled(true);
+                    return;
                 } 
             }
         }
@@ -84,18 +89,30 @@ public class PlotListener {
             if(itemInHand.isPresent()){
                 if(itemInHand.get().getItem() == WOODEN_SHOVEL){
                     if (plot != null) {
-                        player.sendMessage(ChatTypes.CHAT,PLOT_INFO(player,plot.getNameAllowed(),plot.getNameOwner(),plot.getName()));
-                        event.setCancelled(true);
-                        return;
+                        player.sendMessage(PLOT_INFO(player,plot.getNameAllowed(),plot.getNameOwner(),plot.getName()));
+                        if(player.hasPermission("genesys.admin.plot")){
+                            PlotManager plotPlayer = PlotManager.getSett(player);
+                            plotPlayer.setBorder(2, loc);
+                            player.sendMessage(MESSAGE("&aNiveau : &e" + plot.getLevel()));
+                            player.sendMessage(Text.of(TextColors.GREEN, "Angle2 : ", TextColors.YELLOW, String.format("%d %d %d", new Object[] { loc.getBlockX(), loc.getBlockY(), loc.getBlockZ() })));
+                        }
                     } else {
                         PlotManager plotPlayer = PlotManager.getSett(player);
                         plotPlayer.setBorder(2, loc);
-                        player.sendMessage(ChatTypes.CHAT,Text.of(TextColors.GREEN, "Angle2 : ", TextColors.YELLOW, String.format("%d %d %d", new Object[] { loc.getBlockX(), loc.getBlockY(), loc.getBlockZ() })));
-                        event.setCancelled(true);
+                        player.sendMessage(Text.of(TextColors.GREEN, "Angle2 : ", TextColors.YELLOW, String.format("%d %d %d", new Object[] { loc.getBlockX(), loc.getBlockY(), loc.getBlockZ() })));
                     }
+                    event.setCancelled(true);
                     return;
                 } 
             }
+        }
+        
+        // si la boussole est en main, on sort"
+        Optional<ItemStack> is = player.getItemInHand();
+        if (is.isPresent()) {
+            if(is.get().getItem().equals(COMPASS)){  
+                return;
+            }   
         }
         
         // Interact sur sign "Parcelle a vendre"
@@ -115,6 +132,7 @@ public class PlotListener {
                                 player.sendMessage(MESSAGE("&eCette parcelle n'existe plus"));
                                 b.getLocation().get().removeBlock();
                                 event.setCancelled(true);
+                                return;
                             }
                             plot = plotManager.getPlot(Text.of(offering.getValue(Keys.SIGN_LINES).get().get(1)).toPlain());
                             if (gplayer.getMoney()< cout && !plot.getUuidOwner().contains(player.getIdentifier())){

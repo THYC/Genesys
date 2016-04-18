@@ -53,8 +53,10 @@ public class CommandPlotCreate implements CommandExecutor {
                 }
 
                 if(plotManager.plotAllow(plotManager.getBorder1(), plotManager.getBorder2())){
-                    player.sendMessage(ALREADY_OWNED_PLOT());
-                    return CommandResult.empty();
+                    if(!player.hasPermission("genesys.admin.plot")){
+                        player.sendMessage(ALREADY_OWNED_PLOT());
+                        return CommandResult.empty();
+                    }
                 }
 
                 int X = (int) Math.round(c[0].getX()-c[1].getX());

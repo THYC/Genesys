@@ -31,7 +31,9 @@ public class CommandPlot implements CommandExecutor {
                     Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot addplayer <player> &5[NomParcelle] : &7ajoute un habitant \340 la parcelle")).toText(),
                     Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot removeplayer <player> &5[NomParcelle] : &7retire un habitant de la parcelle")).toText(),
                     Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot ownerset <player> &5[NomParcelle] : &7change le propi\351taire de la parcelle")).toText(),
-                    Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot sale <price> &5[NomParcelle] : &7place un panneau pour vendre votre parcelle")).toText())
+                    Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot sale <price> &5[NomParcelle] : &7place un panneau pour vendre votre parcelle")).toText(),
+                    Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot msg &5[Message] : &7Lire / modifier le message d'accueil")).toText(),
+                    Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot tp <name> : &7t\351l\351porte sur la parcelle")).toText())
                 .header(Text.builder().append(TextSerializers.formattingCode('&').deserialize("&eUsage:")).toText())
                 .padding(Text.of("-"))
                 .sendTo(src); 

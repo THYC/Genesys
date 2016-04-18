@@ -48,9 +48,9 @@ public class CommandSetHome implements CommandExecutor {
             }
 
             String world = player.getWorld().getName();
-            double x = player.getLocation().getX();
-            double y = player.getLocation().getY();
-            double z = player.getLocation().getZ();
+            int x = player.getLocation().getBlockX();
+            int y = player.getLocation().getBlockY();
+            int z = player.getLocation().getBlockZ();
 
             GHome ghome = new GHome(gplayer.getUUID(), name, world, x, y, z);
             ghome.insert();

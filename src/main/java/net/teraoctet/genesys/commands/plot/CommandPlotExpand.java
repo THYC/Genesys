@@ -1,29 +1,29 @@
 package net.teraoctet.genesys.commands.plot;
 
 import com.flowpowered.math.vector.Vector3d;
-import static java.lang.Math.abs;
 import static net.teraoctet.genesys.Genesys.plotManager;
 import net.teraoctet.genesys.plot.GPlot;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import static net.teraoctet.genesys.utils.MessageManager.USAGE;
 import net.teraoctet.genesys.player.GPlayer;
 import net.teraoctet.genesys.utils.GData;
-import static net.teraoctet.genesys.utils.MessageManager.BUYING_COST_PLOT;
-import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.action.TextActions;
+import org.spongepowered.api.text.format.TextColors;
+import static java.lang.Math.abs;
+import static net.teraoctet.genesys.utils.MessageManager.BUYING_COST_PLOT;
+import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PLOT;
 import static net.teraoctet.genesys.utils.MessageManager.PROTECT_LOADED_PLOT;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.action.TextActions;
-import org.spongepowered.api.text.format.TextColors;
 
-public class CommandPlotExtand implements CommandExecutor {
+public class CommandPlotExpand implements CommandExecutor {
            
     @Override
     public CommandResult execute(CommandSource sender, CommandContext ctx) {
@@ -44,7 +44,7 @@ public class CommandPlotExtand implements CommandExecutor {
         // on vérifie que le paramètre value est bien renseigné sinon on sort
         if(!ctx.getOne("value").isPresent()) { 
             player.sendMessage(MESSAGE("&bVous devez regarder vers un des 4 points cardinaux et taper la commande :"));
-            player.sendMessage(USAGE("/plot extand <value> : extension d'une parcelle"));
+            player.sendMessage(USAGE("/plot expand <value> : extension d'une parcelle"));
             return CommandResult.empty();
         }
         
@@ -62,7 +62,7 @@ public class CommandPlotExtand implements CommandExecutor {
         }
         
         // on initialise les variables néccéssaires au calcul 
-        int extand = ctx.<Integer> getOne("value").get();   // valeur d'allongement de la parcelle en nb de bloc
+        int expand = ctx.<Integer> getOne("value").get();   // valeur d'allongement de la parcelle en nb de bloc
         int nbBlock = 0;                                    // var ou sera stocké la surface en nb de bloc après calcul
         String axe = "X";                                   // var ou sera stocké le point d'axe à modifier vers laquelle on étend la parcelle 
         int point = 0;                                      // var stockant la nouvelle valeur du point x ou z après calcul
@@ -79,63 +79,63 @@ public class CommandPlotExtand implements CommandExecutor {
             if ((rotation.getY() < -135 && rotation.getY() > -225) || (rotation.getY() > 135 && rotation.getY() < 225)){
                 if(gplot.getZ1() > gplot.getZ2()){
                     // on sauve la valeur dans "point" pour l'affecter à "gplot.setZ2" après validation
-                    point = gplot.getZ2() - extand; 
+                    point = gplot.getZ2() - expand; 
                     // on sauve la valeur du point à modifier
                     axe = "Z2";
                 } else {
                     // on sauve la valeur dans "point" pour l'affecter à "gplot.setZ1" après validation
-                    point = gplot.getZ1() - extand;
+                    point = gplot.getZ1() - expand;
                     // on sauve la valeur du point à modifier
                     axe = "Z1";
                 }
                 // on sauve le nombre de bloc ajouté pour le calcul du prix
-                nbBlock = extand * abs(gplot.getX1() - gplot.getX2()); 
+                nbBlock = expand * abs(gplot.getX1() - gplot.getX2()); 
                 
                 // le joueur regarde vers l'ouest
             } else if ((rotation.getY() < -225 && rotation.getY() > -315) || (rotation.getY() > 45 && rotation.getY() < 135)){
                 if(gplot.getX1() > gplot.getX2()){
                     // on sauve la valeur dans "point" pour l'affecter à "gplot.setX2" après validation
-                    point = gplot.getX2() - extand; 
+                    point = gplot.getX2() - expand; 
                     // on sauve la valeur du point à modifier
                     axe = "X2";
                 } else {
                     // on sauve la valeur dans "point" pour l'affecter à "gplot.setX1" après validation
-                    point = gplot.getX1() - extand;
+                    point = gplot.getX1() - expand;
                     // on sauve la valeur du point à modifier
                     axe = "X1";
                 }
-                nbBlock = extand * abs(gplot.getZ1() - gplot.getZ2());
+                nbBlock = expand * abs(gplot.getZ1() - gplot.getZ2());
                 
                 // le joueur regarde vers le sud
             } else if ((rotation.getY() < -315 && rotation.getY() > -360) || (rotation.getY() < 0 && rotation.getY() > -45) ||
                     (rotation.getY() < 45 && rotation.getY() > 0) || (rotation.getY() < 360 && rotation.getY() > 315)){
                 if(gplot.getZ1() > gplot.getZ2()){
                     // on sauve la valeur dans "point" pour l'affecter à "gplot.setZ1" après validation
-                    point = gplot.getZ1() + extand; 
+                    point = gplot.getZ1() + expand; 
                     // on sauve la valeur du point à modifier
                     axe = "Z1";
                 } else {
                     // on sauve la valeur dans "point" pour l'affecter à "gplot.setZ2" après validation
-                    point = gplot.getZ2() + extand;
+                    point = gplot.getZ2() + expand;
                     // on sauve la valeur du point à modifier
                     axe = "Z2";
                 }
-                nbBlock = extand * abs(gplot.getX1() - gplot.getX2());
+                nbBlock = expand * abs(gplot.getX1() - gplot.getX2());
                 
                 // le joueur regarde vers l'est
             } else if ((rotation.getY() > -135 && rotation.getY() < -45) || (rotation.getY() > 225 && rotation.getY() < 315)){
                 if(gplot.getX1() > gplot.getX2()){
                     // on sauve la valeur dans "point" pour l'affecter à "gplot.setX1" après validation
-                    point = gplot.getX1() + extand; 
+                    point = gplot.getX1() + expand; 
                     // on sauve la valeur du point à modifier
                     axe = "X1";
                 } else {
                     // on sauve la valeur dans "point" pour l'affecter à "gplot.setX2" après validation
-                    point = gplot.getX2() + extand;
+                    point = gplot.getX2() + expand;
                     // on sauve la valeur du point à modifier
                     axe = "X2";
                 }
-                nbBlock = extand * abs(gplot.getZ1() - gplot.getZ2());
+                nbBlock = expand * abs(gplot.getZ1() - gplot.getZ2());
                 
             }
                         
@@ -146,7 +146,7 @@ public class CommandPlotExtand implements CommandExecutor {
             
             player.sendMessage(MESSAGE("&7Le co\373t de cette transaction est de : &e" + amount + " \351meraudes"));
             player.sendMessage(Text.builder("Clique ici pour confirmer l'ajout de " + nbBlock + " block sur ta parcelle\n")
-                    .onClick(TextActions.runCommand("/p extand " + extand + " " + point + " " + axe))
+                    .onClick(TextActions.runCommand("/p expand " + expand + " " + point + " " + axe))
                     .color(TextColors.AQUA)
                     .build());   
             return CommandResult.success();
@@ -155,7 +155,7 @@ public class CommandPlotExtand implements CommandExecutor {
             
             if(!ctx.getOne("point").isPresent() || !ctx.getOne("axe").isPresent()) { 
                 player.sendMessage(MESSAGE("&bRecommencez, vous devez regarder vers un des 4 points cardinaux et taper la commande :"));
-                player.sendMessage(USAGE("/plot extand <value> : extension d'une parcelle"));
+                player.sendMessage(USAGE("/plot expand <value> : extension d'une parcelle"));
                 return CommandResult.empty();
             }
             
@@ -170,25 +170,25 @@ public class CommandPlotExtand implements CommandExecutor {
             switch(axe){ 
                 case "Z1": 
                     // on calcul le nombre de bloc ajouté pour le calcul du prix
-                    nbBlock = extand * abs(gplot.getX1() - gplot.getX2());
+                    nbBlock = expand * abs(gplot.getX1() - gplot.getX2());
                     SuccessTransaction = ConfirmTransaction(nbBlock,gplayer);
                     if (SuccessTransaction == true)gplot.setZ1(point);
                     break;
                 case "Z2":
                     // on calcul le nombre de bloc ajouté pour le calcul du prix
-                    nbBlock = extand * abs(gplot.getX1() - gplot.getX2()); 
+                    nbBlock = expand * abs(gplot.getX1() - gplot.getX2()); 
                     SuccessTransaction = ConfirmTransaction(nbBlock,gplayer);
                     if (SuccessTransaction == true)gplot.setZ2(point);
                     break; 
                 case "X1":
                     // on calcul le nombre de bloc ajouté pour le calcul du prix
-                    nbBlock = extand * abs(gplot.getZ1() - gplot.getZ2());
+                    nbBlock = expand * abs(gplot.getZ1() - gplot.getZ2());
                     SuccessTransaction = ConfirmTransaction(nbBlock,gplayer);
                     if (SuccessTransaction == true)gplot.setX1(point);
                     break;     
                 case "X2":
                     // on calcul le nombre de bloc ajouté pour le calcul du prix
-                    nbBlock = extand * abs(gplot.getZ1() - gplot.getZ2());
+                    nbBlock = expand * abs(gplot.getZ1() - gplot.getZ2());
                     SuccessTransaction = ConfirmTransaction(nbBlock,gplayer);
                     if (SuccessTransaction == true)gplot.setX2(point);
                     break;

@@ -12,7 +12,6 @@ import static net.teraoctet.genesys.utils.GData.datasource;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import net.teraoctet.genesys.utils.DeSerialize;
 import net.teraoctet.genesys.utils.GConfig;
-import static org.spongepowered.api.Sponge.getGame;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.block.tileentity.TileEntity;
@@ -22,6 +21,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
+import static org.spongepowered.api.Sponge.getGame;
 import static org.spongepowered.api.block.BlockTypes.AIR;
 
 public class GPlot {
@@ -114,11 +114,22 @@ public class GPlot {
         + ", " + noInteract + ", " + noFire + ", '" + message + "', " + mode + ", " + noMob + ", " + noTNT + ", " + noCommand + ", '" + uuidOwner + "', '" + uuidAllowed + "')");
     }
     
+    /**
+     * Enregistre une annonce de vente de la parcelle (Plot)
+     * dans la base de donnée.
+     * @param loc 
+     */
     public void addSale(Location loc) {
         String location = DeSerialize.location(loc);
 	GData.queue("INSERT INTO gplsale VALUES ('" + plotName + "', '" + location + "')");
     }
     
+    /**
+     * Supprime l'annonce de vente de la parcelle (Plot) 
+     * ainsi que tous les panneaux (Sign) associés si :
+     * le paramètre DEL_SIGN_AFTER_SALE = true
+     * sinon : supprime le texte uniquement.
+     */
     public void delSale() {
         try {
             Connection c = datasource.getConnection();
@@ -165,6 +176,11 @@ public class GPlot {
 	GData.queue("DELETE FROM gplot WHERE plotName = '" + plotName + "'");
     }
     
+    /**
+     * Chaine type String comprenant la liste des Flags et de leurs valeurs
+     * enregistré sur la parcelle (Plot)
+     * @return 
+     */
     public String getFlag(){
         String flag = "Jail(prison) : " + this.jail + " | ";
         flag = flag + "noFly(vol) : " + this.noFly + " | ";
@@ -211,7 +227,7 @@ public class GPlot {
     public int getNoInteract(){return this.noInteract;}
     public String getName(){return this.plotName;}
     public int getLevel(){return this.level;}
-    public String getworld(){return this.world;}
+    public String getworldName(){return this.world;}
     public int getX1(){return this.x1;}
     public int getX2(){return this.x2;}
     public int getY1(){return this.y1;}
@@ -231,11 +247,33 @@ public class GPlot {
     public int getMode(){return this.mode;} 
     public int getNoCommand(){return this.noCommand;} 
     
+    /**
+     * Retourne l'objet World correspondant
+     * @return World
+     */
+    public Optional<World> getWorld(){
+        Optional<World> w = getGame().getServer().getWorld(world);
+        if(w.isPresent()){
+            return w;
+        }else{
+            return Optional.empty();
+        }
+    }
+    
+    /**
+     * Nom du propriétaire de la parcelle (Plot)
+     * @return 
+     */
     public String getNameOwner(){
         if (uuidOwner.equalsIgnoreCase("ADMIN")) return "ADMIN";
         return getGPlayer(uuidOwner).getName();
     }
     
+    /**
+     * Chaine type String comprenant les noms des joueurs autorisés 
+     * à utiliser la parcelle (Plot)
+     * @return Chaine type String
+     */
     public String getNameAllowed(){
         String[] UUID = this.uuidAllowed.split(" ");
         String NameAllowed = "";
@@ -245,60 +283,129 @@ public class GPlot {
         }
         return NameAllowed;
     }
-
-    public Location getLocation1()
+    
+    /**
+     * Objet Location correspondant au point X1, Y1, Z1
+     * @return Location
+     */
+    public Location getLocX1Y1Z1()
     {
         World w = getGame().getServer().getWorld(this.world).get();
         Location location = new Location(w, this.x1, this.y1, this.z1);
         return location;
     }
     
-    public Location getLocation2()
+    /**
+     * Objet Location correspondant au point X2, Y2, Z2
+     * @return Location
+     */
+    public Location getLocX2Y2Z2()
     {
         World w = getGame().getServer().getWorld(this.world).get();
         Location location = new Location(w, this.x2, this.y2, this.z2);
         return location;
     }
     
-    public Location getLocation3()
+    /**
+     * Objet Location correspondant au point X1, Y1, Z2
+     * @return Location
+     */
+    public Location getLocX1Y1Z2()
     {
         World w = getGame().getServer().getWorld(this.world).get();
         Location location = new Location(w, this.x1, this.y1, this.z2);
         return location;
     }
     
-    public Location getLocation4()
+    /**
+     * Objet Location correspondant au point X2, Y2, Z1
+     * @return Location
+     */
+    public Location getLocX2Y2Z1()
     {
         World w = getGame().getServer().getWorld(this.world).get();
         Location location = new Location(w, this.x2, this.y2, this.z1);
         return location;
     }
-    public Location getLocation5()
+    
+    /**
+     * Objet Location correspondant au point X1, Y2, Z2
+     * @return Location
+     */
+    public Location getLocX1Y2Z2()
     {
         World w = getGame().getServer().getWorld(this.world).get();
         Location location = new Location(w, this.x1, this.y2, this.z2);
         return location;
     }
     
-    public Location getLocation6()
+    /**
+     * Objet Location correspondant au point X2, Y1, Z2
+     * @return Location
+     */
+    public Location getLocX2Y1Z2()
     {
         World w = getGame().getServer().getWorld(this.world).get();
         Location location = new Location(w, this.x2, this.y1, this.z1);
         return location;
     }
     
-    public Location getLocation7()
+    /**
+     * Objet Location correspondant au point X2, Y1, Z1
+     * @return Location
+     */
+    public Location getLocX2Y1Z1()
     {
         World w = getGame().getServer().getWorld(this.world).get();
         Location location = new Location(w, this.x2, this.y1, this.z2);
         return location;
     }
     
-    public Location getLocation8()
+    /**
+     * Objet Location correspondant au point X1, Y2, Z1
+     * @return Location
+     */
+    public Location getLocX1Y2Z1()
     {
         World w = getGame().getServer().getWorld(this.world).get();
         Location location = new Location(w, this.x1, this.y2, this.z1);
         return location;
+    }
+    
+    /**
+     * Objet Location correspondant au centre de la parcelle (Plot)
+     * @return l'objet Location
+     */
+    public Optional<Location> getSpawnPlot(){
+        Optional<World> worldopt = getWorld();
+        if(worldopt.isPresent()){
+            int locX = (getX1() + getX2())/2;
+            int locZ = (getZ1() + getZ2())/2;
+            int locY = getYSpawn(locX,locZ);
+            Location location = new Location(worldopt.get(),locX, locY, locZ);
+            return Optional.of(location);
+        } else {
+            return Optional.empty();
+        }
+    }
+    
+    /**
+     * Point Y correspondant au premier bloc le plus au niveau du sol
+     * @param X coordonnée X du point à calculer
+     * @param Z coordonnée Z du point à calculer
+     * @return le point Y
+     */
+    private int getYSpawn(int X, int Z){
+        Optional<World> worldopt = getWorld();
+        if(worldopt.isPresent()){
+            Location location = new Location(worldopt.get(), X, 250, Z);
+            while (location.getBlockType().equals(AIR)){
+                location = location.add(0,-1,0);
+            }
+            location = location.add(0,1,0);
+            return location.getBlockY();
+        }
+        return 0;
     }
     
 }

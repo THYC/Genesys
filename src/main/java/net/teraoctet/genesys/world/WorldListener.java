@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.logging.Logger;
 
 //import static net.teraoctet.genesys.Genesys.getPlugin;
 import static net.teraoctet.genesys.Genesys.plotManager;
@@ -14,6 +15,7 @@ import net.teraoctet.genesys.plot.GPlot;
 import net.teraoctet.genesys.utils.DeSerialize;
 import net.teraoctet.genesys.utils.GData;
 import net.teraoctet.genesys.player.GPlayer;
+import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 
 import static org.spongepowered.api.Sponge.getGame;
 import org.spongepowered.api.block.BlockSnapshot;
@@ -22,6 +24,7 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.DataManipulator;
+import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.entity.Entity;
@@ -36,9 +39,11 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.SpongeEventFactory;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
+import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.entity.DisplaceEntityEvent;
 import org.spongepowered.api.event.entity.SpawnEntityEvent;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.event.world.ExplosionEvent;
 import static org.spongepowered.api.item.ItemTypes.DIAMOND_AXE;
@@ -127,7 +132,7 @@ public class WorldListener {
     }
     
     @Listener
-    public void onTNTexplode(final ExplosionEvent.Pre event){ 
+    public void onTNTexplode(final ExplosionEvent.Detonate event){ 
         Explosion explosion = event.getExplosion();
         Location loc = new Location(event.getTargetWorld(),explosion.getOrigin());
         GPlot gplot = plotManager.getPlot(loc);
@@ -162,12 +167,15 @@ public class WorldListener {
     @Listener 
     public void saplingDrop(DropItemEvent.Dispense event){ 
         Entity drop = event.getEntities().get(0);
-        //Collection<DataManipulator<?, ?>> da = event.getEntities().get(0).getContainers();
  
         Optional<ItemStackSnapshot> item = drop.get(Keys.REPRESENTED_ITEM);
         if (item.get().getType().getBlock().isPresent()) {
                        
             if (item.get().getType().getBlock().get().equals(BlockTypes.SAPLING)){
+                
+                //Logger.getLogger("INFO").info(drop.getKeys().toString());
+                //Logger.getLogger("INFO").info(drop.getValue(Keys.TREE_TYPE).get().toString());
+                                
                 Reforestation reforestation = new Reforestation(drop);
                 reforestation.run();
             }    
@@ -176,6 +184,7 @@ public class WorldListener {
         
     @Listener
     public void treeBreak(ChangeBlockEvent.Break breakEvent) throws Exception {
+        Logger.getLogger("INFO").info(breakEvent.getTransactions().get(0).getFinal().get(Keys.TREE_TYPE).toString());
         if (!firedEvents.contains(breakEvent) && breakEvent.getCause().first(Player.class).isPresent() && 
                 !breakEvent.isCancelled() && breakEvent.getTransactions().size() == 1 &&
                 TreeDetector.isWood(breakEvent.getTransactions().get(0).getOriginal())) {
@@ -215,5 +224,4 @@ public class WorldListener {
             }
         }
     }
-
 }

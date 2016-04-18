@@ -28,6 +28,7 @@ public class GData {
 	public static void setup() {
             try {
                 sql = getGame().getServiceManager().provide(SqlService.class).get();
+                
                 if(!GConfig.MYSQL_USE()) { 
                     datasource = sql.getDataSource("jdbc:sqlite:config/genesys/genesys.db");
                 } else {
@@ -193,6 +194,24 @@ public class GData {
                                 + "toz INT, "
                                 + "message TEXT)");
                 }
+                
+                if(!tables.contains("gitemshop")) {
+                        execute("CREATE TABLE gitemshop ("
+                                + "portalname TEXT, "
+                                + "level INT, "
+                                + "world TEXT, "
+                                + "x1 INT, "
+                                + "y1 INT, "
+                                + "z1 INT, "
+                                + "x2 INT, "
+                                + "y2 INT, "
+                                + "z2 INT, "
+                                + "toworld TEXT, "
+                                + "tox INT, "
+                                + "toy INT, "
+                                + "toz INT, "
+                                + "message TEXT)");
+                }
                                 
             } catch (SQLException e) {}
 	}
@@ -289,7 +308,7 @@ public class GData {
             try {
                 Connection c = datasource.getConnection();
                 Statement s = c.createStatement();
-                ResultSet rs = s.executeQuery("SELECT * FROM gplot");
+                ResultSet rs = s.executeQuery("SELECT * FROM gplot ORDER BY level asc");
                 while(rs.next()) {
                     GPlot gplot = new GPlot(
                         rs.getString("plotName"),

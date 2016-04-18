@@ -59,16 +59,16 @@ public class CommandPlotFlag implements CommandExecutor {
 
                 builder.title(formatText("&6Plot Flag"))
                     .contents(  formatText("&e/plot flag <flag> <0|1> : &7modifie la valeur d'un flag"),
-                                formatText("&enoEnter : &b" + gplot.getNoEnter() + " &7ils peuvent entrer sur la parcelle"),
-                                formatText("&enoFly : &b" + gplot.getNoFly() + " &7ils peuvent pas voler au dessus"),
-                                formatText("&enoBuild : &b" + gplot.getNoBuild() + " &7ils peuvent construirent"),
-                                formatText("&enoBreak : &b" + gplot.getNoBreak() + " &7ils peuvent casser"),
-                                formatText("&enoInteract : &b" + gplot.getNoInteract() + " &7ils peuvent ouvrir les portes,coffres..."),
-                                formatText("&enoTeleport : &b" + gplot.getNoTeleport() + " &7ils peuvent se t\351l\351porter"),
-                                formatText("&enoFire : &b" + gplot.getNoFire() + " &7mettre le feu"),
-                                formatText("&enoMob : &b" + gplot.getNoMob() + " &7les monstres spawn"),
-                                formatText("&enoTNT : &b" + gplot.getNoTNT() + " &7activation de la TNT"),
-                                formatText("&enoCommand : &b" + gplot.getNoCommand() + " &7ils peuvent taper des commandes"))
+                                formatText("&enoEnter : &b[" + gplot.getNoEnter() + "] &7ils peuvent entrer sur la parcelle"),
+                                formatText("&enoFly : &b[" + gplot.getNoFly() + "] &7ils peuvent pas voler au dessus"),
+                                formatText("&enoBuild : &b[" + gplot.getNoBuild() + "] &7ils peuvent construirent"),
+                                formatText("&enoBreak : &b[" + gplot.getNoBreak() + "] &7ils peuvent casser"),
+                                formatText("&enoInteract : &b[" + gplot.getNoInteract() + "] &7ils peuvent ouvrir les portes,coffres..."),
+                                formatText("&enoTeleport : &b[" + gplot.getNoTeleport() + "] &7ils peuvent se t\351l\351porter"),
+                                formatText("&enoFire : &b[" + gplot.getNoFire() + "] &7mettre le feu"),
+                                formatText("&enoMob : &b[" + gplot.getNoMob() + "] &7les monstres spawn"),
+                                formatText("&enoTNT : &b[" + gplot.getNoTNT() + "] &7activation de la TNT"),
+                                formatText("&enoCommand : &b[" + gplot.getNoCommand() + "] &7ils peuvent taper des commandes"))
                     .header(formatText("&ePlot " + gplot.getName() + " : &7Droits accord\351s aux autres joueurs, 0 = Oui, 1 = Non"))
                     .padding(Text.of("-"))
                     .sendTo(src);

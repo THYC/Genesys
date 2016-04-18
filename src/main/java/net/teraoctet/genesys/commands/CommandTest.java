@@ -45,38 +45,28 @@ import org.spongepowered.api.world.extent.Extent;
 import org.spongepowered.api.world.storage.WorldProperties;
 import java.util.Optional;
 import javax.annotation.concurrent.Immutable;
+import static net.teraoctet.genesys.Genesys.bookManager;
 import org.spongepowered.api.text.BookView;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import static net.teraoctet.genesys.utils.MessageManager.HOME_NOT_FOUND;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
+import static net.teraoctet.genesys.utils.MessageManager.ONHOVER_FACTION_INVIT;
+import static org.spongepowered.api.command.args.GenericArguments.entity;
+import org.spongepowered.api.data.manipulator.mutable.entity.PassengerData;
+import org.spongepowered.api.entity.living.ArmorStand;
+import static org.spongepowered.api.item.ItemTypes.DIAMOND_SWORD;
+import org.spongepowered.api.text.action.TextActions;
 
 public class CommandTest implements CommandExecutor {
             
     @Override
     public CommandResult execute(CommandSource src, CommandContext ctx) throws CommandException {    
-/*
-        Player player = (Player) src;
-        SettingCompass sc = new SettingCompass();
-        ItemStack is = sc.MagicCompass(player,"&eHOME","");
-        player.setItemInHand(is);
-        
-        GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
-        String homename = "default"; 
-        GHome ghome = gplayer.getHome(homename);
-            if(ghome == null) { 
-                src.sendMessage(HOME_NOT_FOUND()); 
-                return CommandResult.empty();
-            }
-        Vector3d d = new Vector3d(
-                ghome.getX()- player.getLocation().getBlockX(),
-                ghome.getY()- player.getLocation().getBlockY(), 
-                ghome.getZ()- player.getLocation().getBlockZ());
-        //sc.setCompassLocation(player, d);
+
         
 
-        final Optional<RespawnLocationData> optPlayerRLD = player.getOrCreate(RespawnLocationData.class);
+        /*final Optional<RespawnLocationData> optPlayerRLD = player.getOrCreate(RespawnLocationData.class);
         if (!optPlayerRLD.isPresent()) {
             return CommandResult.empty();
         }
@@ -92,12 +82,50 @@ public class CommandTest implements CommandExecutor {
                 boolean changed = sc.setCompassLocation(player, d);
             }
         }*/
-        //BookView.Builder helpBook = BookView.builder().author(MESSAGE("&2GENESYS"));
-        BookView.Builder helpBook = BookView.builder().author(Text.of(TextColors.DARK_BLUE, "LandProtect")).title(Text.of(TextColors.GOLD, "LandProtect Help Book"));
-        Text helpCommand = MESSAGE("&3TEST BOOK");
-	helpBook.addPage(helpCommand);
-	Player player = (Player) src;		
-	player.sendBookView(helpBook.build());
+        /*Player player = (Player) src;	
+        ItemStack is = player.getItemInHand().get();
+        player.sendMessage(MESSAGE(is.getItem().getName()));
+        player.sendMessage(MESSAGE(String.valueOf(is.getItem().getTemplate().getContentVersion())));
+        player.sendMessage(MESSAGE(is.getItem().getType().getName()));
+        Logger.getLogger("INFO").info(is.getKeys().toString());
+                    Logger.getLogger("INFO").info(is.getValue(Keys.ITEM_BLOCKSTATE).get().toString());
+                    Logger.getLogger("INFO").info(is.getValue(Keys.ITEM_BLOCKSTATE).toString());*/
+        //BookMessage book = new BookMessage("Test2",MESSAGE("Genesys"),"1",MESSAGE("ttttttttt"));
+        
+        
+        
+        
+        
+        
+        /*
+        Player player = (Player) src;	
+        BookView.Builder helpBook = BookView.builder()
+                .author(Text.of(TextColors.DARK_BLUE, "Genesys"))
+                .title(Text.of(TextColors.GOLD, "Help Book"));
+		Text helpCommand = Text.builder()
+		.append(Text.of(TextColors.DARK_AQUA, "Command: ", TextColors.GOLD, "test", "\n"))
+                .append(MESSAGE("&2+ &aAjouter un membre"))
+                                        .onClick(TextActions.suggestCommand("/faction invit "))    
+                                        .onHover(TextActions.showText(ONHOVER_FACTION_INVIT()))
+		.append(Text.of(TextColors.DARK_AQUA, "Info: ", TextColors.GOLD, "test", "\n"))
+		.append(Text.of(TextColors.DARK_AQUA, "Usage: ", TextColors.GOLD, "/", "test", " ", "test", "\n"))
+		.append(Text.of(TextColors.DARK_AQUA, "Permission: ", TextColors.GOLD, "test", "test", "\n")).color(TextColors.DARK_AQUA)
+		.append(Text.of(TextColors.DARK_AQUA, "Access: ", TextColors.GOLD, "test", " \n")).color(TextColors.DARK_AQUA)
+		.build();
+		helpBook.addPage(helpCommand);
+			
+			player.sendBookView(helpBook.build());*/
+        
+        //summon ArmorStand ~ ~ ~ {Invulnerable:1b,NoBasePlate:1b,ShowArms:1b,Small:1b,Rotation:[145f],Equipment:[{id:"diamond_sword",Count:1b},{},{},{},{}],DisabledSlots:0,Pose:{LeftLeg:[19f,0f,0f],LeftArm:[138f,45f,0f],RightArm:[20f,0f,0f]}}
+      
+ 
+    
+        //BookView.Builder helpBook = BookView.builder().author(Text.of(TextColors.DARK_BLUE, "LandProtect")).title(Text.of(TextColors.GOLD, "LandProtect Help Book"));
+        //Text helpCommand = MESSAGE("&3TEST BOOK");
+	//helpBook.addPage(helpCommand);
+        //helpBook.build();
+		
+	//player.sendBookView(helpBook.build());
         
         return CommandResult.success();
     }	

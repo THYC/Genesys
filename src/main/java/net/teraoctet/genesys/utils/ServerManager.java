@@ -1,14 +1,19 @@
 package net.teraoctet.genesys.utils;
 
 import com.flowpowered.math.vector.Vector3d;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
+import java.util.TimeZone;
 import net.teraoctet.genesys.player.GPlayer;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import org.spongepowered.api.Sponge;
 import static org.spongepowered.api.Sponge.getGame;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.service.ProviderRegistration;
 import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
@@ -52,7 +57,49 @@ public class ServerManager {
             Optional<User> opt_user = service.get(player);
             
             if(opt_user.isPresent()) {
-                return Optional.of(opt_user.get().getPlayer().get().getIdentifier());
+                return Optional.of(opt_user.get().getIdentifier());
+            }else{
+                return Optional.empty();
+            }
+        }
+        return Optional.empty();
+    }
+    
+    /**
+     * retourne le GameProfile du joueur
+     * @param player nom du joueur à retourner
+     * @return 
+     */
+    public Optional<GameProfile> getPlayerProfile(String player){
+        Optional<ProviderRegistration<UserStorageService>> opt_provider = Sponge.getServiceManager().getRegistration(UserStorageService.class);
+        if(opt_provider.isPresent()) {
+            ProviderRegistration<UserStorageService> provider = opt_provider.get();
+            UserStorageService service = provider.getProvider();
+            Optional<User> opt_user = service.get(player);
+            
+            if(opt_user.isPresent()) {
+                return Optional.of(opt_user.get().getProfile());
+            }else{
+                return Optional.empty();
+            }
+        }
+        return Optional.empty();
+    }
+    
+    /**
+     * retourne le GameProfile du joueur
+     * @param player nom du joueur à retourner
+     * @return 
+     */
+    public Optional<Inventory> getPlayerInventory(String player){
+        Optional<ProviderRegistration<UserStorageService>> opt_provider = Sponge.getServiceManager().getRegistration(UserStorageService.class);
+        if(opt_provider.isPresent()) {
+            ProviderRegistration<UserStorageService> provider = opt_provider.get();
+            UserStorageService service = provider.getProvider();
+            Optional<User> opt_user = service.get(player);
+            
+            if(opt_user.isPresent()) {
+                return Optional.of(opt_user.get().getInventory());
             }else{
                 return Optional.empty();
             }
@@ -77,39 +124,7 @@ public class ServerManager {
     public static void broadcast(Text text) {
         getGame().getServer().getBroadcastChannel().send(text);
     }
-    
-    /**
-     * retourne une date au format longDate
-     * @param date date au format double
-     * @return 
-     */
-    public Date doubleToDate(long date){
-        long itemDouble = date;
-        long itemLong = (long) (itemDouble * 1000);
-        Date itemDate = new Date(itemLong);
-        return itemDate;
-    }
-    
-    /**
-     * 
-     * @param milliseconds
-     * @return 
-     */
-    public static String dateToString(double milliseconds) {	
-        int days = 0;
-        int hours = 0;
-        int minutes = 0;
-        int seconds = 0;
-
-        while(milliseconds >= 1000 * 60 * 60 * 24) { days += 1; milliseconds -= 1000 * 60 * 60 * 24; }
-        while(milliseconds >= 1000 * 60 * 60) { hours += 1; milliseconds -= 1000 * 60 * 60; }
-        while(milliseconds >= 1000 * 60) { minutes += 1; milliseconds -= 1000 * 60; }
-        while(milliseconds >= 1000) { seconds += 1; milliseconds -= 1000; }
-
-        return String.valueOf(days) + "d " + String.valueOf(hours) + "h " + String.valueOf(minutes) + "m " + String.valueOf(seconds) + "s";
-
-    }
-    
+      
     /**
      * 
      * @param milliseconds
@@ -158,6 +173,26 @@ public class ServerManager {
             message = message.replace("'", "''");
         }
         return message;
+    }
+    
+    /**
+     * retourne la date au format dd MMM yyyy HH:mm:ss
+     * @return 
+     */
+    public String dateToString(){
+        Calendar cal = Calendar.getInstance();
+	SimpleDateFormat simpleDate = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
+	simpleDate.setTimeZone(TimeZone.getTimeZone("GMT"));
+	return simpleDate.format(cal.getTime());
+    }
+    
+    /**
+     * retourne la date au format ss
+     * @return 
+     */
+    public Long dateToLong(){
+        Calendar cal = Calendar.getInstance();
+	return cal.getTimeInMillis();
     }
     
     /**
