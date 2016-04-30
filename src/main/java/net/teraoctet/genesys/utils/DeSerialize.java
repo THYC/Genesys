@@ -33,7 +33,7 @@ public class DeSerialize {
     /**
      * Deserialyze une chaine type String representant un objet Location
      * @param stringLocation Chaine String sous la forme "world:x:y:z"
-     * @return retourne un objet Optional<World>
+     * @return retourne un objet world
      */
     public static Optional<World> getWorld(String stringLocation) {
         String loc[] = stringLocation.split(":");

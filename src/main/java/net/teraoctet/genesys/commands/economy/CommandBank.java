@@ -1,4 +1,4 @@
-package net.teraoctet.genesys.commands;
+package net.teraoctet.genesys.commands.economy;
 
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;

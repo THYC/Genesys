@@ -1,18 +1,17 @@
 package net.teraoctet.genesys.player;
 
 import com.flowpowered.math.vector.Vector3d;
-import com.google.common.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import static net.teraoctet.genesys.Genesys.bookManager;
+import static net.teraoctet.genesys.Genesys.itemShopManager;
+import static net.teraoctet.genesys.Genesys.mapCountDown;
 import static net.teraoctet.genesys.Genesys.plotManager;
-import net.teraoctet.genesys.plot.GPlot;
-import net.teraoctet.genesys.plot.PlotManager;
+import net.teraoctet.genesys.utils.CountdownToTP;
 import net.teraoctet.genesys.utils.GData;
 import static net.teraoctet.genesys.utils.GData.addGPlayer;
 import static net.teraoctet.genesys.utils.GData.commit;
-import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import static net.teraoctet.genesys.utils.GData.getUUID;
 import static net.teraoctet.genesys.utils.GData.getWorld;
 import static net.teraoctet.genesys.utils.GData.removeGPlayer;
@@ -21,7 +20,6 @@ import static net.teraoctet.genesys.utils.MessageManager.FIRSTJOIN_MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.JOIN_MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.EVENT_DISCONNECT_MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.NAME_CHANGE;
-import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import net.teraoctet.genesys.utils.Permissions;
 import net.teraoctet.genesys.utils.DeSerialize;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
@@ -31,7 +29,6 @@ import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import net.teraoctet.genesys.utils.SettingCompass;
 import static org.spongepowered.api.Sponge.getGame;
 import org.spongepowered.api.block.BlockSnapshot;
-import org.spongepowered.api.block.BlockState;
 
 import org.spongepowered.api.block.BlockTypes;
 import static org.spongepowered.api.block.BlockTypes.AIR;
@@ -39,37 +36,32 @@ import static org.spongepowered.api.block.BlockTypes.STANDING_SIGN;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.block.tileentity.carrier.Chest;
+import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.source.CommandBlockSource;
 import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.Order;
-import org.spongepowered.api.event.action.InteractEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
-import org.spongepowered.api.event.block.InteractBlockEvent.Secondary;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
+import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.command.SendCommandEvent;
+import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.cause.Last;
-import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.message.MessageChannelEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import static org.spongepowered.api.item.ItemTypes.COMPASS;
-import static org.spongepowered.api.item.ItemTypes.SIGN;
-import static org.spongepowered.api.item.ItemTypes.WOODEN_SHOVEL;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.crafting.CraftingInventory;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.entity.HumanInventory;
-import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.item.inventory.type.GridInventory;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
-import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -186,28 +178,6 @@ public class PlayerListener {
             // The entity died from a non-player cause
         }*/
     }
-    
-    /*@Listener
-    public void onDropItem(DropItemEvent.Destruct event) {
-        boolean playerCausePresent = event.getCause().first(Player.class).isPresent();
-        boolean damageCausePresent = event.getCause().first(DamageSource.class).isPresent();
-        
-        if (playerCausePresent && damageCausePresent){
-            getGame().getServer().getBroadcastChannel().send(MESSAGE("Condition true"));
-            List<EntitySnapshot> es = event.getEntitySnapshots();
-            Player player = event.getCause().first(Player.class).get();
-            
-            Location location = player.getLocation().add(0, -2, 0);
-            location.setBlockType(BlockTypes.CHEST);
-            Optional<TileEntity> chestBlock = location.getTileEntity();
-            
-            //TileEntity tileChest = chestBlock.get();
-
-            //Chest chest =(Chest)tileChest;
-            //DataContainer dc = es.
-            //chest.getInventory().getCarrier().get().setRawData(null);
-        }
-    }*/
         
     @Listener
     public void onPlayerDead(DestructEntityEvent.Death event, @Last Player player) {
@@ -227,27 +197,12 @@ public class PlayerListener {
             
             TileEntity tileChest = chestBlock.get();
             Chest chest =(Chest)tileChest;
-            
-            
-            HumanInventory inv = (HumanInventory)player.getInventory();
-            Hotbar bar = inv.getHotbar();
-            //bar.set(new SlotIndex(8), itemstack);
-            
-          
-
-            //Inventory inventory = player.getInventory();
-            //ItemStack stack = ...;
-            //int index = 0;
-            //for(Inventory slot : inventory.slots()) {
-                //chest.getInventory().offer(slot.peek().get());
-            //}
-                
-            
-            for (int i = 0, len = bar.size(); i < len; i++) {
-                Optional<ItemStack> optStack = bar.peek(i);
-                if (optStack.isPresent()) {
-                    chest.getInventory().query(GridInventory.class).offer(optStack.get());
-                    //chest.getInventory().set(optStack.get());
+                       
+            for(Inventory slotInv : player.getInventory().query(GridInventory.class).slots()){
+                Optional<ItemStack> peek = slotInv.peek();
+                if(peek.isPresent()){
+                    //chest.getInventory().offer(peek.get());
+                    //slotInv.clear();
                 }
             }
             
@@ -366,6 +321,26 @@ public class PlayerListener {
                 signData = signData.set(signData.getValue(Keys.SIGN_LINES).get().set(1, MESSAGE(line1)));
                 signData = signData.set(signData.getValue(Keys.SIGN_LINES).get().set(2, MESSAGE(line2)));
                 signData = signData.set(signData.getValue(Keys.SIGN_LINES).get().set(3, MESSAGE(line3)));                
+            }
+        }
+    }
+    
+    @Listener
+    public void OnPlayerAttack(DamageEntityEvent event, @First EntityDamageSource entity){
+        if(event.getTargetEntity() instanceof Player){
+            Player victim = (Player)event.getTargetEntity();
+            if(mapCountDown.containsValue(victim)){
+                CountdownToTP tp = mapCountDown.get(victim);
+                tp.stopTP();
+                mapCountDown.remove(victim);
+                victim.sendMessage(ChatTypes.ACTION_BAR,MESSAGE("&l&e*** PVP : TP ANNULE ***"));
+            }
+            if(entity.getSource() instanceof Player){
+                Player  striker = (Player)entity.getSource();
+                CountdownToTP tp = mapCountDown.get(striker);
+                tp.stopTP();
+                mapCountDown.remove(striker);
+                striker.sendMessage(ChatTypes.ACTION_BAR,MESSAGE("&l&e*** PVP : TP ANNULE ***"));
             }
         }
     }

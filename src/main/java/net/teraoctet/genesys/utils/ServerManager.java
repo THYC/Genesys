@@ -3,9 +3,9 @@ package net.teraoctet.genesys.utils;
 import com.flowpowered.math.vector.Vector3d;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Optional;
 import java.util.TimeZone;
+import static net.teraoctet.genesys.Genesys.mapCountDown;
 import net.teraoctet.genesys.player.GPlayer;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import org.spongepowered.api.Sponge;
@@ -26,7 +26,7 @@ public class ServerManager {
     /**
      * retourne l'objet Player
      * @param player nom du joueur à retourner
-     * @return 
+     * @return Player
      */
     public Optional<Player> getPlayer(String player){
         Optional<ProviderRegistration<UserStorageService>> opt_provider = Sponge.getServiceManager().getRegistration(UserStorageService.class);
@@ -47,7 +47,7 @@ public class ServerManager {
     /**
      * retourne l'idetifier UUID du joueur
      * @param player nom du joueur à retourner
-     * @return 
+     * @return String
      */
     public Optional<String> getPlayerUUID(String player){
         Optional<ProviderRegistration<UserStorageService>> opt_provider = Sponge.getServiceManager().getRegistration(UserStorageService.class);
@@ -68,7 +68,7 @@ public class ServerManager {
     /**
      * retourne le GameProfile du joueur
      * @param player nom du joueur à retourner
-     * @return 
+     * @return GameProfile
      */
     public Optional<GameProfile> getPlayerProfile(String player){
         Optional<ProviderRegistration<UserStorageService>> opt_provider = Sponge.getServiceManager().getRegistration(UserStorageService.class);
@@ -89,7 +89,7 @@ public class ServerManager {
     /**
      * retourne le GameProfile du joueur
      * @param player nom du joueur à retourner
-     * @return 
+     * @return Inventory
      */
     public Optional<Inventory> getPlayerInventory(String player){
         Optional<ProviderRegistration<UserStorageService>> opt_provider = Sponge.getServiceManager().getRegistration(UserStorageService.class);
@@ -110,7 +110,7 @@ public class ServerManager {
     /**
      * retourne True si le joueur est en ligne
      * @param playerName nom du joueur à controler
-     * @return 
+     * @return Boolean
      */
     public static boolean isOnline(String playerName){
         
@@ -126,9 +126,9 @@ public class ServerManager {
     }
       
     /**
-     * 
-     * @param milliseconds
-     * @return 
+     * Retourne la date au format d h m
+     * @param milliseconds Double
+     * @return string
      */
     public static String dateShortToString(double milliseconds) {
         int days = 0;
@@ -149,10 +149,10 @@ public class ServerManager {
     }
     
     /**
-     * 
-     * @param time
-     * @param unit
-     * @return 
+     * Retourne la date au format double suivant une unité demandé
+     * @param time date au format double
+     * @param unit unite a retourner
+     * @return Double
      */
     public static double dateToMilliseconds(double time, String unit) {
         if(unit.equalsIgnoreCase("days")) { return time * 1000 * 60 * 60 * 24; }
@@ -166,10 +166,10 @@ public class ServerManager {
     /**
      * double les quotes contenu dans le message
      * @param message chaine du message à modifier
-     * @return 
+     * @return String
      */
     public String quoteToSQL(String message){
-        if(message.contains("'") /*&& !message.contains("''")*/){
+        if(message.contains("'")){
             message = message.replace("'", "''");
         }
         return message;
@@ -177,7 +177,7 @@ public class ServerManager {
     
     /**
      * retourne la date au format dd MMM yyyy HH:mm:ss
-     * @return 
+     * @return String
      */
     public String dateToString(){
         Calendar cal = Calendar.getInstance();
@@ -188,7 +188,7 @@ public class ServerManager {
     
     /**
      * retourne la date au format ss
-     * @return 
+     * @return Long
      */
     public Long dateToLong(){
         Calendar cal = Calendar.getInstance();
@@ -199,18 +199,54 @@ public class ServerManager {
      * Téléporte un joueur et enregistre ces prédentes coordonnées dans le param LastLocation 
      * @param player nom du joeur a téléporter
      * @param world nom du monde d'arrivée
-     * @param X 
-     * @param Y
-     * @param Z
-     * @return 
+     * @param X coordonnée X
+     * @param Y coordonnée Y
+     * @param Z coordonnée Z
+     * @return Boolean TRUE si le joueur a bien été téléporté
      */
     public boolean teleport(Player player,String world, int X, int Y, int Z){
                  
-        Location lastLocation = player.getLocation();
-        if(!player.transferToWorld(world, new Vector3d(X, Y, Z))) { return false;}
-        GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
+        if(GConfig.COULDOWN_TO_TP()>0){
+            CountdownToTP tp = new CountdownToTP(player,world, X, Y, Z);
+            tp.run();
+            mapCountDown.put(player, tp);
+            return tp.getResult();
+        }else{
+            Location lastLocation = player.getLocation();
+            if(!player.transferToWorld(world, new Vector3d(X, Y, Z))) { return false;}
+            GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
         gplayer.setLastposition(DeSerialize.location(lastLocation));
         gplayer.update();
         return true;
+        }
+    }
+    
+    /**
+     * Téléporte un joueur sur un autre joueur et enregistre ces prédentes coordonnées dans le param LastLocation 
+     * @param player nom du joueur a téléporter
+     * @param target nom du joueur de destination
+     * @return Boolean TRUE si le joueur a bien été téléporté
+     */
+    public boolean teleport(Player player,Player target){
+                 
+        if(GConfig.COULDOWN_TO_TP()>0){
+            CountdownToTP tp = new CountdownToTP(player,target.getWorld().getName(), 
+                    target.getLocation().getBlockX(), target.getLocation().getBlockY(),target.getLocation().getBlockZ());
+            tp.run();
+            mapCountDown.put(player, tp);
+            return tp.getResult();
+        }else{
+            Location lastLocation = player.getLocation();
+            if(!player.transferToWorld(target.getWorld().getName(), new Vector3d(target.getLocation().getBlockX(), 
+                    target.getLocation().getBlockY(),target.getLocation().getBlockZ()))) { return false;}
+                GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
+            gplayer.setLastposition(DeSerialize.location(lastLocation));
+            gplayer.update();
+            return true;
+        }
+    }
+    
+    public void sendCommand(Player player, String cmd){
+        getGame().getCommandManager().get(cmd, player);
     }
 }

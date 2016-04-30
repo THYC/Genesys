@@ -109,7 +109,6 @@ public class MessageManager {
     private static Text ONHOVER_FACTION_LEAVE;
     private static Text ONHOVER_FACTION_LIST_LVL10;
     private static Text ONHOVER_PI_NAME;
-    private static Text SHOP_TRANSACT_FORMAT;
     private static Text SHOP_SALE;
     private static Text SHOP_BUY;
     private static Text WITHDRAW_SUCCESS;
@@ -125,6 +124,7 @@ public class MessageManager {
                 file.createNewFile();
              }    
                 List<String> msg = new ArrayList<>();
+                message = manager.load();
            
                 //-------------------------
                 // Message général serveur
@@ -199,92 +199,122 @@ public class MessageManager {
                     message.getNode("SERVER","FLY_GIVEN").setValue(msg);
                 }
                 
-                msg = new ArrayList<>();
-                msg.add("&eVous avez d\351sactiv\351 le fly de &6%var1%");
-                message.getNode("SERVER","FLY_RETIRED").setValue(msg);
-                manager.save(message);
+                if(message.getNode("SERVER","FLY_RETIRED").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&eVous avez d\351sactiv\351 le fly de &6%var1%");
+                    message.getNode("SERVER","FLY_RETIRED").setValue(msg);
+                    manager.save(message);
+                }
                 
                 //-------------------------
                 // Message Exception/Error
                 //-------------------------
                 
-                msg = new ArrayList<>();
-                msg.add("&cUne erreur est survenue !");
-                message.getNode("EXCEPTION","ERROR").setValue(msg);
-                manager.save(message);
+                if(message.getNode("EXCEPTION","ERROR").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&cUne erreur est survenue !");
+                    message.getNode("EXCEPTION","ERROR").setValue(msg);
+                    manager.save(message);
+                }
                 
-                msg = new ArrayList<>();
-                msg.add("&cCe nom est incorrect !");
-                message.getNode("EXCEPTION","WRONG_NAME").setValue(msg);
-                manager.save(message);
+                if(message.getNode("EXCEPTION","WRONG_NAME").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&cCe nom est incorrect !");
+                    message.getNode("EXCEPTION","WRONG_NAME").setValue(msg);
+                    manager.save(message);
+                }
                 
-                msg = new ArrayList<>();
-                msg.add("&cCe nom est d\351j\340 utilis\351 !");       
-                message.getNode("EXCEPTION","NAME_ALREADY_USED").setValue(msg);
-                manager.save(message);
+                if(message.getNode("EXCEPTION","NAME_ALREADY_USED").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&cCe nom est d\351j\340 utilis\351 !");       
+                    message.getNode("EXCEPTION","NAME_ALREADY_USED").setValue(msg);
+                    manager.save(message);
+                }
                 
-                msg = new ArrayList<>();
-                msg.add("&cVous ne pouvez pas renvoyer le propri\351taire !");
-                message.getNode("EXCEPTION","CANNOT_EJECT_OWNER").setValue(msg);
-                manager.save(message);
+                if(message.getNode("EXCEPTION","CANNOT_EJECT_OWNER").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&cVous ne pouvez pas renvoyer le propri\351taire !");
+                    message.getNode("EXCEPTION","CANNOT_EJECT_OWNER").setValue(msg);
+                    manager.save(message);
+                }
                 
-                msg = new ArrayList<>();
-                msg.add("&4%var1% &cest introuvable");
-                message.getNode("EXCEPTION","NOT_FOUND").setValue(msg);
-                manager.save(message);
+                if(message.getNode("EXCEPTION","NOT_FOUND").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&4%var1% &cest introuvable");
+                    message.getNode("EXCEPTION","NOT_FOUND").setValue(msg);
+                    manager.save(message);
+                }
                 
-                msg = new ArrayList<>();
-                msg.add("&4%var1% &cn'est pas connect\351 !");
-                message.getNode("EXCEPTION","NOT_CONNECTED").setValue(msg);
-                manager.save(message);
+                if(message.getNode("EXCEPTION","NOT_CONNECTED").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&4%var1% &cn'est pas connect\351 !");
+                    message.getNode("EXCEPTION","NOT_CONNECTED").setValue(msg);
+                    manager.save(message);
+                }
                 
-                msg = new ArrayList<>();
-                msg.add("&cVous n'avez pas la permission pour utiliser cette commande !");
-                message.getNode("EXCEPTION","NO_PERMISSIONS").setValue(msg);
-                manager.save(message);
+                if(message.getNode("EXCEPTION","NO_PERMISSIONS").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&cVous n'avez pas la permission pour utiliser cette commande !");
+                    message.getNode("EXCEPTION","NO_PERMISSIONS").setValue(msg);
+                    manager.save(message);
+                }
                 
-                msg = new ArrayList<>();
-                msg.add("&cCette commande ne peut pas s'ex\351cuter sur la console");
-                message.getNode("EXCEPTION","NO_CONSOLE").setValue(msg);
-                manager.save(message);
+                if(message.getNode("EXCEPTION","NO_CONSOLE").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&cCette commande ne peut pas s'ex\351cuter sur la console");
+                    message.getNode("EXCEPTION","NO_CONSOLE").setValue(msg);
+                    manager.save(message);
+                }
                 
-                msg = new ArrayList<>();
-                msg.add("&4%var1% &cn'est pas enregistr\351 dans la base de donn\351e");
-                message.getNode("EXCEPTION","DATA_NOT_FOUND").setValue(msg);
-                manager.save(message);
+                if(message.getNode("EXCEPTION","DATA_NOT_FOUND").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&4%var1% &cn'est pas enregistr\351 dans la base de donn\351e");
+                    message.getNode("EXCEPTION","DATA_NOT_FOUND").setValue(msg);
+                    manager.save(message);
+                }
                 
-                msg = new ArrayList<>();
-                msg.add("&cLe nombre de caract\350res doit \352tre entre %var1% et %var2%");
-                message.getNode("EXCEPTION","WRONG_CHARACTERS_NUMBER").setValue(msg);
-                manager.save(message);    
+                if(message.getNode("EXCEPTION","WRONG_CHARACTERS_NUMBER").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&cLe nombre de caract\350res doit \352tre entre %var1% et %var2%");
+                    message.getNode("EXCEPTION","WRONG_CHARACTERS_NUMBER").setValue(msg);
+                    manager.save(message);  
+                }
                 
                 //-------------------------
                 // Message DeadMsg
                 //-------------------------
+               
+                if(message.getNode("DEAD_MSG","KILLED_BY").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&7%var1% a \351t\351 tu\351 par %var2%");
+                    message.getNode("DEAD_MSG","KILLED_BY").setValue(msg);
+                    manager.save(message);
+                }
                 
-                msg = new ArrayList<>();
-                msg.add("&7%var1% a \351t\351 tu\351 par %var2%");
-                message.getNode("DEAD_MSG","KILLED_BY").setValue(msg);
-                manager.save(message);
-                
-                msg = new ArrayList<>();
-                msg.add("&7%var1% s'est suicid\351");
-                message.getNode("DEAD_MSG","SUICIDE").setValue(msg);
-                manager.save(message);
+                if(message.getNode("DEAD_MSG","SUICIDE").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&7%var1% s'est suicid\351");
+                    message.getNode("DEAD_MSG","SUICIDE").setValue(msg);
+                    manager.save(message);
+                }
                 
                 //-------------------------
                 // Message weather / time
                 //-------------------------
                 
-                msg = new ArrayList<>();
-                msg.add("&e%name% &6a programm\351 le beau temps sur &e%world%");
-                message.getNode("WEATHER-TIME","SUN_MESSAGE").setValue(msg);
-                manager.save(message);
+                if(message.getNode("WEATHER-TIME","SUN_MESSAGE").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&e%name% &6a programm\351 le beau temps sur &e%world%");
+                    message.getNode("WEATHER-TIME","SUN_MESSAGE").setValue(msg);
+                    manager.save(message);
+                }
                 
-                msg = new ArrayList<>();
-                msg.add("&e%name% &6a programm\351 la pluie sur &e%world%");
-                message.getNode("WEATHER-TIME","RAIN_MESSAGE").setValue(msg);
-                manager.save(message);
+                if(message.getNode("WEATHER-TIME","RAIN_MESSAGE").isVirtual()){
+                    msg = new ArrayList<>();
+                    msg.add("&e%name% &6a programm\351 la pluie sur &e%world%");
+                    message.getNode("WEATHER-TIME","RAIN_MESSAGE").setValue(msg);
+                    manager.save(message);
+                }
                 
                 msg = new ArrayList<>();
                 msg.add("&e%name% &6a programm\351 l'orage sur &e%world%");

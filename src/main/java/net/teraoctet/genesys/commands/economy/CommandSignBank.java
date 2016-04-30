@@ -1,4 +1,4 @@
-package net.teraoctet.genesys.commands;
+package net.teraoctet.genesys.commands.economy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,22 +27,15 @@ import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 
-public class CommandSignHelp implements CommandExecutor {
+public class CommandSignBank implements CommandExecutor {
        
     @Override
     @SuppressWarnings("UnusedAssignment")
     public CommandResult execute(CommandSource src, CommandContext ctx) {
 
-        if(src instanceof Player && src.hasPermission("genesys.admin.sign.help")) { 
+        if(src instanceof Player && src.hasPermission("genesys.admin.sign.bank")) { 
             Player player = (Player) src;
-            GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
-        
-            if(!ctx.getOne("name").isPresent()){
-                player.sendMessage(USAGE("/signhelp <name>"));
-                return CommandResult.empty();  
-            }
-            String name = ctx.<String> getOne("name").get();
-            
+                        
             Location location = null;
             BlockRay<World> playerBlockRay = BlockRay.from(player).blockLimit(10).build(); 
             while (playerBlockRay.hasNext()) 
@@ -69,10 +62,10 @@ public class CommandSignHelp implements CommandExecutor {
 
             SignData signData = opSign.get();
             List<Text> help = new ArrayList<>();
-            help.add(MESSAGE("&l&1[?]"));
-            help.add(MESSAGE("&o&1Besoin d'aide sur :"));
-            help.add(MESSAGE("&l&4" + name));
-            help.add(MESSAGE("&1Clique droit ici"));
+            help.add(MESSAGE("&l&1[BANK]"));
+            help.add(MESSAGE("&1-------------"));
+            help.add(MESSAGE("&l&4Clique droit ici"));
+            help.add(MESSAGE("&1-------------"));
             signData.set(Keys.SIGN_LINES,help );
             sign.offer(signData);
             return CommandResult.success();

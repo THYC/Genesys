@@ -1,6 +1,7 @@
 package net.teraoctet.genesys.portal;
 
 import com.flowpowered.math.vector.Vector3d;
+import com.flowpowered.math.vector.Vector3i;
 import java.util.Optional;
 import static net.teraoctet.genesys.Genesys.portalManager;
 import net.teraoctet.genesys.utils.DeSerialize;
@@ -87,11 +88,11 @@ public class PortalListener {
         if(entity instanceof Player == false){
             if (gportal != null){  
                 if(!gportal.gettoworld().equalsIgnoreCase("DISABLED")){
-                    Optional<World> world = getGame().getServer().getWorld(gportal.gettoworld());
-                    Location loc = new Location(world.get(), new Vector3d(gportal.gettoX(), gportal.gettoY(), gportal.gettoZ()));
-                    
-                    entity.transferToWorld(world.get().getName(), new Vector3d(gportal.gettoX(), gportal.gettoY(), gportal.gettoZ()));
-                    //entity.setLocation(loc);
+                    Optional<World> world = getGame().getServer().getWorld(gportal.gettoworld());                    
+                    Location<World> loc = new Location(world.get(), new Vector3d(gportal.gettoX(), gportal.gettoY(), gportal.gettoZ()));
+                    Vector3i chunkPos = loc.getChunkPosition();                    
+                    entity.setLocation(loc);
+                    loc.getExtent().loadChunk(chunkPos, true);
                 }
             }
         }

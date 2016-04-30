@@ -1,5 +1,6 @@
 package net.teraoctet.genesys.commands;
 
+import net.teraoctet.genesys.commands.economy.CommandSignBank;
 import net.teraoctet.genesys.commands.portal.CommandPortalList;
 import net.teraoctet.genesys.commands.portal.CommandPortalMsg;
 import net.teraoctet.genesys.commands.portal.CommandPortalCreateOK;
@@ -34,13 +35,24 @@ import net.teraoctet.genesys.commands.faction.CommandFactionMemberslist;
 import net.teraoctet.genesys.commands.faction.CommandFactionLeave;
 import net.teraoctet.genesys.commands.plot.CommandPlotLevel;
 import net.teraoctet.genesys.commands.plot.CommandPlotTP;
-import net.teraoctet.genesys.commands.shop.CommandShopAdd;
+import net.teraoctet.genesys.commands.economy.CommandSetName;
+import net.teraoctet.genesys.commands.economy.CommandShopCreate;
+import net.teraoctet.genesys.commands.economy.CommandShopPurchase;
+import net.teraoctet.genesys.commands.economy.CommandShopSell;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.text.Text;
 
 public class CommandManager {
         
+        public CommandSpec CommandSetName = CommandSpec.builder()
+                .description(Text.of("/setname <name>"))
+                .permission("genesys.admin.setname")
+                .arguments(GenericArguments.optional(
+                        GenericArguments.onlyOne(GenericArguments.string(Text.of("name")))))
+                .executor(new CommandSetName())
+                .build();
+    
         public CommandSpec CommandKill = CommandSpec.builder()
                 .description(Text.of("/kill"))
                 .permission("genesys.kill")
@@ -511,17 +523,7 @@ public class CommandManager {
                 .child(CommandPortalMsg, "msg")
                 .executor(new CommandPortal())
                 .build();
-       
-        public CommandSpec CommandShopAdd = CommandSpec.builder()
-                .description(Text.of("/shopadd [shopType] [price] <ItemType>"))
-                .permission("genesys.admin.shop")
-                .arguments(GenericArguments.seq(
-                    GenericArguments.optional(GenericArguments.string(Text.of("shoptype"))),
-                    GenericArguments.optional(GenericArguments.doubleNum(Text.of("price"))),
-                    GenericArguments.optional(GenericArguments.string(Text.of("itemtype")))))
-                .executor(new CommandShopAdd())
-                .build();
-        
+               
         public CommandSpec CommandMagicCompass = CommandSpec.builder()
                 .description(Text.of("/mc <Direction> <name> <X> <Y> <Z>"))
                 .permission("genesys.magiccompass")
@@ -545,9 +547,42 @@ public class CommandManager {
         
         public CommandSpec CommandSignHelp = CommandSpec.builder()
                 .description(Text.of("/signhelp <name>"))
-                .permission("genesys.sign.help")
+                .permission("genesys.admin.sign.help")
                 .arguments(
                     GenericArguments.optional(GenericArguments.string(Text.of("name"))))
                 .executor(new CommandSignHelp())
+                .build();
+        
+        public CommandSpec CommandSignBank = CommandSpec.builder()
+                .description(Text.of("/signbank"))
+                .permission("genesys.admin.sign.bank")
+                .executor(new CommandSignBank())
+                .build();
+        
+        public CommandSpec CommandShopCreate = CommandSpec.builder()
+                .description(Text.of("/shopcreate <locationstring> <transacttype> <price> <qte>"))
+                .permission("genesys.admin.shop")
+                .arguments(
+                    GenericArguments.optional(GenericArguments.string(Text.of("locationstring"))),
+                    GenericArguments.optional(GenericArguments.string(Text.of("transacttype"))),
+                    GenericArguments.optional(GenericArguments.doubleNum(Text.of("price"))),
+                    GenericArguments.optional(GenericArguments.integer(Text.of("qte"))))
+                .executor(new CommandShopCreate())
+                .build();
+        
+        public CommandSpec CommandShopPurchase = CommandSpec.builder()
+                .description(Text.of("/shopcreate <locationstring> <transacttype> <price> <qte>"))
+                .permission("genesys.admin.shop")
+                .arguments(
+                    GenericArguments.optional(GenericArguments.string(Text.of("locationstring"))))
+                .executor(new CommandShopPurchase())
+                .build();
+        
+        public CommandSpec CommandShopSell = CommandSpec.builder()
+                .description(Text.of("/shopcreate <locationstring> <transacttype> <price> <qte>"))
+                .permission("genesys.admin.shop")
+                .arguments(
+                    GenericArguments.optional(GenericArguments.string(Text.of("locationstring"))))
+                .executor(new CommandShopSell())
                 .build();
 }

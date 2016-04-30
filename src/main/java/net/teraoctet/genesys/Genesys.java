@@ -4,6 +4,8 @@ import net.teraoctet.genesys.player.PlayerListener;
 import com.google.inject.Inject;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import net.teraoctet.genesys.bookmessage.BookManager;
 import net.teraoctet.genesys.plot.PlotListener;
 import net.teraoctet.genesys.plot.PlotManager;
@@ -15,8 +17,10 @@ import net.teraoctet.genesys.utils.MessageManager;
 import net.teraoctet.genesys.world.WorldListener;
 import net.teraoctet.genesys.world.WorldManager;
 import net.teraoctet.genesys.commands.CommandManager;
-import net.teraoctet.genesys.economy.ShopListener;
+import net.teraoctet.genesys.economy.ItemShopManager;
+import net.teraoctet.genesys.economy.EconomyListener;
 import net.teraoctet.genesys.faction.FactionManager;
+import net.teraoctet.genesys.utils.CountdownToTP;
 import net.teraoctet.genesys.utils.ServerManager;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
@@ -25,6 +29,7 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 
 import static org.spongepowered.api.Sponge.getGame;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GameLoadCompleteEvent;
@@ -42,9 +47,11 @@ public class Genesys {
     public static PortalManager portalManager = new PortalManager();
     public static FactionManager factionManager = new FactionManager();
     public static BookManager bookManager = new BookManager();
+    public static ItemShopManager itemShopManager = new ItemShopManager();
     public Logger getLogger(){return logger;}  
     public static Game game;
     public static PluginContainer plugin;
+    public static Map<Player, CountdownToTP> mapCountDown = new HashMap<>();
                 
     @Listener
     public void onServerInit(GameInitializationEvent event) throws ObjectMappingException {
@@ -56,12 +63,13 @@ public class Genesys {
     	GData.load();
         MessageManager.init();
         BookManager.init();
+        ItemShopManager.init();
 
         getGame().getEventManager().registerListeners(this, new PlotListener());
         getGame().getEventManager().registerListeners(this, new PortalListener());
         getGame().getEventManager().registerListeners(this, new PlayerListener());
         getGame().getEventManager().registerListeners(this, new WorldListener());
-        getGame().getEventManager().registerListeners(this, new ShopListener());
+        getGame().getEventManager().registerListeners(this, new EconomyListener());
          
 	getGame().getCommandManager().register(this, new CommandManager().CommandKill, "kill", "tue");
 	getGame().getCommandManager().register(this, new CommandManager().CommandSun, "sun", "soleil");
@@ -69,14 +77,14 @@ public class Genesys {
 	getGame().getCommandManager().register(this, new CommandManager().CommandStorm, "storm", "orage");
 	getGame().getCommandManager().register(this, new CommandManager().CommandDay, "day", "timeday", "jour");
 	getGame().getCommandManager().register(this, new CommandManager().CommandNight, "night", "timenight", "nuit");
-        getGame().getCommandManager().register(this, new CommandManager().CommandPlot, "plot", "parcel", "parcelle", "p");
+        getGame().getCommandManager().register(this, new CommandManager().CommandPlot, "plot", "parcel", "parcelle", "p", "protege");
 	getGame().getCommandManager().register(this, new CommandManager().CommandFly, "fly", "vole");
 	getGame().getCommandManager().register(this, new CommandManager().CommandSetHome, "sethome", "homeset");
-	getGame().getCommandManager().register(this, new CommandManager().CommandHome, "home");
-        getGame().getCommandManager().register(this, new CommandManager().CommandDelhome, "delhome");
-	getGame().getCommandManager().register(this, new CommandManager().CommandBack, "back", "gsback", "reviens");
+	getGame().getCommandManager().register(this, new CommandManager().CommandHome, "home", "maison");
+        getGame().getCommandManager().register(this, new CommandManager().CommandDelhome, "delhome", "removehome");
+	getGame().getCommandManager().register(this, new CommandManager().CommandBack, "back", "gsback", "reviens", "retour");
 	getGame().getCommandManager().register(this, new CommandManager().CommandLevel, "level");
-        getGame().getCommandManager().register(this, new CommandManager().CommandWorldCreate, "worldcreate", "createworld");
+        getGame().getCommandManager().register(this, new CommandManager().CommandWorldCreate, "worldcreate", "createworld", "newworld");
 	getGame().getCommandManager().register(this, new CommandManager().CommandWorldTP, "worldtp", "tpworld");
         getGame().getCommandManager().register(this, new CommandManager().CommandClearinventory, "clearinventory", "ci", "clear");
         getGame().getCommandManager().register(this, new CommandManager().CommandInvsee, "invsee", "is");
@@ -86,11 +94,15 @@ public class Genesys {
 	getGame().getCommandManager().register(this, new CommandManager().CommandTest, "test");
         getGame().getCommandManager().register(this, new CommandManager().CommandRocket, "rocket");
         getGame().getCommandManager().register(this, new CommandManager().CommandPortal, "portal", "portail", "pl", "po");
-        getGame().getCommandManager().register(this, new CommandManager().CommandShopAdd, "shopadd", "addshop");
         getGame().getCommandManager().register(this, new CommandManager().CommandHead, "head", "skull", "tete");
         getGame().getCommandManager().register(this, new CommandManager().CommandMagicCompass, "mc", "magic", "compass", "boussole");
         getGame().getCommandManager().register(this, new CommandManager().CommandSignWrite, "write", "ecrire", "signwrite", "sw", "print");
         getGame().getCommandManager().register(this, new CommandManager().CommandSignHelp, "signhelp", "sh");
+        getGame().getCommandManager().register(this, new CommandManager().CommandSignBank, "signbank", "sb");
+        getGame().getCommandManager().register(this, new CommandManager().CommandSetName, "setname", "sn", "dn");
+        getGame().getCommandManager().register(this, new CommandManager().CommandShopCreate, "shopcreate", "shopc");
+        getGame().getCommandManager().register(this, new CommandManager().CommandShopPurchase, "shoppurchase", "shopp");
+        getGame().getCommandManager().register(this, new CommandManager().CommandShopSell, "shopsell", "shops");
 
         getLogger().info("-----------------------------"); 
 	getLogger().info("...........Genesys..........."); 

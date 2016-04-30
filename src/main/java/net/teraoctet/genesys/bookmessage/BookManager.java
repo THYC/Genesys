@@ -102,7 +102,7 @@ public class BookManager {
     /**
      * Retourne un objet BookView
      * @param title titre du livre a retourner
-     * @return 
+     * @return BookView
      */    
     public BookView getBookMessage(String title){ 
         Text author = getNodeText(title,"author");

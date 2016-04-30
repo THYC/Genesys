@@ -80,8 +80,8 @@ public class PlotManager {
     
     /**
      * Retourne True si le nom indiqué correspond bien a un nom de parcelle(Plot)
-     * @param name
-     * @return 
+     * @param name Nom du Plot
+     * @return Boolean
      */
     public Boolean hasPlot(String name){return plots.stream().anyMatch((plot) -> (plot.getName().contains(name)));}
     
@@ -94,8 +94,8 @@ public class PlotManager {
     
     /**
      * Retourne la valeur GPlot de la parcelle nommée
-     * @param plotName
-     * @return 
+     * @param plotName Nom de l'object GPlot
+     * @return Object GPlot
      */
     public GPlot getPlot(String plotName){
         for (GPlot plot : plots) {
@@ -106,8 +106,8 @@ public class PlotManager {
     
     /**
      * Retourne le propriétaire de la parcelle nommée
-     * @param plotName
-     * @return 
+     * @param plotName Nom de l'object GPlot
+     * @return String
      */
     public String getPlotOwner(String plotName){
         for(GPlot plot : plots){
@@ -161,8 +161,8 @@ public class PlotManager {
     /**
      * Si TRUE retourne la list des jails enregistré
      * Si FALSE retourne la liste des parcelles enregistré
-     * @param flagJail
-     * @return 
+     * @param flagJail Boolean 
+     * @return Text
      */        
     public Text getListPlot(boolean flagJail){
         String listplot = "&6";
@@ -181,8 +181,8 @@ public class PlotManager {
     
     /**
      * Retourne la liste des parcelles appartenant au joueur nommé
-     * @param playerUUID
-     * @return 
+     * @param playerUUID UUID du joueur 
+     * @return  Text
      */
     public Text getListPlot(String playerUUID){
         String listplot = "&6Total : " + plots.size();
@@ -197,8 +197,8 @@ public class PlotManager {
     
     /**
      * Retourne un Array comprenant les parcelles du joueur
-     * @param playerUUID
-     * @return 
+     * @param playerUUID UUID du joueur
+     * @return  ArrayList
      */
     public static final ArrayList<GPlot> playerPlots (String playerUUID)
     {
@@ -209,9 +209,9 @@ public class PlotManager {
     
     /**
      * Retourne la validité des coodonnées pour la création d'une parcelle
-     * @param l1
-     * @param l2
-     * @return 
+     * @param l1 Location du point 1
+     * @param l2 Location du point 2
+     * @return Boolean
      */
     public boolean plotAllow(Location l1, Location l2){                
         Location <World> w = l1;

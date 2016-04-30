@@ -78,6 +78,13 @@ public class CommandMagicCompass implements CommandExecutor {
                 } 
                 if(is.isPresent()){ player.setItemInHand(is.get()); }
                 return CommandResult.success();
+            }else{
+                player.sendMessage(USAGE("/mc [Direction] [name] [X] [Y] [Z]"));
+                        player.sendMessage(MESSAGE("&8Direction : HOME/PLOT/FACTION/XYZ"));
+                        player.sendMessage(MESSAGE("&8Name : le nom de votre home, de votre parcelle ..."));
+                        player.sendMessage(MESSAGE("&8X Y Z : uniquement si Direction = XYZ"));
+                        player.sendMessage(MESSAGE("&8ex : /xyz maMine 100 30 -150"));
+                return CommandResult.empty();
             }
         } else if (src instanceof ConsoleSource) {
             src.sendMessage(NO_CONSOLE());

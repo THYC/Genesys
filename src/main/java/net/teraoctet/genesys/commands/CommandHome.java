@@ -1,8 +1,7 @@
 package net.teraoctet.genesys.commands;
 
-import com.flowpowered.math.vector.Vector3d;
 import java.util.Optional;
-import net.teraoctet.genesys.utils.DeSerialize;
+import static net.teraoctet.genesys.Genesys.serverManager;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import net.teraoctet.genesys.utils.GHome;
 import net.teraoctet.genesys.player.GPlayer;
@@ -17,7 +16,6 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.world.Location;
 
 public class CommandHome implements CommandExecutor {
     
@@ -33,29 +31,22 @@ public class CommandHome implements CommandExecutor {
             if(home.isPresent()) { 
                 homename = home.get().toLowerCase();
             }
-
-            GHome ghome = gplayer.getHome(homename);
-            if(ghome == null) { 
+            
+            if(gplayer.getHome(homename).isPresent()){
+                GHome ghome = gplayer.getHome(homename).get();
+                if(!serverManager.teleport(player, ghome.getWorld(), ghome.getX(), ghome.getY(), ghome.getZ())){
+                    src.sendMessage(ERROR()); 
+                    return CommandResult.empty();
+                } else if (homename.equalsIgnoreCase("default")){
+                    src.sendMessage(HOME_TP_SUCCESS(player,""));
+                } else {
+                    src.sendMessage(HOME_TP_SUCCESS(player,homename));
+                }
+                return CommandResult.success();
+            }else{
                 src.sendMessage(HOME_NOT_FOUND()); 
                 return CommandResult.empty();
             }
-           
-            Location lastLocation = player.getLocation();
-
-            if(!player.transferToWorld(ghome.getWorld(), new Vector3d(ghome.getX(), ghome.getY(), ghome.getZ()))) { 
-                src.sendMessage(ERROR()); 
-                return CommandResult.empty(); 
-            }
-
-            gplayer.setLastposition(DeSerialize.location(lastLocation));
-            gplayer.update();
-
-            if (homename.equalsIgnoreCase("default")){
-                src.sendMessage(HOME_TP_SUCCESS(player,""));
-            } else {
-                src.sendMessage(HOME_TP_SUCCESS(player,homename));
-            }
-            return CommandResult.success();
         } 
         
         else if (src instanceof ConsoleSource){

@@ -8,6 +8,7 @@ import net.teraoctet.genesys.player.GPlayer;
 import net.teraoctet.genesys.plot.GPlot;
 import static net.teraoctet.genesys.utils.DeSerialize.getVector3d;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
+import static net.teraoctet.genesys.utils.MessageManager.HOME_NOT_FOUND;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import org.spongepowered.api.data.DataTransactionResult;
 import org.spongepowered.api.data.key.Keys;
@@ -61,9 +62,14 @@ public class SettingCompass {
             case "HOME":
                 String homeName = "default";
                 if(arg.length == 2){ homeName = arg[1];}
-                loc =   String.valueOf(gplayer.getHome(homeName).getX()) + ":" +
-                        String.valueOf(gplayer.getHome(homeName).getY()) + ":" +
-                        String.valueOf(gplayer.getHome(homeName).getZ());
+                if(gplayer.getHome(homeName).isPresent()){
+                loc =   String.valueOf(gplayer.getHome(homeName).get().getX()) + ":" +
+                        String.valueOf(gplayer.getHome(homeName).get().getY()) + ":" +
+                        String.valueOf(gplayer.getHome(homeName).get().getZ());
+                }else{
+                    player.sendMessage(HOME_NOT_FOUND());
+                    return Optional.empty();
+                }
                 break;
             case "GRAVE":
                 loc = gplayer.getLastdeath();

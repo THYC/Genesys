@@ -60,9 +60,9 @@ public class GData {
                                 + "uuid TEXT, "
                                 + "name TEXT, "
                                 + "world TEXT, "
-                                + "x DOUBLE, "
-                                + "y DOUBLE, "
-                                + "z DOUBLE)");
+                                + "x INT, "
+                                + "y INT, "
+                                + "z INT)");
                 }
 
                 if(!tables.contains("gmutes")) {
@@ -293,9 +293,9 @@ public class GData {
                         rs.getString("uuid"), 
                         rs.getString("name"), 
                         rs.getString("world"), 
-                        rs.getDouble("x"),
-                        rs.getDouble("y"),  
-                        rs.getDouble("z"));
+                        rs.getInt("x"),
+                        rs.getInt("y"),  
+                        rs.getInt("z"));
                         GPlayer gplayer = getGPlayer(home.getUUID());
                         gplayer.setHome(home.getName(), home);
                         GData.removeGPlayer(home.getUUID());

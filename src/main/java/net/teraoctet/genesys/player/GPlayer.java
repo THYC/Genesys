@@ -124,8 +124,14 @@ public class GPlayer{
     public double getTimejail() { return timejail; }
     public int getID_faction() { return id_faction; }
     public int getFactionRank() { return faction_rank; }
-
-    public GHome getHome(String name) { if(homes == null) homes = new HashMap<>(); return homes.containsKey(name) ? homes.get(name) : null; }
+    public Optional<GHome> getHome(String name) { 
+        if(homes == null) homes = new HashMap<>(); 
+        if(homes.containsKey(name)){
+            return Optional.of(homes.get(name));
+        }else{
+            return Optional.empty();
+        } 
+    }
     public void removeGHome(String name) { if(homes.containsKey(name)) homes.remove(name); }
     public HashMap<String, GHome> getHomes() { if(homes == null) homes = new HashMap<>(); return homes; }
     public String getReply() { return reply; }

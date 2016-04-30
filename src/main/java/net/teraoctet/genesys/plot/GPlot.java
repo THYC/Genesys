@@ -117,7 +117,7 @@ public class GPlot {
     /**
      * Enregistre une annonce de vente de la parcelle (Plot)
      * dans la base de donnée.
-     * @param loc 
+     * @param loc Location  
      */
     public void addSale(Location loc) {
         String location = DeSerialize.location(loc);
@@ -179,7 +179,7 @@ public class GPlot {
     /**
      * Chaine type String comprenant la liste des Flags et de leurs valeurs
      * enregistré sur la parcelle (Plot)
-     * @return 
+     * @return String
      */
     public String getFlag(){
         String flag = "Jail(prison) : " + this.jail + " | ";
@@ -262,7 +262,7 @@ public class GPlot {
     
     /**
      * Nom du propriétaire de la parcelle (Plot)
-     * @return 
+     * @return String
      */
     public String getNameOwner(){
         if (uuidOwner.equalsIgnoreCase("ADMIN")) return "ADMIN";

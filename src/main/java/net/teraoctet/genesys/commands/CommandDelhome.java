@@ -30,10 +30,8 @@ public class CommandDelhome implements CommandExecutor {
             if(home.isPresent()) { 
                 homename = home.get().toLowerCase();
             }
-
-            GHome ghome = gplayer.getHome(homename);
-
-            if(ghome != null) { 
+            if(gplayer.getHome(homename).isPresent()){
+                GHome ghome = gplayer.getHome(homename).get();
                 ghome.delete();
                 gplayer.removeGHome(homename);
                 commit();

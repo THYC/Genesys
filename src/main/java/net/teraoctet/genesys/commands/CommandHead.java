@@ -2,6 +2,7 @@ package net.teraoctet.genesys.commands;
 
 import java.util.Optional;
 import static net.teraoctet.genesys.Genesys.serverManager;
+import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static org.spongepowered.api.Sponge.getGame;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -29,25 +30,27 @@ public class CommandHead implements CommandExecutor {
         if(src instanceof Player && src.hasPermission("genesys.head")) { 
             Player player = (Player) src;           
             Optional<String> head = ctx.<String> getOne("head");
-            ItemStack.Builder builder = getGame().getRegistry().createBuilder(ItemStack.Builder.class);
-            ItemStack skull = builder.itemType(ItemTypes.SKULL).quantity(1).build();
-            skull.offer(Keys.SKULL_TYPE, SkullTypes.PLAYER);
-            RepresentedPlayerData playerData = skull.getOrCreate(RepresentedPlayerData.class).get();
+            //ItemStack.Builder builder = getGame().getRegistry().createBuilder(ItemStack.Builder.class);
+            //ItemStack skull = builder.itemType(ItemTypes.SKULL).quantity(1).build();
+            //skull.offer(Keys.SKULL_TYPE, SkullTypes.PLAYER);
+            //RepresentedPlayerData playerData = skull.getOrCreate(RepresentedPlayerData.class).get();
                 
             if (head.isPresent()){
                 Optional<GameProfile> gpOpt = serverManager.getPlayerProfile(head.get());    
                 if (gpOpt.isPresent()){
-                    playerData = playerData.set(playerData.owner().set(gpOpt.get()));
-                    skull.offer(playerData);
+                    //playerData = playerData.set(playerData.owner().set(gpOpt.get()));
+                    //skull.offer(playerData);
+                    ItemStack skull = createHead(gpOpt.get());
                     player.setItemInHand(skull);
-                    player.sendMessage(ChatTypes.CHAT,Text.of(TextColors.GREEN, "Success! ", TextColors.YELLOW, "Created skull of your head. Enjoy!"));
+                    player.sendMessage(MESSAGE("Tête créé avec succès !"));
                     return CommandResult.success();
                 } else {
                     return CommandResult.empty();
                 }
             } else {    
-                playerData = playerData.set(playerData.owner().set(player.getProfile()));
-                skull.offer(playerData);
+                //playerData = playerData.set(playerData.owner().set(player.getProfile()));
+                //skull.offer(playerData);
+                ItemStack skull = createHead(player.getProfile());
                 player.setItemInHand(skull);
                 player.sendMessage(ChatTypes.CHAT,Text.of(TextColors.GREEN, "Success! ", TextColors.YELLOW, "Created skull of player's head. Enjoy!"));
             }  
@@ -62,5 +65,12 @@ public class CommandHead implements CommandExecutor {
         }
 
         return CommandResult.empty();
+    }
+    
+    public ItemStack createHead(GameProfile profile) {
+        ItemStack skull = ItemStack.of(ItemTypes.SKULL, 1);
+        skull.offer(Keys.SKULL_TYPE, SkullTypes.PLAYER);
+        skull.offer(Keys.REPRESENTED_PLAYER, profile);
+        return skull;
     }
 }

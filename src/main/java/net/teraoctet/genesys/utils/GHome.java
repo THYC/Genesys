@@ -5,11 +5,11 @@ public class GHome {
 	private String uuid;
 	private String name;
 	private String world;
-	private double x;
-	private double y;
-	private double z;
+	private int x;
+	private int y;
+	private int z;
 	
-	public GHome(String uuid, String name, String world, double x, double y, double z) {
+	public GHome(String uuid, String name, String world, int x, int y, int z) {
 		this.uuid = uuid;
 		this.name = name;
 		this.world = world;
@@ -33,15 +33,15 @@ public class GHome {
 	public void setUUID(String uuid) { this.uuid = uuid; }
 	public void setName(String name) { this.name = name; }
 	public void setWorld(String world) { this.world = world; }
-	public void setX(double x) { this.x = x; }
-	public void setY(double y) { this.y = y; }
-	public void setZ(double z) { this.z = z; }
+	public void setX(int x) { this.x = x; }
+	public void setY(int y) { this.y = y; }
+	public void setZ(int z) { this.z = z; }
 	
 	public String getUUID() { return uuid; }
 	public String getName() { return name; }
 	public String getWorld() { return world; }
-	public double getX() { return x; }
-	public double getY() { return y; }
-	public double getZ() { return z; }
+	public int getX() { return x; }
+	public int getY() { return y; }
+	public int getZ() { return z; }
 
 }
