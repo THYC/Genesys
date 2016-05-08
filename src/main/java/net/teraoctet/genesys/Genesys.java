@@ -52,6 +52,8 @@ public class Genesys {
     public static Game game;
     public static PluginContainer plugin;
     public static Map<Player, CountdownToTP> mapCountDown = new HashMap<>();
+    public static Map<Player,Boolean>modInput = new HashMap<>();
+    public static Map<Player,Double>inputDouble = new HashMap<>();
                 
     @Listener
     public void onServerInit(GameInitializationEvent event) throws ObjectMappingException {

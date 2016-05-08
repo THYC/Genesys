@@ -5,9 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import static net.teraoctet.genesys.Genesys.bookManager;
-import static net.teraoctet.genesys.Genesys.itemShopManager;
+import static net.teraoctet.genesys.Genesys.inputDouble;
 import static net.teraoctet.genesys.Genesys.mapCountDown;
 import static net.teraoctet.genesys.Genesys.plotManager;
+import net.teraoctet.genesys.commands.economy.CommandBank;
 import net.teraoctet.genesys.utils.CountdownToTP;
 import net.teraoctet.genesys.utils.GData;
 import static net.teraoctet.genesys.utils.GData.addGPlayer;
@@ -36,7 +37,6 @@ import static org.spongepowered.api.block.BlockTypes.STANDING_SIGN;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.block.tileentity.carrier.Chest;
-import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.source.CommandBlockSource;
 import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.data.key.Keys;
@@ -52,13 +52,12 @@ import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.cause.Last;
 import org.spongepowered.api.event.message.MessageChannelEvent;
+import org.spongepowered.api.event.message.MessageEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import static org.spongepowered.api.item.ItemTypes.COMPASS;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.crafting.CraftingInventory;
-import org.spongepowered.api.item.inventory.entity.Hotbar;
-import org.spongepowered.api.item.inventory.entity.HumanInventory;
 import org.spongepowered.api.item.inventory.type.GridInventory;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
@@ -143,6 +142,23 @@ public class PlayerListener {
         builder.append(": /").append(event.getCommand()).append(" ").append(event.getArguments());
 
         getGame().getServer().getConsole().sendMessage(Text.of(builder.toString()));
+    }
+    
+    @Listener
+    public void promptDouble(MessageEvent event, @First Player player) {
+        if(inputDouble.containsKey(player)){
+            String smessage = event.getOriginalMessage().toPlain();
+            smessage = smessage.replaceAll("<" + player.getName() + "> ", "");
+            try{
+            Double d = Double.valueOf(smessage);
+            inputDouble.replace(player, d);
+            event.setMessage(MESSAGE("&eMaintenant cliques de nouveau sur le panneau pour confirmer/n")
+                    .concat(MESSAGE("&esi tu tiens ta bourse dans ta main, la somme sera vers\351 dessus sinon tu aura des \351meraudes")));
+            }catch(Exception ex){
+                player.sendMessage(MESSAGE("&bNOOB uniquement des chiffres ! recommences :"));
+                event.clearMessage();
+            }
+        }
     }
     
     @Listener

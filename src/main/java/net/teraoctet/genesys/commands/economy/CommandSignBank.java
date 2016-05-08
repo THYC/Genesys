@@ -3,9 +3,6 @@ package net.teraoctet.genesys.commands.economy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import static net.teraoctet.genesys.utils.GData.getGPlayer;
-import static net.teraoctet.genesys.utils.MessageManager.USAGE;
-import net.teraoctet.genesys.player.GPlayer;
 import org.spongepowered.api.block.BlockTypes;
 import static org.spongepowered.api.block.BlockTypes.STANDING_SIGN;
 import org.spongepowered.api.block.tileentity.Sign;
@@ -26,6 +23,7 @@ import org.spongepowered.api.command.source.ConsoleSource;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
+import static net.teraoctet.genesys.utils.MessageManager.USAGE;
 
 public class CommandSignBank implements CommandExecutor {
        
@@ -35,7 +33,21 @@ public class CommandSignBank implements CommandExecutor {
 
         if(src instanceof Player && src.hasPermission("genesys.admin.sign.bank")) { 
             Player player = (Player) src;
-                        
+            
+            if(!ctx.getOne("type").isPresent()){
+                player.sendMessage(USAGE("/signbank <depot|retrait>"));
+                return CommandResult.empty();  
+            }
+            String type = ctx.<String> getOne("type").get();
+            if(type.equalsIgnoreCase("depot")){
+                type = "Depot";
+            }else if(type.equalsIgnoreCase("retrait")){
+                type = "Retrait";
+            }else{
+                player.sendMessage(USAGE("/signbank <depot|retrait>"));
+                return CommandResult.empty();  
+            }
+            
             Location location = null;
             BlockRay<World> playerBlockRay = BlockRay.from(player).blockLimit(10).build(); 
             while (playerBlockRay.hasNext()) 
@@ -63,7 +75,7 @@ public class CommandSignBank implements CommandExecutor {
             SignData signData = opSign.get();
             List<Text> help = new ArrayList<>();
             help.add(MESSAGE("&l&1[BANK]"));
-            help.add(MESSAGE("&1-------------"));
+            help.add(MESSAGE("&o&1" + type));
             help.add(MESSAGE("&l&4Clique droit ici"));
             help.add(MESSAGE("&1-------------"));
             signData.set(Keys.SIGN_LINES,help );

@@ -1,5 +1,8 @@
 package net.teraoctet.genesys.commands.economy;
 
+import net.teraoctet.genesys.player.GPlayer;
+import static net.teraoctet.genesys.utils.GData.getGPlayer;
+import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import org.spongepowered.api.command.CommandResult;
@@ -15,14 +18,9 @@ public class CommandBank implements CommandExecutor {
     public CommandResult execute(CommandSource src, CommandContext ctx) {
 
         if(src instanceof Player && src.hasPermission("genesys.")) {
-            //remplir "src.hasPermission("genesys.")" avec le nom de la permission de la commande
-            //      -------------------------------------------
-            //si la console peut utiliser la commande :
-            //  - supprimer "src instanceof Player"
-            //  - supprimer "else if (src instanceof ConsoleSource)"            
-            
-            //CODER LA COMMANDE ICI
-            
+            Player player = (Player)src;
+            GPlayer gp = getGPlayer(player.getIdentifier());
+            player.sendMessage(MESSAGE(String.valueOf(gp.getMoney())));
             return CommandResult.success();
         } 
         

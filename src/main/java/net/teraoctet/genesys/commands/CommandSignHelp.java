@@ -35,7 +35,6 @@ public class CommandSignHelp implements CommandExecutor {
 
         if(src instanceof Player && src.hasPermission("genesys.admin.sign.help")) { 
             Player player = (Player) src;
-            GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
         
             if(!ctx.getOne("name").isPresent()){
                 player.sendMessage(USAGE("/signhelp <name>"));

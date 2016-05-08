@@ -2,13 +2,15 @@ package net.teraoctet.genesys.economy;
 
 import java.io.IOException;
 import java.util.Optional;
-import static net.teraoctet.genesys.Genesys.bookManager;
+import java.util.function.Consumer;
+import static net.teraoctet.genesys.Genesys.inputDouble;
 import static net.teraoctet.genesys.Genesys.itemShopManager;
 import net.teraoctet.genesys.player.GPlayer;
 import net.teraoctet.genesys.utils.DeSerialize;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
-import static org.spongepowered.api.Sponge.getGame;
+import static net.teraoctet.genesys.utils.MessageManager.MISSING_BALANCE;
+import static net.teraoctet.genesys.utils.MessageManager.WITHDRAW_SUCCESS;
 import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
 import org.spongepowered.api.data.manipulator.mutable.item.EnchantmentData;
 import org.spongepowered.api.data.meta.ItemEnchantment;
@@ -27,9 +29,11 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.block.tileentity.TileEntity;
-import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.event.block.InteractBlockEvent;
+import org.spongepowered.api.item.ItemTypes;
 
 public class EconomyListener {
         
@@ -137,12 +141,15 @@ public class EconomyListener {
             return;
         }
         Player player = optPlayer.get();
-
+        
         BlockSnapshot b = event.getTargetBlock();
         if(!b.getLocation().isPresent()){return;}
+        
         Location loc = b.getLocation().get();              
         Optional<TileEntity> block = loc.getTileEntity();
         if (block.isPresent()) {
+            
+            //on verifie si le joueur clique sur un panneau
             TileEntity tile=block.get();
             if (tile instanceof Sign) {
                 if (event instanceof InteractBlockEvent.Secondary){
@@ -151,25 +158,142 @@ public class EconomyListener {
                     if (optional.isPresent()) {
                         SignData offering = optional.get();
                         Text txt1 = offering.lines().get(0);
+                        Text txt2 = offering.lines().get(1);
+                        
+                        GPlayer gplayer = getGPlayer(player.getIdentifier());
+                                                
+                        //on verifie si le joueur a cliqué sur un panneau BANK
                         if (txt1.equals(MESSAGE("&l&1[BANK]"))){
+                            
+                            //on verifie si le joueur a cliqué sur un panneau retrait
+                            if (txt2.equals(MESSAGE("&o&1Retrait"))){
+                                
+                                //on verifie si il y a eu une demande de saisie
+                                Optional<Double>coin;
+                                if(inputDouble.containsKey(player)){
+                                    coin = Optional.of(inputDouble.get(player));
+                                    if(coin.isPresent()){
+                                        
+                                        //si une valeur a été saisie précédemment on effectue le versement et on sort
+                                        if(coin.get() != 0.0){
+                                            int coinInt = coin.get().intValue();
+                                            if(gplayer.getMoney()> coinInt){
+                                                gplayer.debitMoney(coinInt);
+                                                
+                                                //on verifie si le joueur a une bourse, si oui on la credite
+                                                if(player.getItemInHand().isPresent()){
+                                                    if(itemShopManager.hasCoinPurses(player.getItemInHand().get())){
+                                                        Optional<ItemStack> coinPurse = itemShopManager.addCoin(coin.get(),player.getItemInHand().get());
+                                                        if(coinPurse.isPresent()){
+                                                            player.setItemInHand(coinPurse.get());
+                                                            return;
+                                                        }
+                                                    }
+                                                }
+                                                
+                                                //si le joueur n'avait pas de bourse, on lui verse des emeraudes
+                                                ItemStack is = ItemStack.of(ItemTypes.EMERALD, coinInt);
+                                                player.getInventory().offer(is);
+                                                inputDouble.remove(player);
+                                                player.sendMessages(WITHDRAW_SUCCESS(String.valueOf(coinInt)));
+                                                return;
+                                            }else{
+                                                player.sendMessage(MISSING_BALANCE());
+                                            }
+                                        }                                    
+                                    }
+                                }
+
+                                BookView.Builder bv = BookView.builder()
+                                        .author(Text.of(TextColors.GOLD, "genesys"))
+                                        .title(Text.of(TextColors.GOLD, "Bank"));
+                                Text text = 
+                                        Text.builder()  .append(MESSAGE("&l&b   -----------------\n"))
+                                                        .append(MESSAGE("&l&b     RETRAIT \n"))
+                                                        .append(MESSAGE("&l&b   -----------------\n\n"))
+                                                        .append(MESSAGE("&b&oClique sur un des 4 choix\n")).build().concat(
+                                        Text.builder()  .append(MESSAGE("&e[1] Retrait de 10 \351meraude(s)\n"))
+                                                        .onClick(TextActions.executeCallback(callBank(1,10.0))).build()).concat(
+                                        Text.builder()  .append(MESSAGE("&e[2] Retrait de 20 \351meraude(s)\n"))
+                                                        .onClick(TextActions.executeCallback(callBank(1,20.0))).build()).concat(
+                                        Text.builder()  .append(MESSAGE("&e[3] Retrait de 30 \351meraude(s)\n"))
+                                                        .onClick(TextActions.executeCallback(callBank(1,30.0))).build()).concat(
+                                        Text.builder()  .append(MESSAGE("&e[4] &bje veux saisir la somme\n\n"))
+                                                        .onClick(TextActions.executeCallback(callBank(2,0.0))).build());
+                                bv.addPage(text);
+                                player.sendBookView(bv.build());
+                                player.sendMessage(text);
+                            }
+                        }
+                        
+                        //on verifie si le joueur a cliqué sur un panneau depot
+                        if (txt2.equals(MESSAGE("&o&1Depot"))){
+                                
+                            //on verifie si il y a eu une demande de saisie
+                            Optional<Double>coin;
+                            if(inputDouble.containsKey(player)){
+                                coin = Optional.of(inputDouble.get(player));
+                                if(coin.isPresent()){
+
+                                    //si une valeur a été saisie précédemment on effectue le versement et on sort
+                                    if(coin.get() != 0.0){
+                                        int coinInt = coin.get().intValue();
+                                        if(gplayer.getMoney()> coinInt){
+                                            gplayer.debitMoney(coinInt);
+                                            ItemStack is = ItemStack.of(ItemTypes.EMERALD, coinInt);
+                                            player.getInventory().offer(is);
+                                            inputDouble.remove(player);
+                                            player.sendMessages(WITHDRAW_SUCCESS(String.valueOf(coinInt)));
+                                            return;
+                                        }else{
+                                            player.sendMessage(MISSING_BALANCE());
+                                        }
+                                    }                                    
+                                }
+                            }
+
                             BookView.Builder bv = BookView.builder()
                                     .author(Text.of(TextColors.GOLD, "genesys"))
                                     .title(Text.of(TextColors.GOLD, "Bank"));
-                            Text text = Text.builder()
-                                    .append(MESSAGE("&l&1   ---- Bank ----\n\n"))
-                                    .append(MESSAGE("&l&0Quel op\351ration voulez vous faire ?\n"))
-                                    .append(MESSAGE("&l&7Faire un retrait d'\351meraude(s)\n"))
-                                    .onClick(TextActions.runCommand("/banktr " + "&l&1[BANK]")).color(TextColors.AQUA)
-                                    .append(MESSAGE("&l&7D\351poser des \351meraude(s)\n"))
-                                    .append(MESSAGE("&l&7Faire un d\351pot de ma bourse\n"))
-                                    .append(MESSAGE("&l&7Faire un retrait sur ma bourse\n"))
-                                    .build();
+                            Text text = 
+                                    Text.builder()  .append(MESSAGE("&l&b   -----------------\n"))
+                                                        .append(MESSAGE("&l&b     DEPOT \n"))
+                                                        .append(MESSAGE("&l&b   -----------------\n\n"))
+                                                        .append(MESSAGE("&b&oClique sur un des 4 choix\n")).build().concat(
+                                        Text.builder()  .append(MESSAGE("&e[1] Depot des \351meraude(s)\n"))
+                                                        .onClick(TextActions.executeCallback(callBank(1,10.0))).build()).concat(
+                                        Text.builder()  .append(MESSAGE("&e[2] Depot de toutes les \351meraude(s) situés dans mon stuff\n"))
+                                                        .onClick(TextActions.executeCallback(callBank(1,20.0))).build()).concat(
+                                        Text.builder()  .append(MESSAGE("&e[3] Retrait de 30 \351meraude(s)\n"))
+                                                        .onClick(TextActions.executeCallback(callBank(1,30.0))).build()).concat(
+                                        Text.builder()  .append(MESSAGE("&e[4] &bje veux saisir la somme\n\n"))
+                                                        .onClick(TextActions.executeCallback(callBank(2,0.0))).build());
                             bv.addPage(text);
                             player.sendBookView(bv.build());
+                            player.sendMessage(text);
+                            
                         }
                     }
                 } 
             }
         }
+    }
+    
+    private Consumer<CommandSource> callBank(Integer type, double coin) {
+	return (CommandSource src) -> {
+            Player player = (Player)src;
+            GPlayer gplayer = getGPlayer(player.getIdentifier());
+            switch (type){
+                case 1: //retrait de sommes prédéfini
+                    inputDouble.put(player, coin);
+                    src.sendMessage(MESSAGE("&eMaintenant cliques de nouveau sur le panneau pour confirmer le retrait de " + coin + " \351meraude(s)"));
+                    src.sendMessage(MESSAGE("&esi tu tiens ta bourse dans ta main, la somme sera vers\351 dessus sinon tu aura des \351meraudes"));
+                    break;
+                case 2: //retrait saisie par le joueur
+                    inputDouble.put(player, 0.0);
+                    src.sendMessage(MESSAGE("&eTapes la somme voulu :"));
+                    break;
+            }
+        };
     }
 }

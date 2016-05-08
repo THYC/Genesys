@@ -554,8 +554,10 @@ public class CommandManager {
                 .build();
         
         public CommandSpec CommandSignBank = CommandSpec.builder()
-                .description(Text.of("/signbank"))
+                .description(Text.of("/signbank <type>"))
                 .permission("genesys.admin.sign.bank")
+                .arguments(
+                    GenericArguments.optional(GenericArguments.string(Text.of("type"))))
                 .executor(new CommandSignBank())
                 .build();
         
