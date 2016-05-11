@@ -6,6 +6,7 @@ import static net.teraoctet.genesys.Genesys.plugin;
 import net.teraoctet.genesys.player.GPlayer;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import org.spongepowered.api.Sponge;
+import static org.spongepowered.api.Sponge.getGame;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.world.Location;
@@ -33,12 +34,12 @@ public class CountdownToTP {
     public void run(){
         taskCountdown = Sponge.getScheduler().createTaskBuilder().execute(() -> {
             Location lastLocation = player.getLocation();
-            if(player.transferToWorld(world, new Vector3d(X, Y, Z))){
-                GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
-                gplayer.setLastposition(DeSerialize.location(lastLocation));
-                gplayer.update();
-                this.result = true;
-            };  
+            player.transferToWorld(getGame().getServer().getWorld(world).get().getUniqueId(), new Vector3d(X, Y, Z));
+            GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
+            gplayer.setLastposition(DeSerialize.location(lastLocation));
+            gplayer.update();
+            this.result = true;
+             
         }).delay(GConfig.COULDOWN_TO_TP(), TimeUnit.SECONDS).submit(plugin);
     }
     

@@ -18,6 +18,7 @@ import org.spongepowered.api.service.ProviderRegistration;
 import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 public class ServerManager {
     
@@ -198,26 +199,32 @@ public class ServerManager {
     /**
      * Téléporte un joueur et enregistre ces prédentes coordonnées dans le param LastLocation 
      * @param player nom du joeur a téléporter
-     * @param world nom du monde d'arrivée
+     * @param worldS nom du monde d'arrivée
      * @param X coordonnée X
      * @param Y coordonnée Y
      * @param Z coordonnée Z
      * @return Boolean TRUE si le joueur a bien été téléporté
      */
-    public boolean teleport(Player player,String world, int X, int Y, int Z){
+    public boolean teleport(Player player, String worldS, int X, int Y, int Z){
                  
         if(GConfig.COULDOWN_TO_TP()>0){
-            CountdownToTP tp = new CountdownToTP(player,world, X, Y, Z);
+            CountdownToTP tp = new CountdownToTP(player,worldS, X, Y, Z);
             tp.run();
             mapCountDown.put(player, tp);
             return tp.getResult();
         }else{
             Location lastLocation = player.getLocation();
-            if(!player.transferToWorld(world, new Vector3d(X, Y, Z))) { return false;}
-            GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
-        gplayer.setLastposition(DeSerialize.location(lastLocation));
-        gplayer.update();
-        return true;
+            Optional<World> w = getGame().getServer().getWorld(worldS);
+            if(w.isPresent()){
+                player.transferToWorld(w.get().getUniqueId(), new Vector3d(X, Y, Z));
+                GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
+                gplayer.setLastposition(DeSerialize.location(lastLocation));
+                gplayer.update();
+                return true;
+            }else{
+                return false;
+            }
+  
         }
     }
     
@@ -237,12 +244,17 @@ public class ServerManager {
             return tp.getResult();
         }else{
             Location lastLocation = player.getLocation();
-            if(!player.transferToWorld(target.getWorld().getName(), new Vector3d(target.getLocation().getBlockX(), 
-                    target.getLocation().getBlockY(),target.getLocation().getBlockZ()))) { return false;}
+            Optional<World> w = Optional.of(target.getWorld());
+            if(w.isPresent()){
+                player.transferToWorld(w.get().getUniqueId(), new Vector3d(target.getLocation().getBlockX(), 
+                target.getLocation().getBlockY(),target.getLocation().getBlockZ()));
                 GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
-            gplayer.setLastposition(DeSerialize.location(lastLocation));
-            gplayer.update();
-            return true;
+                gplayer.setLastposition(DeSerialize.location(lastLocation));
+                gplayer.update();
+                return true;
+            }else{
+                return false;
+            }
         }
     }
     

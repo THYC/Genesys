@@ -38,27 +38,22 @@ public class CommandWorldCreate implements CommandExecutor {
         if (src instanceof Player && src.hasPermission("genesys.admin.world.worldcreate")){
             Player player = null;
             player = (Player)src;
-                
-            if(!ctx.getOne("name").isPresent() || !ctx.getOne("environment").isPresent() || !ctx.getOne("gamemode").isPresent()) { 
+            if(!ctx.getOne("name").isPresent() || !ctx.getOne("environment").isPresent() || !ctx.getOne("gamemode").isPresent()) {
                 src.sendMessage(USAGE("/worldcreate <name> <environnement> <gamemode> <difficulty>"));
                 src.sendMessage(MESSAGE("&6<environment> = &7'overworld', 'flat', 'superflat', 'nether' ou 'end'"));
                 src.sendMessage(MESSAGE("&6<gamemode> = &7survival, creative, adventure ou spectator"));
                 src.sendMessage(MESSAGE("&6<Difficulty> = &7easy, hard, normal, peaceful"));
                 return CommandResult.empty();
-            } 
-
+            }
             String name = ctx.<String> getOne("name").get();
             String environment = ctx.<String> getOne("environment").get();
             String gamemodeI = ctx.<String> getOne("gamemode").get();
             String difficultyI = ctx.<String> getOne("difficulty").get();
-
             if(getGame().getServer().getWorld(name).isPresent()) {src.sendMessage(WORLD_ALREADY_EXIST()); return CommandResult.success();}
-
             Difficulty difficulty;
             DimensionType dimension;
             GeneratorType generator;
             GameMode gamemode;
-
             switch (environment.toLowerCase()){
                 case "overworld": dimension = DimensionTypes.OVERWORLD;generator = GeneratorTypes.OVERWORLD;break;
                 case "flat": dimension = DimensionTypes.OVERWORLD;generator = GeneratorTypes.FLAT;break;
@@ -67,7 +62,6 @@ public class CommandWorldCreate implements CommandExecutor {
                 case "end": dimension = DimensionTypes.THE_END; generator = GeneratorTypes.THE_END; break;
                 default: src.sendMessage(MESSAGE("&6<environment> = &7'overworld', 'flat', 'superflat', 'nether' ou 'end'"));return CommandResult.success();
             }
-
             switch (gamemodeI.toLowerCase()){
                 case "survival": gamemode = GameModes.SURVIVAL; break;
                 case "creative": gamemode = GameModes.CREATIVE; break;
@@ -75,7 +69,6 @@ public class CommandWorldCreate implements CommandExecutor {
                 case "spectator": gamemode = GameModes.SPECTATOR; break;
                 default: src.sendMessage(MESSAGE("&6<gamemode> = &7survival, creative, adventure ou spectator"));return CommandResult.success();
             }
-
             switch (difficultyI.toLowerCase()){
                 case "easy": difficulty = Difficulties.EASY; break;
                 case "hard": difficulty = Difficulties.HARD; break;
@@ -83,29 +76,24 @@ public class CommandWorldCreate implements CommandExecutor {
                 case "peaceful": difficulty = Difficulties.PEACEFUL; break;
                 default: src.sendMessage(MESSAGE("&6<Difficulty> = &7easy, hard, normal, peaceful"));return CommandResult.success();
             }
-
             src.sendMessage(MESSAGE("&cCr\351ation du monde en cours ..."));
-
-            WorldCreationSettings worldSettings = getGame().getRegistry().createBuilder(WorldCreationSettings.Builder.class)
-                    .name(name)
+            Optional<WorldCreationSettings> worldSettings = Optional.of(getGame().getRegistry().createBuilder(WorldCreationSettings.Builder.class)
                     .enabled(true)
                     .loadsOnStartup(true)
                     .keepsSpawnLoaded(true)
                     .dimension(dimension)
                     .generator(generator)
                     .gameMode(gamemode)
-                    .build();
-
-            Optional<WorldProperties> worldProperties = getGame().getServer().createWorldProperties(worldSettings);
-
+                    .build());
+            Optional<WorldProperties> worldProperties = Optional.of(getGame().getServer().createWorldProperties(worldSettings.get()).get());
             if (worldProperties.isPresent()) {
                 Optional<World> world = getGame().getServer().loadWorld(worldProperties.get());
                 if(world.isPresent()) {
                     world.get().getProperties().setDifficulty(difficulty);
                     GWorld w = new GWorld(
-                    name, world.get().getUniqueId().toString(),"Vous \352tes sur " + name,
-                    "&c[" + name + "] ", Difficulties.EASY, gamemode, true, true, 
-                    true, world.get().getSpawnLocation(), 0, 2);
+                            name, world.get().getUniqueId().toString(),"Vous \352tes sur " + name,
+                            "&c[" + name + "] ", Difficulties.EASY, gamemode, true, true,
+                            true, world.get().getSpawnLocation(), 0, 2);
                     addWorld(name, w);
                     WorldManager.save(w);
                     src.sendMessage(WORLD_CREATED(player,name));

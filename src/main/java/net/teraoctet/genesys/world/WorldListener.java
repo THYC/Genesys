@@ -3,19 +3,16 @@ package net.teraoctet.genesys.world;
 import com.flowpowered.math.vector.Vector3d;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.logging.Logger;
 
-//import static net.teraoctet.genesys.Genesys.getPlugin;
 import static net.teraoctet.genesys.Genesys.plotManager;
 import net.teraoctet.genesys.plot.GPlot;
 import net.teraoctet.genesys.utils.DeSerialize;
 import net.teraoctet.genesys.utils.GData;
 import net.teraoctet.genesys.player.GPlayer;
-import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 
 import static org.spongepowered.api.Sponge.getGame;
 import org.spongepowered.api.block.BlockSnapshot;
