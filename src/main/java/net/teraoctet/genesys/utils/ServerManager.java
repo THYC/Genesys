@@ -257,7 +257,7 @@ public class ServerManager {
             }
         }
     }
-    
+        
     public void sendCommand(Player player, String cmd){
         getGame().getCommandManager().get(cmd, player);
     }

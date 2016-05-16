@@ -587,4 +587,24 @@ public class CommandManager {
                     GenericArguments.optional(GenericArguments.string(Text.of("locationstring"))))
                 .executor(new CommandShopSell())
                 .build();
+        
+        public CommandSpec CommandTPA = CommandSpec.builder()
+                .description(Text.of("/tpa <player>"))
+                .permission("genesys.tpa")
+                .arguments(GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.player(Text.of("player")))))
+                .executor(new CommandTPA())
+                .build();
+        
+        public CommandSpec CommandTPhere = CommandSpec.builder()
+                .description(Text.of("/tphere <player>"))
+                .permission("genesys.tpa")
+                .arguments(GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.player(Text.of("player")))))
+                .executor(new CommandTPhere())
+                .build();
+        
+        public CommandSpec CommandTPaccept = CommandSpec.builder()
+                .description(Text.of("/tpaccept"))
+                .permission("genesys.tpa")
+                .executor(new CommandTPaccept())
+                .build();
 }

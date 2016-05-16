@@ -29,7 +29,6 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.block.tileentity.TileEntity;
-import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.event.block.InteractBlockEvent;
@@ -282,7 +281,6 @@ public class EconomyListener {
     private Consumer<CommandSource> callBank(Integer type, double coin) {
 	return (CommandSource src) -> {
             Player player = (Player)src;
-            GPlayer gplayer = getGPlayer(player.getIdentifier());
             switch (type){
                 case 1: //retrait de sommes prédéfini
                     inputDouble.put(player, coin);
