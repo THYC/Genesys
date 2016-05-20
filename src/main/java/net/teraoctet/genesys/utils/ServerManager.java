@@ -203,12 +203,13 @@ public class ServerManager {
      * @param X coordonnée X
      * @param Y coordonnée Y
      * @param Z coordonnée Z
+     * @param msg message affiché en retour
      * @return Boolean TRUE si le joueur a bien été téléporté
      */
-    public boolean teleport(Player player, String worldS, int X, int Y, int Z){
+    public boolean teleport(Player player, String worldS, int X, int Y, int Z, Text msg){
                  
-        if(GConfig.COULDOWN_TO_TP()>0){
-            CountdownToTP tp = new CountdownToTP(player,worldS, X, Y, Z);
+        if(GConfig.COOLDOWN_TO_TP()>0){
+            CooldownToTP tp = new CooldownToTP(player,worldS, X, Y, Z, Optional.ofNullable(msg));
             tp.run();
             mapCountDown.put(player, tp);
             return tp.getResult();
@@ -216,7 +217,39 @@ public class ServerManager {
             Location lastLocation = player.getLocation();
             Optional<World> w = getGame().getServer().getWorld(worldS);
             if(w.isPresent()){
-                player.transferToWorld(w.get().getUniqueId(), new Vector3d(X, Y, Z));
+                player.transferToWorld(w.get(), new Vector3d(X, Y, Z));
+                GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
+                gplayer.setLastposition(DeSerialize.location(lastLocation));
+                gplayer.update();
+                return true;
+            }else{
+                return false;
+            }
+  
+        }
+    }
+    
+    /**
+     * Téléporte un joueur et enregistre ces prédentes coordonnées dans le param LastLocation 
+     * @param player nom du joeur a téléporter
+     * @param worldS nom du monde d'arrivée
+     * @param X coordonnée X
+     * @param Y coordonnée Y
+     * @param Z coordonnée Z
+     * @return Boolean TRUE si le joueur a bien été téléporté
+     */
+    public boolean teleport(Player player, String worldS, int X, int Y, int Z){
+                 
+        if(GConfig.COOLDOWN_TO_TP()>0){
+            CooldownToTP tp = new CooldownToTP(player,worldS, X, Y, Z);
+            tp.run();
+            mapCountDown.put(player, tp);
+            return tp.getResult();
+        }else{
+            Location lastLocation = player.getLocation();
+            Optional<World> w = getGame().getServer().getWorld(worldS);
+            if(w.isPresent()){
+                player.transferToWorld(w.get(), new Vector3d(X, Y, Z));
                 GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
                 gplayer.setLastposition(DeSerialize.location(lastLocation));
                 gplayer.update();
@@ -236,8 +269,8 @@ public class ServerManager {
      */
     public boolean teleport(Player player,Player target){
                  
-        if(GConfig.COULDOWN_TO_TP()>0){
-            CountdownToTP tp = new CountdownToTP(player,target.getWorld().getName(), 
+        if(GConfig.COOLDOWN_TO_TP()>0){
+            CooldownToTP tp = new CooldownToTP(player,target.getWorld().getName(), 
                     target.getLocation().getBlockX(), target.getLocation().getBlockY(),target.getLocation().getBlockZ());
             tp.run();
             mapCountDown.put(player, tp);
@@ -246,7 +279,7 @@ public class ServerManager {
             Location lastLocation = player.getLocation();
             Optional<World> w = Optional.of(target.getWorld());
             if(w.isPresent()){
-                player.transferToWorld(w.get().getUniqueId(), new Vector3d(target.getLocation().getBlockX(), 
+                player.transferToWorld(w.get(), new Vector3d(target.getLocation().getBlockX(), 
                 target.getLocation().getBlockY(),target.getLocation().getBlockZ()));
                 GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
                 gplayer.setLastposition(DeSerialize.location(lastLocation));

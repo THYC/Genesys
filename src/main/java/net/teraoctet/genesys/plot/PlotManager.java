@@ -1,5 +1,6 @@
 package net.teraoctet.genesys.plot;
 
+import com.flowpowered.math.vector.Vector3d;
 import java.util.ArrayList;
 import static net.teraoctet.genesys.utils.GData.jails;
 import static net.teraoctet.genesys.utils.GData.plots;
@@ -48,6 +49,15 @@ public class PlotManager {
         return null;
     }
     
+    private GPlot plotContainsVector(String world, Vector3d vector, boolean flagJail){
+        if (flagJail == true){
+            for(GPlot jail : jails){if(foundPlot(world, vector,jail)){return jail;}}
+        }else{
+            for(GPlot plot : plots){if(foundPlot(world, vector,plot)){return plot;}}
+        }
+        return null;
+    }
+    
     private boolean foundPlot(Location location, GPlot plot){
         Location <World> world = location;
         
@@ -56,6 +66,19 @@ public class PlotManager {
         int Z = location.getBlockZ();
         
         if (plot.getworldName().equalsIgnoreCase(world.getExtent().getName()) == false){return false;}
+        else if ((X < plot.getX1()) || (X > plot.getX2())){return false;}
+        else if ((Z < plot.getZ1()) || (Z > plot.getZ2())){return false;}
+        else if ((Y < plot.getY1()) || (Y > plot.getY2())){return false;}
+        return true;
+    }
+    
+    private boolean foundPlot(String world, Vector3d vector, GPlot plot){
+                
+        int X = vector.getFloorX();
+        int Y = vector.getFloorY();
+        int Z = vector.getFloorZ();
+        
+        if (plot.getworldName().equalsIgnoreCase(world) == false){return false;}
         else if ((X < plot.getX1()) || (X > plot.getX2())){return false;}
         else if ((Z < plot.getZ1()) || (Z > plot.getZ2())){return false;}
         else if ((Y < plot.getY1()) || (Y > plot.getY2())){return false;}
@@ -72,11 +95,29 @@ public class PlotManager {
     public GPlot getPlot(Location loc, boolean flagJail){return plotContainsVector(loc, flagJail);}
     
     /**
+     * Parcelle (Plot) enregistré au point de l'objet Location 
+     * avec le Flag Jail = True si la paramètre flaJail = True
+     * @param world nom du monde
+     * @param vector vector3d
+     * @param flagJail True pour les parcelles Jails
+     * @return La parcelle ou Null si rien trouvé
+     */
+    public GPlot getPlot(String world, Vector3d vector, boolean flagJail){return plotContainsVector(world, vector, flagJail);}
+    
+    /**
      * Parcelle (Plot) enregistré au point de l'objet Location
      * @param loc Objet Location
      * @return La parcelle ou Null si rien trouvé
      */
     public GPlot getPlot(Location loc){return plotContainsVector(loc, false);}
+    
+    /**
+     * Parcelle (Plot) enregistré au point de l'objet Location
+     * @param world nom du monde
+     * @param vector vector3d
+     * @return La parcelle ou Null si rien trouvé
+     */
+    public GPlot getPlot(String world, Vector3d vector){return plotContainsVector(world, vector, false);}
     
     /**
      * Retourne True si le nom indiqué correspond bien a un nom de parcelle(Plot)

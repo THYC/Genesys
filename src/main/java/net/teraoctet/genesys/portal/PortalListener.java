@@ -21,7 +21,8 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
-import org.spongepowered.api.event.entity.DisplaceEntityEvent;
+import org.spongepowered.api.event.entity.MoveEntityEvent;
+//import org.spongepowered.api.event.entity.DisplaceEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.world.ExplosionEvent;
 import org.spongepowered.api.text.Text;
@@ -37,8 +38,8 @@ public class PortalListener {
     public PortalListener() {}
     
     @Listener
-    public void onPlayerMovePortal(DisplaceEntityEvent.Move event, @First Player player) {
-        GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
+    public void onPlayerMovePortal(MoveEntityEvent.Position.Position event, @First Player player) {
+        /*GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
         Location locTo = event.getToTransform().getLocation();
         GPortal gportal = portalManager.getPortal(locTo);
            
@@ -77,12 +78,12 @@ public class PortalListener {
                 }
                 player.offer(Keys.GAME_MODE, player.getWorld().getProperties().getGameMode());
             }
-        }
+        }*/
     }
     
     @Listener
-    public void onEntityMovePortal(DisplaceEntityEvent.Move event, @First Entity entity) {
-        Location locTo = event.getToTransform().getLocation();
+    public void onEntityMovePortal(MoveEntityEvent.Position.Position event, @First Entity entity) {
+        /*Location locTo = event.getToTransform().getLocation();
         GPortal gportal = portalManager.getPortal(locTo);
         
         if(entity instanceof Player == false){
@@ -95,7 +96,7 @@ public class PortalListener {
                     loc.getExtent().loadChunk(chunkPos, true);
                 }
             }
-        }
+        }*/
     }
         
     @Listener
@@ -160,7 +161,7 @@ public class PortalListener {
     @Listener
     public void onExplosion(ExplosionEvent.Pre event) {
         Explosion explosion = event.getExplosion();
-        Location loc = new Location(event.getTargetWorld(),explosion.getOrigin());
+        Location loc = new Location(event.getTargetWorld(),explosion.getLocation().getBlockPosition());
         
         GPortal gportal = portalManager.getPortal(loc);
         if (gportal != null){event.setCancelled(true);}

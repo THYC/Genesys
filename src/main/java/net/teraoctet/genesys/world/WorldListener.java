@@ -34,7 +34,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.SpongeEventFactory;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
-import org.spongepowered.api.event.entity.DisplaceEntityEvent;
+//import org.spongepowered.api.event.entity.DisplaceEntityEvent;
 import org.spongepowered.api.event.entity.SpawnEntityEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.event.world.ExplosionEvent;
@@ -64,7 +64,7 @@ public class WorldListener {
     	}	
     }  
     
-    @Listener 
+    /*@Listener 
     public void onTeleportEvent(DisplaceEntityEvent.Teleport event){ 
         
         System.out.println("################### tp ######################");
@@ -88,11 +88,7 @@ public class WorldListener {
             gplayer.setLastposition(lastposition);
             gplayer.update();
         }
-       
-        /*player.sendTitle(Titles.of(Texts.of(TextColors.DARK_GREEN, toWorld.getExtent().getName()), 
-                Texts.of(TextColors.AQUA, "x: ", toWorld.getExtent().getSpawnLocation().getBlockX(), ", y: ", 
-                        toWorld.getExtent().getSpawnLocation().getBlockY(),", z: ", toWorld.getExtent().getSpawnLocation().getBlockZ()))); */
-    } 
+    } */
     
     public static void spawnParticles(Location<World> location, double range, boolean sub){
         
@@ -126,7 +122,7 @@ public class WorldListener {
     @Listener
     public void onTNTexplode(final ExplosionEvent.Detonate event){ 
         Explosion explosion = event.getExplosion();
-        Location loc = new Location(event.getTargetWorld(),explosion.getOrigin());
+        Location loc = new Location(event.getTargetWorld(),explosion.getLocation().getBlockPosition());
         GPlot gplot = plotManager.getPlot(loc);
         if (gplot == null){
             if (event.getCause().first(PrimedTNT.class).isPresent()){
@@ -138,7 +134,7 @@ public class WorldListener {
     @Listener(order = Order.LAST) 
     public void onExplosion(final ExplosionEvent.Detonate event){ 
         Explosion explosion = event.getExplosion();
-        Location loc = new Location(event.getTargetWorld(),explosion.getOrigin());
+        Location loc = new Location(event.getTargetWorld(),explosion.getLocation().getBlockPosition());
         GPlot gplot = plotManager.getPlot(loc);
         if (gplot == null){
             if (!event.getCause().first(PrimedTNT.class).isPresent()){
@@ -176,7 +172,7 @@ public class WorldListener {
         
     @Listener
     public void treeBreak(ChangeBlockEvent.Break breakEvent) throws Exception {
-        Logger.getLogger("INFO").info(breakEvent.getTransactions().get(0).getFinal().get(Keys.TREE_TYPE).toString());
+        //Logger.getLogger("INFO").info(breakEvent.getTransactions().get(0).getFinal().get(Keys.TREE_TYPE).toString());
         if (!firedEvents.contains(breakEvent) && breakEvent.getCause().first(Player.class).isPresent() && 
                 !breakEvent.isCancelled() && breakEvent.getTransactions().size() == 1 &&
                 TreeDetector.isWood(breakEvent.getTransactions().get(0).getOriginal())) {

@@ -1,5 +1,6 @@
 package net.teraoctet.genesys.plot;
 
+import com.flowpowered.math.vector.Vector3d;
 import java.util.Optional;
 import static net.teraoctet.genesys.Genesys.plotManager;
 import net.teraoctet.genesys.utils.GData;
@@ -26,7 +27,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.command.SendCommandEvent;
-import org.spongepowered.api.event.entity.DisplaceEntityEvent;
+//import org.spongepowered.api.event.entity.DisplaceEntityEvent;
 import org.spongepowered.api.event.world.ExplosionEvent;
 import static org.spongepowered.api.item.ItemTypes.WOODEN_SHOVEL;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -38,8 +39,13 @@ import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.explosion.Explosion;
 import static net.teraoctet.genesys.utils.MessageManager.MISSING_BALANCE;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
+import static org.spongepowered.api.Sponge.getGame;
 import static org.spongepowered.api.block.BlockTypes.STANDING_SIGN;
 import static org.spongepowered.api.block.BlockTypes.WALL_SIGN;
+import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
+import org.spongepowered.api.event.entity.DamageEntityEvent;
+import org.spongepowered.api.event.entity.MoveEntityEvent;
+import org.spongepowered.api.event.filter.cause.First;
 import static org.spongepowered.api.item.ItemTypes.COMPASS;
 
 public class PlotListener {
@@ -167,22 +173,24 @@ public class PlotListener {
         // Interact sur autre block
         if (plot != null && !plot.getUuidAllowed().contains(player.getUniqueId().toString()) 
                 && plot.getNoInteract() == 1 && gplayer.getLevel() != 10) {
-            player.sendMessage(ChatTypes.CHAT,PLOT_PROTECTED());
+            player.sendMessage(PLOT_PROTECTED());
+            player.sendMessage(MESSAGE(String.valueOf(plot.getNoInteract())));
             event.setCancelled(true);
         }
     }
     
     @Listener
-    public void onPlayerMovePlot(DisplaceEntityEvent.Move event) {
+    public void onPlayerMovePlot(MoveEntityEvent.Position.Position event) {
         if (event.getTargetEntity() instanceof Player){
             Player player = (Player) event.getTargetEntity();
             GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
-            Location locTo = event.getToTransform().getLocation();
-            Location locFrom = event.getFromTransform().getLocation();
-            GPlot gplot = plotManager.getPlot(locTo);
-            GPlot jail = plotManager.getPlot(locFrom,true);
+            Vector3d to = event.getToPosition();
+            Vector3d from = event.getFromPosition();
+            String world = player.getWorld().getName();
+            GPlot gplot = plotManager.getPlot(world,to);
+            GPlot jail = plotManager.getPlot(world,from,true);
             
-            if(plotManager.getPlot(locFrom) == null) {
+            if(plotManager.getPlot(world,from) == null) {
                 if (gplot != null && DISPLAY_PLOT_MSG_FOR_OWNER() && gplot.getUuidAllowed().contains(player.getUniqueId().toString())){ 
                     player.sendMessage(ChatTypes.CHAT,MESSAGE(gplot.getMessage(),player));
                 }
@@ -198,10 +206,10 @@ public class PlotListener {
                     }
                 }
 
-                if(plotManager.getPlot(locFrom) == null) {
+                if(plotManager.getPlot(world,from) == null) {
                     player.sendMessage(ChatTypes.CHAT,MESSAGE(gplot.getMessage(),player));
                     if(gplot.getNoEnter() == 1 && !player.hasPermission("genesys.plot.enter")) {
-                        player.setLocation(locFrom);
+                        player.transferToWorld(getGame().getServer().getWorld(world).get(), from);
                         player.sendMessage(ChatTypes.CHAT,PLOT_NO_ENTER());
                         event.setCancelled(true);
                     }
@@ -209,8 +217,8 @@ public class PlotListener {
             }
 
             if (jail != null){
-                if(plotManager.getPlot(locTo, true) == null && gplayer.getJail().equalsIgnoreCase(jail.getName())) {
-                    player.setLocation(locFrom);
+                if(plotManager.getPlot(world, to, true) == null && gplayer.getJail().equalsIgnoreCase(jail.getName())) {
+                    player.transferToWorld(getGame().getServer().getWorld(world).get(), from);
                     player.sendMessage(ChatTypes.CHAT,PLOT_NO_ENTER());
                 }
             }
@@ -227,9 +235,11 @@ public class PlotListener {
         GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
         Location loc = player.getLocation();
         GPlot gplot = plotManager.getPlot(loc);
-        if (gplot != null && !gplot.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
-            player.sendMessage(ChatTypes.CHAT,PLOT_PROTECTED());
-            event.setCancelled(true);
+        if (gplot != null){
+            if(!gplot.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10 && gplot.getNoCommand() == 1){
+                player.sendMessage(ChatTypes.CHAT,PLOT_PROTECTED());
+                event.setCancelled(true);
+            }
         }
         
     }
@@ -326,10 +336,16 @@ public class PlotListener {
     @Listener
     public void onExplosion(ExplosionEvent.Pre event) {
         Explosion explosion = event.getExplosion();
-        Location loc = new Location(event.getTargetWorld(),explosion.getOrigin());
+        Location loc = new Location(event.getTargetWorld(),explosion.getLocation().getBlockPosition());
         GPlot gplot = plotManager.getPlot(loc);
         if (gplot != null){
             if (gplot.getNoTNT() == 1){ event.setCancelled(true);}
         }
+    }
+    
+    @Listener
+    public void onPVP(DamageEntityEvent event, @First EntityDamageSource source){
+        getGame().getServer().getConsole().sendMessage(MESSAGE(source.getSource().getType().getName())); //attaquant
+        getGame().getServer().getConsole().sendMessage(MESSAGE(event.getTargetEntity().getType().getName())); //victime
     }
 }

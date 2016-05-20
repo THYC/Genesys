@@ -19,7 +19,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import org.spongepowered.api.data.manipulator.mutable.DisplayNameData;
-import org.spongepowered.api.text.BookView;
+//import org.spongepowered.api.text.BookView;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
@@ -43,9 +43,9 @@ public class CommandShopCreate implements CommandExecutor {
                 if(displayData.isPresent()){
                     name = displayData.get().displayName().get().toPlain();
                 }
-                BookView.Builder bv = BookView.builder()
-                        .author(Text.of(TextColors.GOLD, "genesys"))
-                        .title(Text.of(TextColors.GOLD, "ItemShop"));
+                //BookView.Builder bv = BookView.builder()
+                        //.author(Text.of(TextColors.GOLD, "genesys"))
+                        //.title(Text.of(TextColors.GOLD, "ItemShop"));
                 Text text = Text.builder()
                         .append(MESSAGE("&l&1   ---- ItemShop ----\n\n"))
                         .append(MESSAGE("&8Nom de l'item : &4" + name + "\n"))
@@ -58,8 +58,9 @@ public class CommandShopCreate implements CommandExecutor {
                         .onClick(TextActions.runCommand("/shopcreate " + locationString.get() + " buy"))
                         .onHover(TextActions.showText(MESSAGE("&eClique ic pour un rachat d'item"))).build())
                         .build();
-                bv.addPage(text);
-                player.sendBookView(bv.build());
+                //bv.addPage(text);
+                //player.sendBookView(bv.build());
+                player.sendMessage(text);
                 return CommandResult.success();
             }else if(player.getItemInHand().isPresent() && locationString.isPresent() && transactType.isPresent() && !price.isPresent()){
                 ItemStack is = player.getItemInHand().get();
@@ -69,9 +70,9 @@ public class CommandShopCreate implements CommandExecutor {
                     name = displayData.get().displayName().get().toPlain();
                 }
                 
-                BookView.Builder bv = BookView.builder()
-                        .author(Text.of(TextColors.GOLD, "genesys"))
-                        .title(Text.of(TextColors.GOLD, "ItemShop"));
+                //BookView.Builder bv = BookView.builder()
+                        //.author(Text.of(TextColors.GOLD, "genesys"))
+                        //.title(Text.of(TextColors.GOLD, "ItemShop"));
                 Text text = Text.builder()
                         .append(MESSAGE("&l&1   ---- ItemShop ----\n\n"))
                         .append(MESSAGE("&8Nom de l'item : &l&4" + name +"\n"))
@@ -82,8 +83,9 @@ public class CommandShopCreate implements CommandExecutor {
                         .onClick(TextActions.runCommand("/shopcreate " + locationString.get() + " " + transactType.get() + "  0"))
                         .onHover(TextActions.showText(MESSAGE("&eClique ici"))).build())
                         .build();
-                bv.addPage(text);
-                player.sendBookView(bv.build());
+                //bv.addPage(text);
+                //player.sendBookView(bv.build());
+                player.sendMessage(text);
                 return CommandResult.success();
             }else if(player.getItemInHand().isPresent() && locationString.isPresent() && transactType.isPresent() && price.isPresent()){
                 ItemStack is = player.getItemInHand().get(); 

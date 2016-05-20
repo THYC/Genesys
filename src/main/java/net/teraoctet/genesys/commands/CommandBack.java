@@ -31,7 +31,7 @@ public class CommandBack implements CommandExecutor {
             if (player.getLocation().getExtent().getUniqueId().equals(location.getExtent().getUniqueId())) {
                 player.setLocation(location);
             } else {
-                player.transferToWorld(location.getExtent().getUniqueId(), location.getPosition());
+                player.transferToWorld(location.getExtent(), location.getPosition());
             }		
             src.sendMessage(TP_BACK(player));
             return CommandResult.success();

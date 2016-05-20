@@ -75,11 +75,12 @@ public class EconomyListener {
                         }
                         enchantment = enchantment.replace("minecraft:", "");
                         BookView.Builder bv;
+                        Text text = Text.EMPTY;
                         if(is.get().getTransactType().contains("buy")){
                             bv = BookView.builder()
                                     .author(Text.of(TextColors.GOLD, "genesys"))
                                     .title(Text.of(TextColors.GOLD, "ItemShop"));
-                            Text text = Text.builder()
+                            text = Text.builder()
                                     .append(MESSAGE("&l&1   ---- ItemShop ----\n\n"))
                                     .append(MESSAGE("&l&0" + is.get().getTransactType() + " : &l&4" + name +"\n"))
                                     .append(MESSAGE("&o&7(" + itemStack.getItem().getName() + ")\n\n"))
@@ -92,7 +93,7 @@ public class EconomyListener {
                             bv = BookView.builder()
                                     .author(Text.of(TextColors.GOLD, "genesys"))
                                     .title(Text.of(TextColors.GOLD, "ItemShop"));
-                            Text text = Text.builder()
+                            text = Text.builder()
                                     .append(MESSAGE("&l&1   ---- ItemShop ----\n\n"))
                                     .append(MESSAGE("&l&0" + is.get().getTransactType() + " : &l&4" + name +"\n"))
                                     .append(MESSAGE("&o&7(" + itemStack.getItem().getName() + ")\n"))
@@ -106,6 +107,7 @@ public class EconomyListener {
                         }
                         
                         player.sendBookView(bv.build());
+                        //player.sendMessage(text);
                         event.setCancelled(true);
                     } 
                 }
@@ -203,9 +205,9 @@ public class EconomyListener {
                                     }
                                 }
 
-                                BookView.Builder bv = BookView.builder()
-                                        .author(Text.of(TextColors.GOLD, "genesys"))
-                                        .title(Text.of(TextColors.GOLD, "Bank"));
+                                //BookView.Builder bv = BookView.builder()
+                                        //.author(Text.of(TextColors.GOLD, "genesys"))
+                                        //.title(Text.of(TextColors.GOLD, "Bank"));
                                 Text text = 
                                         Text.builder()  .append(MESSAGE("&l&b   -----------------\n"))
                                                         .append(MESSAGE("&l&b     RETRAIT \n"))
@@ -219,8 +221,8 @@ public class EconomyListener {
                                                         .onClick(TextActions.executeCallback(callBank(1,30.0))).build()).concat(
                                         Text.builder()  .append(MESSAGE("&e[4] &bje veux saisir la somme\n\n"))
                                                         .onClick(TextActions.executeCallback(callBank(2,0.0))).build());
-                                bv.addPage(text);
-                                player.sendBookView(bv.build());
+                                //bv.addPage(text);
+                                //player.sendBookView(bv.build());
                                 player.sendMessage(text);
                             }
                         }
@@ -251,9 +253,9 @@ public class EconomyListener {
                                 }
                             }
 
-                            BookView.Builder bv = BookView.builder()
-                                    .author(Text.of(TextColors.GOLD, "genesys"))
-                                    .title(Text.of(TextColors.GOLD, "Bank"));
+                            //BookView.Builder bv = BookView.builder()
+                                    //.author(Text.of(TextColors.GOLD, "genesys"))
+                                    //.title(Text.of(TextColors.GOLD, "Bank"));
                             Text text = 
                                     Text.builder()  .append(MESSAGE("&l&b   -----------------\n"))
                                                         .append(MESSAGE("&l&b     DEPOT \n"))
@@ -267,8 +269,8 @@ public class EconomyListener {
                                                         .onClick(TextActions.executeCallback(callBank(1,30.0))).build()).concat(
                                         Text.builder()  .append(MESSAGE("&e[4] &bje veux saisir la somme\n\n"))
                                                         .onClick(TextActions.executeCallback(callBank(2,0.0))).build());
-                            bv.addPage(text);
-                            player.sendBookView(bv.build());
+                            //bv.addPage(text);
+                            //player.sendBookView(bv.build());
                             player.sendMessage(text);
                             
                         }

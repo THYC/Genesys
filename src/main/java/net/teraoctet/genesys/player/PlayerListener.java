@@ -4,12 +4,12 @@ import com.flowpowered.math.vector.Vector3d;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import static net.teraoctet.genesys.Genesys.bookManager;
 import static net.teraoctet.genesys.Genesys.inputDouble;
 import static net.teraoctet.genesys.Genesys.mapCountDown;
 import static net.teraoctet.genesys.Genesys.plotManager;
-import net.teraoctet.genesys.commands.economy.CommandBank;
-import net.teraoctet.genesys.utils.CountdownToTP;
+import net.teraoctet.genesys.utils.CooldownToTP;
 import net.teraoctet.genesys.utils.GData;
 import static net.teraoctet.genesys.utils.GData.addGPlayer;
 import static net.teraoctet.genesys.utils.GData.commit;
@@ -17,20 +17,13 @@ import static net.teraoctet.genesys.utils.GData.getUUID;
 import static net.teraoctet.genesys.utils.GData.getWorld;
 import static net.teraoctet.genesys.utils.GData.removeGPlayer;
 import static net.teraoctet.genesys.utils.GData.removeUUID;
-import static net.teraoctet.genesys.utils.MessageManager.FIRSTJOIN_MESSAGE;
-import static net.teraoctet.genesys.utils.MessageManager.JOIN_MESSAGE;
-import static net.teraoctet.genesys.utils.MessageManager.EVENT_DISCONNECT_MESSAGE;
-import static net.teraoctet.genesys.utils.MessageManager.NAME_CHANGE;
 import net.teraoctet.genesys.utils.Permissions;
 import net.teraoctet.genesys.utils.DeSerialize;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
-import static net.teraoctet.genesys.utils.MessageManager.FIRSTJOIN_BROADCAST_MESSAGE;
-import static net.teraoctet.genesys.utils.MessageManager.EVENT_LOGIN_MESSAGE;
-import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import net.teraoctet.genesys.utils.SettingCompass;
+
 import static org.spongepowered.api.Sponge.getGame;
 import org.spongepowered.api.block.BlockSnapshot;
-
 import org.spongepowered.api.block.BlockTypes;
 import static org.spongepowered.api.block.BlockTypes.AIR;
 import static org.spongepowered.api.block.BlockTypes.STANDING_SIGN;
@@ -63,6 +56,14 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
+
+import static net.teraoctet.genesys.utils.MessageManager.FIRSTJOIN_MESSAGE;
+import static net.teraoctet.genesys.utils.MessageManager.JOIN_MESSAGE;
+import static net.teraoctet.genesys.utils.MessageManager.EVENT_DISCONNECT_MESSAGE;
+import static net.teraoctet.genesys.utils.MessageManager.NAME_CHANGE;
+import static net.teraoctet.genesys.utils.MessageManager.FIRSTJOIN_BROADCAST_MESSAGE;
+import static net.teraoctet.genesys.utils.MessageManager.EVENT_LOGIN_MESSAGE;
+import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 
 public class PlayerListener {
     
@@ -217,8 +218,8 @@ public class PlayerListener {
             for(Inventory slotInv : player.getInventory().query(GridInventory.class).slots()){
                 Optional<ItemStack> peek = slotInv.peek();
                 if(peek.isPresent()){
-                    //chest.getInventory().offer(peek.get());
-                    //slotInv.clear();
+                    chest.getInventory().offer(peek.get());
+                    slotInv.clear();
                 }
             }
             
@@ -346,14 +347,14 @@ public class PlayerListener {
         if(event.getTargetEntity() instanceof Player){
             Player victim = (Player)event.getTargetEntity();
             if(mapCountDown.containsValue(victim)){
-                CountdownToTP tp = mapCountDown.get(victim);
+                CooldownToTP tp = mapCountDown.get(victim);
                 tp.stopTP();
                 mapCountDown.remove(victim);
                 victim.sendMessage(ChatTypes.ACTION_BAR,MESSAGE("&l&e*** PVP : TP ANNULE ***"));
             }
             if(entity.getSource() instanceof Player){
                 Player  striker = (Player)entity.getSource();
-                CountdownToTP tp = mapCountDown.get(striker);
+                CooldownToTP tp = mapCountDown.get(striker);
                 tp.stopTP();
                 mapCountDown.remove(striker);
                 striker.sendMessage(ChatTypes.ACTION_BAR,MESSAGE("&l&e*** PVP : TP ANNULE ***"));
@@ -385,7 +386,8 @@ public class PlayerListener {
                         if (txt1.equals(MESSAGE("&l&1[?]"))){
                             String tag = Text.of(offering.getValue(Keys.SIGN_LINES).get().get(2)).toPlain();
                             getGame().getServer().getConsole().sendMessage(MESSAGE(tag));
-                            player.sendBookView(bookManager.getBookMessage(tag));
+                            //player.sendBookView(bookManager.getBookMessage(tag));
+                            player.sendMessage(txt1);
                             //event.setCancelled(true);
                             //return;
                         }
@@ -400,5 +402,18 @@ public class PlayerListener {
                 } 
             }
         }
+    }
+    
+    @Listener
+    public void onTPwithPVP(DamageEntityEvent event){
+        if(event.getTargetEntity() instanceof Player){
+            Player player = (Player)event.getTargetEntity();
+            if(mapCountDown.containsKey(player)){
+                mapCountDown.get(player).stopTP();
+                mapCountDown.remove(player);
+                player.sendMessage(MESSAGE("&eCombat d\351tect\351: T\351l\351portation annul\351e"));
+            }
+        }
+        
     }
 }

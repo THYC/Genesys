@@ -30,7 +30,7 @@ public class GConfig {
                 config.getNode("faction", "MAX_NUMBER_OF_MEMBER").setValue(20);
                 config.getNode("faction", "NAME_MAX_SIZE").setValue(25);
                 config.getNode("faction", "NAME_MIN_SIZE").setValue(5);
-                config.getNode("server", "COULDOWN_TO_TP").setValue(10);
+                config.getNode("server", "COOLDOWN_TO_TP").setValue(10);
                 config.getNode("version").setValue(1);
                 manager.save(config);
             }
@@ -59,5 +59,5 @@ public class GConfig {
     public static int FACTION_NAME_MAX_SIZE() { return config.getNode("faction", "NAME_MAX_SIZE").getInt(); }
     public static int FACTION_NAME_MIN_SIZE() { return config.getNode("faction", "NAME_MIN_SIZE").getInt(); }
     
-    public static int COULDOWN_TO_TP() { return config.getNode("server", "COULDOWN_TO_TP").getInt(); }
+    public static int COOLDOWN_TO_TP() { return config.getNode("server", "COOLDOWN_TO_TP").getInt(); }
 }

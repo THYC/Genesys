@@ -21,7 +21,7 @@ import net.teraoctet.genesys.commands.CommandManager;
 import net.teraoctet.genesys.economy.ItemShopManager;
 import net.teraoctet.genesys.economy.EconomyListener;
 import net.teraoctet.genesys.faction.FactionManager;
-import net.teraoctet.genesys.utils.CountdownToTP;
+import net.teraoctet.genesys.utils.CooldownToTP;
 import net.teraoctet.genesys.utils.ServerManager;
 import net.teraoctet.genesys.utils.TPAH;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -53,7 +53,7 @@ public class Genesys {
     public Logger getLogger(){return logger;}  
     public static Game game;
     public static PluginContainer plugin;
-    public static Map<Player, CountdownToTP> mapCountDown = new HashMap<>();
+    public static Map<Player, CooldownToTP> mapCountDown = new HashMap<>();
     public static Map<Player,Boolean>modInput = new HashMap<>();
     public static Map<Player,Double>inputDouble = new HashMap<>();
     public static final ArrayList<TPAH> Atpa = new ArrayList<>();

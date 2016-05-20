@@ -41,7 +41,7 @@ public class CommandPlotTP implements CommandExecutor {
                     Optional<Location> spawn = gplot.getSpawnPlot();
                     if(spawn.isPresent()){
                         Location lastLocation = player.getLocation();
-                        player.transferToWorld(gplot.getWorld().get().getUniqueId(), 
+                        player.transferToWorld(gplot.getWorld().get(), 
                                 new Vector3d(spawn.get().getBlockX(), spawn.get().getBlockY(), spawn.get().getBlockZ()));
                         gplayer.setLastposition(DeSerialize.location(lastLocation));
                         gplayer.update();

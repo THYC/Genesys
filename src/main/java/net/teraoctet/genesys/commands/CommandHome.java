@@ -5,17 +5,19 @@ import static net.teraoctet.genesys.Genesys.serverManager;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import net.teraoctet.genesys.utils.GHome;
 import net.teraoctet.genesys.player.GPlayer;
+import net.teraoctet.genesys.utils.GConfig;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
 import static net.teraoctet.genesys.utils.MessageManager.HOME_NOT_FOUND;
-import static net.teraoctet.genesys.utils.MessageManager.ERROR;
 import static net.teraoctet.genesys.utils.MessageManager.HOME_TP_SUCCESS;
+import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
 
 public class CommandHome implements CommandExecutor {
     
@@ -34,14 +36,13 @@ public class CommandHome implements CommandExecutor {
             
             if(gplayer.getHome(homename).isPresent()){
                 GHome ghome = gplayer.getHome(homename).get();
-                if(!serverManager.teleport(player, ghome.getWorld(), ghome.getX(), ghome.getY(), ghome.getZ())){
-                    src.sendMessage(ERROR()); 
-                    return CommandResult.empty();
-                } else if (homename.equalsIgnoreCase("default")){
-                    src.sendMessage(HOME_TP_SUCCESS(player,""));
-                } else {
-                    src.sendMessage(HOME_TP_SUCCESS(player,homename));
+                Text msg = HOME_TP_SUCCESS(player,"");
+                if (!homename.equalsIgnoreCase("default")){
+                    msg = HOME_TP_SUCCESS(player,homename);
                 }
+                serverManager.teleport(player, ghome.getWorld(), ghome.getX(), ghome.getY(), ghome.getZ(),msg);
+                src.sendMessage(MESSAGE("&eVous serez TP dans environ " + GConfig.COOLDOWN_TO_TP()));
+
                 return CommandResult.success();
             }else{
                 src.sendMessage(HOME_NOT_FOUND()); 
