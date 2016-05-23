@@ -28,20 +28,20 @@ public class CommandPlotTP implements CommandExecutor {
         if(src instanceof Player && src.hasPermission("genesys.plot.tp")) { 
             Player player = (Player) src;
             GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
-            GPlot gplot = null;
+            Optional<GPlot> gplot = Optional.empty();
 
             if(ctx.getOne("name").isPresent()){
                 String plotName = ctx.<String> getOne("name").get();
                 gplot = plotManager.getPlot(plotName);                
 
-                if (gplot == null){
+                if (!gplot.isPresent()){
                     player.sendMessage(NO_PLOT());
                     return CommandResult.empty();
-                } else if (gplot.getNoTeleport() == 1 || gplayer.getLevel() == 10){
-                    Optional<Location> spawn = gplot.getSpawnPlot();
+                } else if (gplot.get().getNoTeleport() == 1 || gplayer.getLevel() == 10){
+                    Optional<Location> spawn = gplot.get().getSpawnPlot();
                     if(spawn.isPresent()){
                         Location lastLocation = player.getLocation();
-                        player.transferToWorld(gplot.getWorld().get(), 
+                        player.transferToWorld(gplot.get().getWorld().get(), 
                                 new Vector3d(spawn.get().getBlockX(), spawn.get().getBlockY(), spawn.get().getBlockZ()));
                         gplayer.setLastposition(DeSerialize.location(lastLocation));
                         gplayer.update();

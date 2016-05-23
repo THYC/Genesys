@@ -1,5 +1,6 @@
 package net.teraoctet.genesys.commands.plot;
 
+import java.util.Optional;
 import static net.teraoctet.genesys.Genesys.plotManager;
 import net.teraoctet.genesys.plot.GPlot;
 import net.teraoctet.genesys.utils.GData;
@@ -32,7 +33,7 @@ public class CommandPlotFlag implements CommandExecutor {
         if(src instanceof Player && src.hasPermission("genesys.plot.flag")) { 
             Player player = (Player) src;
             GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
-            GPlot gplot = null;
+            Optional<GPlot> gplot = Optional.empty();
 
             if(ctx.getOne("name").isPresent()){
                 String plotName = ctx.<String> getOne("name").get();
@@ -48,7 +49,7 @@ public class CommandPlotFlag implements CommandExecutor {
                 player.sendMessage(USAGE("/plot flag> : liste les flags de la parcelle, vous devez \352tre sur la parcelle"));
                 player.sendMessage(USAGE("/plot flaglist <NomParcelle> : liste les flags de la parcelle nomm\351e"));
                 return CommandResult.empty();
-            } else if (!gplot.getUuidOwner().equalsIgnoreCase(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
+            } else if (!gplot.get().getUuidOwner().equalsIgnoreCase(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
                 player.sendMessage(ALREADY_OWNED_PLOT());
                 return CommandResult.empty();   
             }
@@ -59,17 +60,17 @@ public class CommandPlotFlag implements CommandExecutor {
 
                 builder.title(formatText("&6Plot Flag"))
                     .contents(  formatText("&e/plot flag <flag> <0|1> : &7modifie la valeur d'un flag"),
-                                formatText("&enoEnter : &b[" + gplot.getNoEnter() + "] &7ils peuvent entrer sur la parcelle"),
-                                formatText("&enoFly : &b[" + gplot.getNoFly() + "] &7ils peuvent pas voler au dessus"),
-                                formatText("&enoBuild : &b[" + gplot.getNoBuild() + "] &7ils peuvent construirent"),
-                                formatText("&enoBreak : &b[" + gplot.getNoBreak() + "] &7ils peuvent casser"),
-                                formatText("&enoInteract : &b[" + gplot.getNoInteract() + "] &7ils peuvent ouvrir les portes,coffres..."),
-                                formatText("&enoTeleport : &b[" + gplot.getNoTeleport() + "] &7ils peuvent se t\351l\351porter"),
-                                formatText("&enoFire : &b[" + gplot.getNoFire() + "] &7mettre le feu"),
-                                formatText("&enoMob : &b[" + gplot.getNoMob() + "] &7les monstres spawn"),
-                                formatText("&enoTNT : &b[" + gplot.getNoTNT() + "] &7activation de la TNT"),
-                                formatText("&enoCommand : &b[" + gplot.getNoCommand() + "] &7ils peuvent taper des commandes"))
-                    .header(formatText("&ePlot " + gplot.getName() + " : &7Droits accord\351s aux autres joueurs, 0 = Oui, 1 = Non"))
+                                formatText("&enoEnter : &b[" + gplot.get().getNoEnter() + "] &7ils peuvent entrer sur la parcelle"),
+                                formatText("&enoFly : &b[" + gplot.get().getNoFly() + "] &7ils peuvent pas voler au dessus"),
+                                formatText("&enoBuild : &b[" + gplot.get().getNoBuild() + "] &7ils peuvent construirent"),
+                                formatText("&enoBreak : &b[" + gplot.get().getNoBreak() + "] &7ils peuvent casser"),
+                                formatText("&enoInteract : &b[" + gplot.get().getNoInteract() + "] &7ils peuvent ouvrir les portes,coffres..."),
+                                formatText("&enoTeleport : &b[" + gplot.get().getNoTeleport() + "] &7ils peuvent se t\351l\351porter"),
+                                formatText("&enoFire : &b[" + gplot.get().getNoFire() + "] &7mettre le feu"),
+                                formatText("&enoMob : &b[" + gplot.get().getNoMob() + "] &7les monstres spawn"),
+                                formatText("&enoTNT : &b[" + gplot.get().getNoTNT() + "] &7activation de la TNT"),
+                                formatText("&enoCommand : &b[" + gplot.get().getNoCommand() + "] &7ils peuvent taper des commandes"))
+                    .header(formatText("&ePlot " + gplot.get().getName() + " : &7Droits accord\351s aux autres joueurs, 0 = Oui, 1 = Non"))
                     .padding(Text.of("-"))
                     .sendTo(src);
 	
@@ -89,47 +90,47 @@ public class CommandPlotFlag implements CommandExecutor {
 
                 switch (flag.toLowerCase()){
                     case "noenter":
-                        gplot.setNoEnter(value);
+                        gplot.get().setNoEnter(value);
                         player.sendMessage(MESSAGE("&7Flag enregistr\351 : &enoEnter = " + value));
                         break;
                     case "nofly":
-                        gplot.setNoFly(value);
+                        gplot.get().setNoFly(value);
                         player.sendMessage(MESSAGE("&7Flag enregistr\351 : &enoFly = " + value));
                         break;
                     case "nobuild":
-                        gplot.setNoBuild(value);
+                        gplot.get().setNoBuild(value);
                         player.sendMessage(MESSAGE("&7Flag enregistr\351 : &enoBuild = " + value));
                         break;
                     case "nobreak":
-                        gplot.setNoBreak(value);
+                        gplot.get().setNoBreak(value);
                         player.sendMessage(MESSAGE("&7Flag enregistr\351 : &enoBreak = " + value));
                         break;
                     case "nointeract":
-                        gplot.setNoInteract(value);
+                        gplot.get().setNoInteract(value);
                         player.sendMessage(MESSAGE("&7Flag enregistr\351 : &enoInteract = " + value));
                         break;
                     case "noteleport":
-                        gplot.setNoTeleport(value);
+                        gplot.get().setNoTeleport(value);
                         player.sendMessage(MESSAGE("&7Flag enregistr\351 : &enoTeleport = " + value));
                         break;
                     case "nofire":
-                        gplot.setNoFire(value);
+                        gplot.get().setNoFire(value);
                         player.sendMessage(MESSAGE("&7Flag enregistr\351 : &enoFire = " + value));
                         break;
                     case "nomob":
-                        gplot.setNoMob(value);
+                        gplot.get().setNoMob(value);
                         player.sendMessage(MESSAGE("&7Flag enregistr\351 : &enoMob = " + value));
                         break;
                     case "notnt":
-                        gplot.setNoTNT(value);
+                        gplot.get().setNoTNT(value);
                         player.sendMessage(MESSAGE("&7Flag enregistr\351 : &enoTNT = " + value));
                         break;
                     case "nocommand":
-                        gplot.setNoCommand(value);
+                        gplot.get().setNoCommand(value);
                         player.sendMessage(MESSAGE("&7Flag enregistr\351 : &enoCommand = " + value));
                         break;
                 }
-                gplot.update();
+                gplot.get().update();
                 GData.commit();
                 return CommandResult.success();
             }

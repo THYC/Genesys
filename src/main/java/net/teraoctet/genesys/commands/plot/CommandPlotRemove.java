@@ -1,5 +1,6 @@
 package net.teraoctet.genesys.commands.plot;
 
+import java.util.Optional;
 import static net.teraoctet.genesys.Genesys.plotManager;
 import net.teraoctet.genesys.plot.GPlot;
 import net.teraoctet.genesys.utils.GData;
@@ -26,7 +27,7 @@ public class CommandPlotRemove implements CommandExecutor {
         if(src instanceof Player && src.hasPermission("genesys.plot.remove")) { 
             Player player = (Player) src;
             GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
-            GPlot gplot = null;
+            Optional<GPlot> gplot = Optional.empty();
 
             if(ctx.getOne("name").isPresent()){
                 String plotName = ctx.<String> getOne("name").get();
@@ -35,20 +36,20 @@ public class CommandPlotRemove implements CommandExecutor {
                 gplot = plotManager.getPlot(player.getLocation());
             }
 
-            if (gplot == null){
+            if (!gplot.isPresent()){
                 player.sendMessage(NO_PLOT());
                 player.sendMessage(USAGE("/plot remove : supprime une parcelle - vous devez \352tre sur la parcelle"));
                 player.sendMessage(USAGE("/plot remove <NomParcelle> : supprime la parcelle nomm\351e"));
                 return CommandResult.empty(); 
-            } else if (!gplot.getUuidOwner().equalsIgnoreCase(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
+            } else if (!gplot.get().getUuidOwner().equalsIgnoreCase(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
                 player.sendMessage(ALREADY_OWNED_PLOT());
                 return CommandResult.empty();  
             }
 
-            gplot.delete();
+            gplot.get().delete();
             GData.commit();
-            GData.removePlot(gplot);
-            player.sendMessage(MESSAGE("&eLa parcelle " + gplot.getName() + " &7a \351t\351 supprim\351e"));  
+            GData.removePlot(gplot.get());
+            player.sendMessage(MESSAGE("&eLa parcelle " + gplot.get().getName() + " &7a \351t\351 supprim\351e"));  
             return CommandResult.success();
         } 
         

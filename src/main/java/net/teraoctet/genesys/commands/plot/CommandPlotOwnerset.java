@@ -1,5 +1,6 @@
 package net.teraoctet.genesys.commands.plot;
 
+import java.util.Optional;
 import static net.teraoctet.genesys.Genesys.plotManager;
 import net.teraoctet.genesys.plot.GPlot;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
@@ -25,7 +26,7 @@ public class CommandPlotOwnerset implements CommandExecutor {
         if(src instanceof Player && src.hasPermission("genesys.plot.ownerset")) {
             Player player = (Player) src;
             GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
-            GPlot gplot = null;
+            Optional<GPlot> gplot = Optional.empty();
 
             if(ctx.getOne("name").isPresent()){
                 String plotName = ctx.<String> getOne("name").get();
@@ -34,12 +35,12 @@ public class CommandPlotOwnerset implements CommandExecutor {
                 gplot = plotManager.getPlot(player.getLocation());
             }
 
-            if (gplot == null){
+            if (!gplot.isPresent()){
                 player.sendMessage(NO_PLOT());
                 player.sendMessage(USAGE("/plot ownerset : change le propri\351taire de la parcelle - vous devez \352tre sur la parcelle"));
                 player.sendMessage(USAGE("/plot ownerset <NomParcelle> : change le propri\351taire de la parcelle nomm\351e"));
                 return CommandResult.empty();
-            } else if (!gplot.getUuidOwner().equalsIgnoreCase(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
+            } else if (!gplot.get().getUuidOwner().equalsIgnoreCase(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
                 player.sendMessage(ALREADY_OWNED_PLOT());
                 player.sendMessage(MESSAGE("&eVous devez \352tre propri\351taire pour taper cette commande"));
                 return CommandResult.empty();
@@ -51,9 +52,9 @@ public class CommandPlotOwnerset implements CommandExecutor {
                     player.sendMessage(MESSAGE("&e" + target + " &7 doit \352tre connect\351 pour l'ajouter"));
                     return CommandResult.empty();
                 } else {
-                    gplot.setUuidOwner(target.getUniqueId().toString());
-                    player.sendMessage(MESSAGE("&e" + target.getName() + " &7est maintenant le propri\351taire de &e" + gplot.getName()));
-                    target.sendMessage(MESSAGE("&7Vous \352tes maintenant propri\351taire de &e" + gplot.getName()));
+                    gplot.get().setUuidOwner(target.getUniqueId().toString());
+                    player.sendMessage(MESSAGE("&e" + target.getName() + " &7est maintenant le propri\351taire de &e" + gplot.get().getName()));
+                    target.sendMessage(MESSAGE("&7Vous \352tes maintenant propri\351taire de &e" + gplot.get().getName()));
                     return CommandResult.success();
                 }
             } else {

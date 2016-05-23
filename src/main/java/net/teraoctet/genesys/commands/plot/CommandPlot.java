@@ -23,17 +23,17 @@ public class CommandPlot implements CommandExecutor {
             Builder builder = paginationService.builder();  
 
             builder.title(Text.builder().append(TextSerializers.formattingCode('&').deserialize("&6Plot")).toText())
-                .contents(Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot create <name> &5[strict] : &7cr\351ation d'une nouvelle parcelle")).toText(),
-                    Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot list [player] : &7liste des parcelles poss\351d\351es par un joueur")).toText(),
-                    Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot remove &5[NomParcelle] : &7supprime une parcelle")).toText(),
-                    Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot flaglist <NomParcelle> : &7liste les diff\351rents flags")).toText(),
-                    Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot flag <nameFlag]> <0|1> &5[NomParcelle] : &7modifie un flag d'une parcelle")).toText(),
-                    Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot addplayer <player> &5[NomParcelle] : &7ajoute un habitant \340 la parcelle")).toText(),
-                    Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot removeplayer <player> &5[NomParcelle] : &7retire un habitant de la parcelle")).toText(),
-                    Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot ownerset <player> &5[NomParcelle] : &7change le propi\351taire de la parcelle")).toText(),
-                    Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot sale <price> &5[NomParcelle] : &7place un panneau pour vendre votre parcelle")).toText(),
+                .contents(Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot create &b<name> &b[strict] : &7cr\351ation d'une nouvelle parcelle")).toText(),
+                    Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot list &b[player] : &7liste des parcelles poss\351d\351es par un joueur")).toText(),
+                    Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot remove &b[NomParcelle] : &7supprime une parcelle")).toText(),
+                    Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot flaglist &b<NomParcelle> : &7liste les diff\351rents flags")).toText(),
+                    Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot flag &b<nameFlag]> <0|1> &b[NomParcelle] : &7modifie un flag d'une parcelle")).toText(),
+                    Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot addplayer &b<player> &b[NomParcelle] : &7ajoute un habitant \340 la parcelle")).toText(),
+                    Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot removeplayer &b<player> &b[NomParcelle] : &7retire un habitant de la parcelle")).toText(),
+                    Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot ownerset &b<player> &b[NomParcelle] : &7change le propi\351taire de la parcelle")).toText(),
+                    Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot sale &b<price> &b[NomParcelle] : &7place un panneau pour vendre ta parcelle")).toText(),
                     Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot msg &5[Message] : &7Lire / modifier le message d'accueil")).toText(),
-                    Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot tp <name> : &7t\351l\351porte sur la parcelle")).toText())
+                    Text.builder().append(TextSerializers.formattingCode('&').deserialize("&e/plot tp &b<name> : &7t\351l\351porte sur la parcelle")).toText())
                 .header(Text.builder().append(TextSerializers.formattingCode('&').deserialize("&eUsage:")).toText())
                 .padding(Text.of("-"))
                 .sendTo(src); 

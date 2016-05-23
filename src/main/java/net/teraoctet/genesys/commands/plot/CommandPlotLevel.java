@@ -1,5 +1,6 @@
 package net.teraoctet.genesys.commands.plot;
 
+import java.util.Optional;
 import static net.teraoctet.genesys.Genesys.plotManager;
 import net.teraoctet.genesys.plot.GPlot;
 import static net.teraoctet.genesys.utils.MessageManager.USAGE;
@@ -21,7 +22,7 @@ public class CommandPlotLevel implements CommandExecutor {
 
         if(src instanceof Player && src.hasPermission("genesys.plot.level")) { 
             Player player = (Player) src;
-            GPlot gplot = null;
+            Optional<GPlot> gplot = Optional.empty();
 
             if(ctx.getOne("name").isPresent()){
                 String plotName = ctx.<String> getOne("name").get();
@@ -38,12 +39,12 @@ public class CommandPlotLevel implements CommandExecutor {
             if(ctx.getOne("level").isPresent()){
                 int level = ctx.<Integer> getOne("level").get();  
                 
-                gplot.setLevel(level);
-                gplot.update();
-                player.sendMessage(MESSAGE("&e" + gplot.getName() + " level :&7" + gplot.getLevel()));
+                gplot.get().setLevel(level);
+                gplot.get().update();
+                player.sendMessage(MESSAGE("&e" + gplot.get().getName() + " level :&7" + gplot.get().getLevel()));
                 return CommandResult.success();
             } else {
-                player.sendMessage(MESSAGE("&e" + gplot.getName() + " level :&7" + gplot.getLevel()));
+                player.sendMessage(MESSAGE("&e" + gplot.get().getName() + " level :&7" + gplot.get().getLevel()));
                 player.sendMessage(USAGE("/plot level [level]"));
             }
         } 

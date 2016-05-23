@@ -42,10 +42,14 @@ import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static org.spongepowered.api.Sponge.getGame;
 import static org.spongepowered.api.block.BlockTypes.STANDING_SIGN;
 import static org.spongepowered.api.block.BlockTypes.WALL_SIGN;
+import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
+import org.spongepowered.api.event.entity.TargetEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.event.filter.cause.Last;
 import static org.spongepowered.api.item.ItemTypes.COMPASS;
 
 public class PlotListener {
@@ -65,18 +69,18 @@ public class PlotListener {
         if(!b.getLocation().isPresent()){return;}
         Location loc = b.getLocation().get();
         Optional<ItemStack> itemInHand = player.getItemInHand();
-        GPlot plot = plotManager.getPlot(loc);
+        Optional<GPlot> plot = plotManager.getPlot(loc);
         
         // Event click gauche -- saisie angle 1 plot
         if (event instanceof InteractBlockEvent.Primary){
             if(itemInHand.isPresent()){
                 if(itemInHand.get().getItem() == WOODEN_SHOVEL){
-                    if (plot != null) {
-                        player.sendMessage(PLOT_INFO(player,plot.getNameAllowed(),plot.getNameOwner(),plot.getName()));
+                    if (plot.isPresent()) {
+                        player.sendMessage(PLOT_INFO(player,plot.get().getNameAllowed(),plot.get().getNameOwner(),plot.get().getName()));
                         if(player.hasPermission("genesys.admin.plot")){
                             PlotManager plotPlayer = PlotManager.getSett(player);
                             plotPlayer.setBorder(1, loc);
-                            player.sendMessage(MESSAGE("&aNiveau : &e" + plot.getLevel()));
+                            player.sendMessage(MESSAGE("&aNiveau : &e" + plot.get().getLevel()));
                             player.sendMessage(Text.of(TextColors.GREEN, "Angle1 : ", TextColors.YELLOW, String.format("%d %d %d", new Object[] { loc.getBlockX(), loc.getBlockY(), loc.getBlockZ() })));
                         }
                     } else {
@@ -94,12 +98,12 @@ public class PlotListener {
 	if (event instanceof InteractBlockEvent.Secondary){
             if(itemInHand.isPresent()){
                 if(itemInHand.get().getItem() == WOODEN_SHOVEL){
-                    if (plot != null) {
-                        player.sendMessage(PLOT_INFO(player,plot.getNameAllowed(),plot.getNameOwner(),plot.getName()));
+                    if (plot.isPresent()) {
+                        player.sendMessage(PLOT_INFO(player,plot.get().getNameAllowed(),plot.get().getNameOwner(),plot.get().getName()));
                         if(player.hasPermission("genesys.admin.plot")){
                             PlotManager plotPlayer = PlotManager.getSett(player);
                             plotPlayer.setBorder(2, loc);
-                            player.sendMessage(MESSAGE("&aNiveau : &e" + plot.getLevel()));
+                            player.sendMessage(MESSAGE("&aNiveau : &e" + plot.get().getLevel()));
                             player.sendMessage(Text.of(TextColors.GREEN, "Angle2 : ", TextColors.YELLOW, String.format("%d %d %d", new Object[] { loc.getBlockX(), loc.getBlockY(), loc.getBlockZ() })));
                         }
                     } else {
@@ -141,27 +145,29 @@ public class PlotListener {
                                 return;
                             }
                             plot = plotManager.getPlot(Text.of(offering.getValue(Keys.SIGN_LINES).get().get(1)).toPlain());
-                            if (gplayer.getMoney()< cout && !plot.getUuidOwner().contains(player.getIdentifier())){
-                                player.sendMessage(ChatTypes.CHAT,MISSING_BALANCE());
-                                event.setCancelled(true);
-                            }
-                            if (!plot.getUuidOwner().contains("ADMIN") && !plot.getUuidOwner().contains(player.getIdentifier())){
-                                GPlayer vendeur = getGPlayer(plot.getUuidOwner());
-                                vendeur.creditMoney(cout);
-                                vendeur.sendMessage(MESSAGE("&6" + player.getName() + " &7vient d'acheter votre parcelle"));
-                                vendeur.sendMessage(MESSAGE("&6" + cout + " emeraudes &7ont ete ajoute a votre compte"));
-                                vendeur.sendMessage(MESSAGE("&6/bank &7pour consulter votre compte"));  
-                            }
-                            plot.delSale();
-                            if(!plot.getUuidOwner().contains(player.getIdentifier())){
-                                gplayer.debitMoney(cout);
-                                plot.setUuidOwner(gplayer.getUUID());
-                                plot.setUuidAllowed(gplayer.getUUID());
-                                plot.update();
-                                GData.commit();
-                                player.sendMessage(MESSAGE("&eVous etes maintenant le nouveau proprietaire de cette parcelle"));
-                            } else {
-                                player.sendMessage(MESSAGE("&eVous avez annule la vente de votre parcelle"));
+                            if(plot.isPresent()){
+                                if (gplayer.getMoney()< cout && !plot.get().getUuidOwner().contains(player.getIdentifier())){
+                                    player.sendMessage(ChatTypes.CHAT,MISSING_BALANCE());
+                                    event.setCancelled(true);
+                                }
+                                if (!plot.get().getUuidOwner().contains("ADMIN") && !plot.get().getUuidOwner().contains(player.getIdentifier())){
+                                    GPlayer vendeur = getGPlayer(plot.get().getUuidOwner());
+                                    vendeur.creditMoney(cout);
+                                    vendeur.sendMessage(MESSAGE("&6" + player.getName() + " &7vient d'acheter votre parcelle"));
+                                    vendeur.sendMessage(MESSAGE("&6" + cout + " emeraudes &7ont ete ajoute a votre compte"));
+                                    vendeur.sendMessage(MESSAGE("&6/bank &7pour consulter votre compte"));  
+                                }
+                                plot.get().delSale();
+                                if(!plot.get().getUuidOwner().contains(player.getIdentifier())){
+                                    gplayer.debitMoney(cout);
+                                    plot.get().setUuidOwner(gplayer.getUUID());
+                                    plot.get().setUuidAllowed(gplayer.getUUID());
+                                    plot.get().update();
+                                    GData.commit();
+                                    player.sendMessage(MESSAGE("&eVous etes maintenant le nouveau proprietaire de cette parcelle"));
+                                } else {
+                                    player.sendMessage(MESSAGE("&eVous avez annule la vente de votre parcelle"));
+                                }
                             }
                             return;
                         } 
@@ -171,56 +177,67 @@ public class PlotListener {
         }
         
         // Interact sur autre block
-        if (plot != null && !plot.getUuidAllowed().contains(player.getUniqueId().toString()) 
-                && plot.getNoInteract() == 1 && gplayer.getLevel() != 10) {
-            player.sendMessage(PLOT_PROTECTED());
-            player.sendMessage(MESSAGE(String.valueOf(plot.getNoInteract())));
-            event.setCancelled(true);
+        if (plot.isPresent()){
+            if(!plot.get().getUuidAllowed().contains(player.getUniqueId().toString()) && plot.get().getNoInteract() == 1 && gplayer.getLevel() != 10) {
+                player.sendMessage(PLOT_PROTECTED());
+                player.sendMessage(MESSAGE(String.valueOf(plot.get().getNoInteract())));
+                event.setCancelled(true);
+            }
         }
     }
     
     @Listener
-    public void onPlayerMovePlot(MoveEntityEvent.Position.Position event) {
-        if (event.getTargetEntity() instanceof Player){
-            Player player = (Player) event.getTargetEntity();
-            GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
-            Vector3d to = event.getToPosition();
-            Vector3d from = event.getFromPosition();
-            String world = player.getWorld().getName();
-            GPlot gplot = plotManager.getPlot(world,to);
-            GPlot jail = plotManager.getPlot(world,from,true);
-            
-            if(plotManager.getPlot(world,from) == null) {
-                if (gplot != null && DISPLAY_PLOT_MSG_FOR_OWNER() && gplot.getUuidAllowed().contains(player.getUniqueId().toString())){ 
-                    player.sendMessage(ChatTypes.CHAT,MESSAGE(gplot.getMessage(),player));
-                }
+    public void onPlayerMovePlot2(TargetEntityEvent event, @Last Player player) {
+        getGame().getServer().getConsole().sendMessage(MESSAGE(event.getCause().toString()));
+    }
+    
+    @Listener
+    public void onPlayerMovePlot(MoveEntityEvent.Position event , @Last Player player) {
+        getGame().getServer().getConsole().sendMessage(MESSAGE(event.getTargetEntity().getType().getId()));
+        getGame().getServer().getConsole().sendMessage(MESSAGE(player.getName()));
+        GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
+        Vector3d to = event.getToPosition();
+        Vector3d from = event.getFromPosition();
+        String world = player.getWorld().getName();
+        Optional<GPlot> gplot = plotManager.getPlot(world,to);
+        Optional<GPlot> jail = plotManager.getPlot(world,from,true);
+
+        getGame().getServer().getConsole().sendMessage(MESSAGE("to : " + to.toString()));
+        getGame().getServer().getConsole().sendMessage(MESSAGE("from : " + from.toString()));
+
+        if(!plotManager.getPlot(world,from).isPresent()) {
+            if(gplot.isPresent()){
+                if(DISPLAY_PLOT_MSG_FOR_OWNER() && gplot.get().getUuidAllowed().contains(player.getUniqueId().toString()))
+                player.sendMessage(MESSAGE(gplot.get().getMessage(),player));
             }
-            
-            if (gplot != null && !gplot.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
+        }
+
+        if(gplot.isPresent()){
+            if(!gplot.get().getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
                 if (player.get(Keys.CAN_FLY).isPresent()) { 
-                    if(player.get(Keys.CAN_FLY).get() == true && gplot.getNoFly() == 1) {
+                    if(player.get(Keys.CAN_FLY).get() == true && gplot.get().getNoFly() == 1) {
                         player.offer(Keys.IS_FLYING, false); 
                         player.offer(Keys.CAN_FLY, false); 
-                        player.sendMessage(ChatTypes.CHAT,PLOT_NO_FLY());
+                        player.sendMessage(PLOT_NO_FLY());
                         event.setCancelled(true);
                     }
                 }
 
-                if(plotManager.getPlot(world,from) == null) {
-                    player.sendMessage(ChatTypes.CHAT,MESSAGE(gplot.getMessage(),player));
-                    if(gplot.getNoEnter() == 1 && !player.hasPermission("genesys.plot.enter")) {
+                if(!plotManager.getPlot(world,from).isPresent()) {
+                    player.sendMessage(MESSAGE(gplot.get().getMessage(),player));
+                    if(gplot.get().getNoEnter() == 1 && !player.hasPermission("genesys.plot.enter")) {
                         player.transferToWorld(getGame().getServer().getWorld(world).get(), from);
-                        player.sendMessage(ChatTypes.CHAT,PLOT_NO_ENTER());
+                        player.sendMessage(PLOT_NO_ENTER());
                         event.setCancelled(true);
                     }
                 }
             }
+        }
 
-            if (jail != null){
-                if(plotManager.getPlot(world, to, true) == null && gplayer.getJail().equalsIgnoreCase(jail.getName())) {
-                    player.transferToWorld(getGame().getServer().getWorld(world).get(), from);
-                    player.sendMessage(ChatTypes.CHAT,PLOT_NO_ENTER());
-                }
+        if (jail.isPresent()){
+            if(!plotManager.getPlot(world, to, true).isPresent() && gplayer.getJail().equalsIgnoreCase(jail.get().getName())) {
+                player.transferToWorld(getGame().getServer().getWorld(world).get(), from);
+                player.sendMessage(ChatTypes.CHAT,PLOT_NO_ENTER());
             }
         }
     }
@@ -234,10 +251,10 @@ public class PlotListener {
         Player player = optPlayer.get();
         GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
         Location loc = player.getLocation();
-        GPlot gplot = plotManager.getPlot(loc);
-        if (gplot != null){
-            if(!gplot.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10 && gplot.getNoCommand() == 1){
-                player.sendMessage(ChatTypes.CHAT,PLOT_PROTECTED());
+        Optional<GPlot> gplot = plotManager.getPlot(loc);
+        if (gplot.isPresent()){
+            if(!gplot.get().getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10 && gplot.get().getNoCommand() == 1){
+                player.sendMessage(PLOT_PROTECTED());
                 event.setCancelled(true);
             }
         }
@@ -256,10 +273,14 @@ public class PlotListener {
         Optional<Location<World>> optLoc = block.getOriginal().getLocation();
         Location loc = optLoc.get();
                        
-        GPlot gplot = plotManager.getPlot(loc);
-        if (gplot != null && gplot.getNoBreak() == 1 && !gplot.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
-            player.sendMessage(PLOT_PROTECTED());
-            event.setCancelled(true);
+        Optional<GPlot> gplot = plotManager.getPlot(loc);
+        if (gplot.isPresent()){
+            if(gplot.get().getNoBreak() == 1 && !gplot.get().getUuidAllowed().contains(player.getUniqueId().toString()) && 
+                    gplayer.getLevel() != 10){
+                player.sendMessage(PLOT_PROTECTED());
+                player.sendMessage(MESSAGE("break"));
+                event.setCancelled(true);
+            }
         }
     }
     
@@ -284,30 +305,36 @@ public class PlotListener {
         Optional<Location<World>> optLoc = block.getOriginal().getLocation();
         Location loc = optLoc.get();
         
-        GPlot gplot = plotManager.getPlot(loc);
-        if (gplot != null && gplot.getNoBuild() == 1 && !gplot.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
-            player.sendMessage(PLOT_PROTECTED());
-            event.setCancelled(true);
+        Optional<GPlot> gplot = plotManager.getPlot(loc);
+        if (gplot.isPresent()){
+            if(gplot.get().getNoBuild() == 1 && !gplot.get().getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
+                player.sendMessage(PLOT_PROTECTED());
+                event.setCancelled(true);
+            }
         }
     }
     
     @Listener
     public void onFluidBlock(ChangeBlockEvent.Modify event) {
-        Optional<Player> optPlayer = event.getCause().first(Player.class);
-        if (!optPlayer.isPresent()) {
-            return;
-        }
-        Player player = optPlayer.get();
-        GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
-        Transaction<BlockSnapshot> block = event.getTransactions().get(0);
-        
-        Optional<Location<World>> optLoc = block.getOriginal().getLocation();
-        Location loc = optLoc.get();
-        
-        GPlot gplot = plotManager.getPlot(loc);
-        if (gplot != null && !gplot.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
-            player.sendMessage(PLOT_PROTECTED());
-            event.setCancelled(true);
+        if(event.getTransactions().contains(FLOWING_WATER) || event.getTransactions().contains(FLOWING_LAVA)){
+            Optional<Player> optPlayer = event.getCause().first(Player.class);
+            if (!optPlayer.isPresent()) {
+                return;
+            }
+            Player player = optPlayer.get();
+            GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
+            Transaction<BlockSnapshot> block = event.getTransactions().get(0);
+
+            Optional<Location<World>> optLoc = block.getOriginal().getLocation();
+            Location loc = optLoc.get();
+
+            Optional<GPlot> gplot = plotManager.getPlot(loc);
+            if (gplot.isPresent()){
+                if(!gplot.get().getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
+                    player.sendMessage(PLOT_PROTECTED());
+                    event.setCancelled(true);
+                }
+            }
         }
     }
     
@@ -316,9 +343,9 @@ public class PlotListener {
         Transaction<BlockSnapshot> block = event.getTransactions().get(0);
         Optional<Location<World>> optLoc = block.getOriginal().getLocation();
         Location loc = optLoc.get();
-        GPlot gplot = plotManager.getPlot(loc);
-        if (gplot != null){
-            if(block.getFinal().getState().getType() == FIRE && gplot.getNoFire() == 1){                
+        Optional<GPlot> gplot = plotManager.getPlot(loc);
+        if (gplot.isPresent()){
+            if(block.getFinal().getState().getType() == FIRE && gplot.get().getNoFire() == 1){                
                 event.setCancelled(true);   
                 return;
             }
@@ -327,7 +354,7 @@ public class PlotListener {
             Optional<Explosive> optExplosive = event.getCause().first(Explosive.class);
             
             if(block.getFinal().getState().getType() == AIR && block.getOriginal().getState().getType() != FLOWING_LAVA && 
-            block.getOriginal().getState().getType() != FLOWING_WATER && !optPlayer.isPresent() && !optExplosive.isPresent() && gplot.getNoFire() == 1){
+            block.getOriginal().getState().getType() != FLOWING_WATER && !optPlayer.isPresent() && !optExplosive.isPresent() && gplot.get().getNoFire() == 1){
                 event.setCancelled(true);   
             }
         }
@@ -337,9 +364,9 @@ public class PlotListener {
     public void onExplosion(ExplosionEvent.Pre event) {
         Explosion explosion = event.getExplosion();
         Location loc = new Location(event.getTargetWorld(),explosion.getLocation().getBlockPosition());
-        GPlot gplot = plotManager.getPlot(loc);
-        if (gplot != null){
-            if (gplot.getNoTNT() == 1){ event.setCancelled(true);}
+        Optional<GPlot> gplot = plotManager.getPlot(loc);
+        if (gplot.isPresent()){
+            if (gplot.get().getNoTNT() == 1){ event.setCancelled(true);}
         }
     }
     

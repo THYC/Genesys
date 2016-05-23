@@ -2,6 +2,7 @@ package net.teraoctet.genesys.plot;
 
 import com.flowpowered.math.vector.Vector3d;
 import java.util.ArrayList;
+import java.util.Optional;
 import static net.teraoctet.genesys.utils.GData.jails;
 import static net.teraoctet.genesys.utils.GData.plots;
 import static net.teraoctet.genesys.utils.GData.setts;
@@ -40,22 +41,22 @@ public class PlotManager {
 
     public void setPlayer(Player player){this.player = player;}
   
-    private GPlot plotContainsVector(Location loc, boolean flagJail){
+    private Optional<GPlot> plotContainsVector(Location loc, boolean flagJail){
         if (flagJail == true){
-            for(GPlot jail : jails){if(foundPlot(loc,jail)){return jail;}}
+            for(GPlot jail : jails){if(foundPlot(loc,jail)){return Optional.of(jail);}}
         }else{
-            for(GPlot plot : plots){if(foundPlot(loc,plot)){return plot;}}
+            for(GPlot plot : plots){if(foundPlot(loc,plot)){return Optional.of(plot);}}
         }
-        return null;
+        return Optional.empty();
     }
     
-    private GPlot plotContainsVector(String world, Vector3d vector, boolean flagJail){
+    private Optional<GPlot> plotContainsVector(String world, Vector3d vector, boolean flagJail){
         if (flagJail == true){
-            for(GPlot jail : jails){if(foundPlot(world, vector,jail)){return jail;}}
+            for(GPlot jail : jails){if(foundPlot(world, vector,jail)){return Optional.of(jail);}}
         }else{
-            for(GPlot plot : plots){if(foundPlot(world, vector,plot)){return plot;}}
+            for(GPlot plot : plots){if(foundPlot(world, vector,plot)){return Optional.of(plot);}}
         }
-        return null;
+        return Optional.empty();
     }
     
     private boolean foundPlot(Location location, GPlot plot){
@@ -92,7 +93,7 @@ public class PlotManager {
      * @param flagJail True pour les parcelles Jails
      * @return La parcelle ou Null si rien trouvé
      */
-    public GPlot getPlot(Location loc, boolean flagJail){return plotContainsVector(loc, flagJail);}
+    public Optional<GPlot> getPlot(Location loc, boolean flagJail){return plotContainsVector(loc, flagJail);}
     
     /**
      * Parcelle (Plot) enregistré au point de l'objet Location 
@@ -102,14 +103,14 @@ public class PlotManager {
      * @param flagJail True pour les parcelles Jails
      * @return La parcelle ou Null si rien trouvé
      */
-    public GPlot getPlot(String world, Vector3d vector, boolean flagJail){return plotContainsVector(world, vector, flagJail);}
+    public Optional<GPlot> getPlot(String world, Vector3d vector, boolean flagJail){return plotContainsVector(world, vector, flagJail);}
     
     /**
      * Parcelle (Plot) enregistré au point de l'objet Location
      * @param loc Objet Location
      * @return La parcelle ou Null si rien trouvé
      */
-    public GPlot getPlot(Location loc){return plotContainsVector(loc, false);}
+    public Optional<GPlot> getPlot(Location loc){return plotContainsVector(loc, false);}
     
     /**
      * Parcelle (Plot) enregistré au point de l'objet Location
@@ -117,7 +118,7 @@ public class PlotManager {
      * @param vector vector3d
      * @return La parcelle ou Null si rien trouvé
      */
-    public GPlot getPlot(String world, Vector3d vector){return plotContainsVector(world, vector, false);}
+    public Optional<GPlot> getPlot(String world, Vector3d vector){return plotContainsVector(world, vector, false);}
     
     /**
      * Retourne True si le nom indiqué correspond bien a un nom de parcelle(Plot)
@@ -138,11 +139,11 @@ public class PlotManager {
      * @param plotName Nom de l'object GPlot
      * @return Object GPlot
      */
-    public GPlot getPlot(String plotName){
+    public Optional<GPlot> getPlot(String plotName){
         for (GPlot plot : plots) {
-            if(plot.getName().contains(plotName)){return plot;}
+            if(plot.getName().contains(plotName)){return Optional.of(plot);}
         }
-        return null;
+        return Optional.empty();
     }
     
     /**

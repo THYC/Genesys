@@ -76,8 +76,13 @@ public class SettingCompass {
                 break;
             case "PLOT": 
                 if(arg.length == 1){return Optional.empty();}
-                GPlot gplot = plotManager.getPlot(arg[1]);
-                loc =   DeSerialize.location(gplot.getSpawnPlot().get());
+                Optional<GPlot> gplot = plotManager.getPlot(arg[1]);
+                if(gplot.isPresent()){
+                    loc = DeSerialize.location(gplot.get().getSpawnPlot().get());
+                }else{
+                    player.sendMessage(MESSAGE("&eParcelle inexistante"));
+                    return Optional.empty();
+                }   
                 break;
             default:
             

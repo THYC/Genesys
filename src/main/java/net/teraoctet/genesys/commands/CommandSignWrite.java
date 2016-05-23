@@ -52,9 +52,9 @@ public class CommandSignWrite implements CommandExecutor {
                 }                     
             } 
 
-            GPlot gplot = plotManager.getPlot(location);
-            if (gplot != null){ 
-                if(!gplot.getUuidOwner().equalsIgnoreCase(player.getIdentifier())){
+            Optional<GPlot> gplot = plotManager.getPlot(location);
+            if (gplot.isPresent()){ 
+                if(!gplot.get().getUuidOwner().equalsIgnoreCase(player.getIdentifier())){
                     src.sendMessage(NO_PERMISSIONS());
                     return CommandResult.empty(); 
                 }

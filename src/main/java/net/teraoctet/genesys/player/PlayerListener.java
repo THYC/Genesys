@@ -64,6 +64,7 @@ import static net.teraoctet.genesys.utils.MessageManager.NAME_CHANGE;
 import static net.teraoctet.genesys.utils.MessageManager.FIRSTJOIN_BROADCAST_MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.EVENT_LOGIN_MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
+import org.spongepowered.api.event.item.inventory.DropItemEvent;
 
 public class PlayerListener {
     
@@ -179,6 +180,13 @@ public class PlayerListener {
         if(event.contains(COMPASS)){
             getGame().getServer().getConsole().sendMessage(MESSAGE("crafting"));
         }
+    }
+    
+    @Listener
+    public void onPlayerCraft2(DropItemEvent.Dispense event, @First Player player)
+    {
+        getGame().getServer().getConsole().sendMessage(MESSAGE("dispense"));
+        
     }
     
     @Listener

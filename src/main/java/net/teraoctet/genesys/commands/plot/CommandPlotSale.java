@@ -47,7 +47,7 @@ public class CommandPlotSale implements CommandExecutor {
                 return CommandResult.empty();  
             }
 
-            GPlot gplot = null;
+            Optional<GPlot> gplot = Optional.empty();
 
             if(ctx.getOne("name").isPresent()){
                 String plotName = ctx.<String> getOne("name").get();
@@ -67,7 +67,7 @@ public class CommandPlotSale implements CommandExecutor {
                 }
             }
 
-            if (!gplot.getUuidOwner().equalsIgnoreCase(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
+            if (!gplot.get().getUuidOwner().equalsIgnoreCase(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
                 player.sendMessage(ALREADY_OWNED_PLOT());
                 return CommandResult.empty();
             }
@@ -101,13 +101,13 @@ public class CommandPlotSale implements CommandExecutor {
             SignData signData = opSign.get();
             List<Text> sale = new ArrayList<>();
             sale.add(MESSAGE("&1A VENDRE"));
-            sale.add(MESSAGE("&1" + gplot.getName()));
+            sale.add(MESSAGE("&1" + gplot.get().getName()));
             sale.add(MESSAGE("&4" + String.valueOf(price)));
             sale.add(MESSAGE("&1Emeraudes"));
             signData.set(Keys.SIGN_LINES,sale );
             sign.offer(signData);
 
-            gplot.addSale(location);
+            gplot.get().addSale(location);
             GData.commit();
             return CommandResult.success();
         } 

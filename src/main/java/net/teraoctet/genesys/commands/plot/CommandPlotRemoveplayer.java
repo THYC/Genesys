@@ -1,5 +1,6 @@
 package net.teraoctet.genesys.commands.plot;
 
+import java.util.Optional;
 import static net.teraoctet.genesys.Genesys.plotManager;
 import net.teraoctet.genesys.plot.GPlot;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
@@ -25,7 +26,7 @@ public class CommandPlotRemoveplayer implements CommandExecutor {
         if(src instanceof Player && src.hasPermission("genesys.plot.removeplayer")) { 
             Player player = (Player) src;
             GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
-            GPlot gplot = null;
+            Optional<GPlot> gplot = Optional.empty();
 
             if(ctx.getOne("name").isPresent()){
                 String plotName = ctx.<String> getOne("name").get();
@@ -34,12 +35,12 @@ public class CommandPlotRemoveplayer implements CommandExecutor {
                 gplot = plotManager.getPlot(player.getLocation());
             }
 
-            if (gplot == null){
+            if (!gplot.isPresent()){
                 player.sendMessage(NO_PLOT());
                 player.sendMessage(USAGE("/plot removeplayer : retire un habitant - vous devez \352tre sur la parcelle"));
                 player.sendMessage(USAGE("/plot removeplayer <NomParcelle> : retire un habitant sur la parcelle nomm\351e"));
                 return CommandResult.empty();
-            } else if (!gplot.getUuidOwner().equalsIgnoreCase(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
+            } else if (!gplot.get().getUuidOwner().equalsIgnoreCase(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
                 player.sendMessage(ALREADY_OWNED_PLOT());
                 return CommandResult.empty(); 
             }
@@ -51,11 +52,11 @@ public class CommandPlotRemoveplayer implements CommandExecutor {
                     return CommandResult.empty();
                 }
 
-                String uuidAllowed = gplot.getUuidAllowed();
+                String uuidAllowed = gplot.get().getUuidAllowed();
                 uuidAllowed = uuidAllowed.replace(target.getUniqueId().toString(), "");
-                gplot.setUuidAllowed(uuidAllowed);
+                gplot.get().setUuidAllowed(uuidAllowed);
                 player.sendMessage(MESSAGE("&e" + target.getName() + " &7a \351t\351 retir\351 de la liste des habitants"));
-                target.sendMessage(MESSAGE("&e" + player.getName() + " &7vous a retir\351 des habitants de &e" + gplot.getName()));
+                target.sendMessage(MESSAGE("&e" + player.getName() + " &7vous a retir\351 des habitants de &e" + gplot.get().getName()));
                 return CommandResult.success();
             } else {
                 player.sendMessage(USAGE("/plot removeplayer <playerName> [NomParcelle]"));

@@ -3,8 +3,10 @@ package net.teraoctet.genesys.commands.plot;
 import java.util.Optional;
 import static net.teraoctet.genesys.Genesys.plotManager;
 import static net.teraoctet.genesys.Genesys.serverManager;
+import net.teraoctet.genesys.player.GPlayer;
 import net.teraoctet.genesys.plot.GPlot;
 import net.teraoctet.genesys.utils.GData;
+import static net.teraoctet.genesys.utils.GData.getGPlayer;
 import static net.teraoctet.genesys.utils.MessageManager.MESSAGE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_CONSOLE;
 import static net.teraoctet.genesys.utils.MessageManager.NO_PERMISSIONS;
@@ -26,20 +28,21 @@ public class CommandPlotMsg implements CommandExecutor {
             Optional<String> arguments = ctx.<String> getOne("arguments");
                         
             Player player = (Player)src;
+            GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
                         
             // on vérifie que le joueur se situe bien sur une parcelle sinon on sort
-            GPlot gplot = plotManager.getPlot(player.getLocation());
-            if(gplot == null){
+            Optional<GPlot> gplot = plotManager.getPlot(player.getLocation());
+            if(!gplot.isPresent()){
                 player.sendMessage(NO_PLOT());
                 return CommandResult.empty();
             }
             
             // on vérifie que le joueur est bien le owner de la parcelle
-            if(gplot.getUuidOwner().equals(player.getIdentifier())){
+            if(gplot.get().getUuidOwner().equals(player.getIdentifier()) || gplayer.getLevel() == 10){
                 
                 // si le joueur n'a pas tapé d'arguments on affiche le message existant
                 if(!ctx.<String> getOne("arguments").isPresent()){
-                    Text msg = MESSAGE(gplot.getMessage());
+                    Text msg = MESSAGE(gplot.get().getMessage());
                     player.sendMessage(msg); 
                     return CommandResult.success();
                     
@@ -51,8 +54,8 @@ public class CommandPlotMsg implements CommandExecutor {
                         smsg = smsg + arg + " ";
                     }
                     Text msg = MESSAGE(smsg);
-                    gplot.setMessage(serverManager.quoteToSQL(smsg));
-                    gplot.update();
+                    gplot.get().setMessage(serverManager.quoteToSQL(smsg));
+                    gplot.get().update();
                     GData.commit();
                     player.sendMessage(MESSAGE("&cVotre nouveau message :"));
                     player.sendMessage(msg);

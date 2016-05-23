@@ -123,8 +123,8 @@ public class WorldListener {
     public void onTNTexplode(final ExplosionEvent.Detonate event){ 
         Explosion explosion = event.getExplosion();
         Location loc = new Location(event.getTargetWorld(),explosion.getLocation().getBlockPosition());
-        GPlot gplot = plotManager.getPlot(loc);
-        if (gplot == null){
+        Optional<GPlot> gplot = plotManager.getPlot(loc);
+        if (!gplot.isPresent()){
             if (event.getCause().first(PrimedTNT.class).isPresent()){
                 event.setCancelled(true);
             }
@@ -135,8 +135,8 @@ public class WorldListener {
     public void onExplosion(final ExplosionEvent.Detonate event){ 
         Explosion explosion = event.getExplosion();
         Location loc = new Location(event.getTargetWorld(),explosion.getLocation().getBlockPosition());
-        GPlot gplot = plotManager.getPlot(loc);
-        if (gplot == null){
+        Optional<GPlot> gplot = plotManager.getPlot(loc);
+        if (!gplot.isPresent()){
             if (!event.getCause().first(PrimedTNT.class).isPresent()){
                 List<Transaction<BlockSnapshot>> bs = event.getTransactions();
                 Restore restore = new Restore(bs);

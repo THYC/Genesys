@@ -1,5 +1,6 @@
 package net.teraoctet.genesys.commands.plot;
 
+import java.util.Optional;
 import static net.teraoctet.genesys.Genesys.plotManager;
 import net.teraoctet.genesys.plot.GPlot;
 import static net.teraoctet.genesys.utils.GData.getGPlayer;
@@ -25,7 +26,7 @@ public class CommandPlotAddplayer implements CommandExecutor {
         if(src instanceof Player && src.hasPermission("genesys.plot.addplayer")) { 
             Player player = (Player) src;
             GPlayer gplayer = getGPlayer(player.getUniqueId().toString());
-            GPlot gplot = null;
+            Optional<GPlot> gplot = Optional.empty();
 
             if(ctx.getOne("name").isPresent()){
                 String plotName = ctx.<String> getOne("name").get();
@@ -34,12 +35,12 @@ public class CommandPlotAddplayer implements CommandExecutor {
                 gplot = plotManager.getPlot(player.getLocation());
             }
 
-            if (gplot == null){
+            if (!gplot.isPresent()){
                 player.sendMessage(NO_PLOT());
                 player.sendMessage(USAGE("/plot addplayer : ajoute un habitant - vous devez \352tre sur la parcelle"));
                 player.sendMessage(USAGE("/plot addplayer <nomParcelle> : ajoute un habitant sur la parcelle nomm\351e"));
                 return CommandResult.empty();
-            } else if (!gplot.getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
+            } else if (!gplot.get().getUuidAllowed().contains(player.getUniqueId().toString()) && gplayer.getLevel() != 10){
                 player.sendMessage(ALREADY_OWNED_PLOT());
                 return CommandResult.empty();   
             }
@@ -50,9 +51,9 @@ public class CommandPlotAddplayer implements CommandExecutor {
                     player.sendMessage(MESSAGE("&e" + target + " &7 doit \352tre connect\351 pour l'ajouter"));
                     return CommandResult.empty();
                 }
-                gplot.setUuidAllowed(gplot.getUuidAllowed() + " " + target.getUniqueId().toString());
+                gplot.get().setUuidAllowed(gplot.get().getUuidAllowed() + " " + target.getUniqueId().toString());
                 player.sendMessage(MESSAGE("&e" + target.getName() + " &7 a \351t\351 ajout\351 à la liste des habitants"));
-                target.sendMessage(MESSAGE("&7Vous \352tes maintenant habitant de &e" + gplot.getName()));
+                target.sendMessage(MESSAGE("&7Vous \352tes maintenant habitant de &e" + gplot.get().getName()));
                 return CommandResult.success();
             } else {
                 player.sendMessage(USAGE("/plot addplayer <playerName> [nomParcelle]"));
